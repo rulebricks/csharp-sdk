@@ -1,10 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0;net462;netstandard2.0</TargetFrameworks>
-        <ImplicitUsings Condition="'$(TargetFramework)' != 'net462' and '$(TargetFramework)' != 'netstandard2.0'">enable</ImplicitUsings>
+        <TargetFrameworks>net6.0;net462</TargetFrameworks>
+        <ImplicitUsings Condition="'$(TargetFramework)' != 'net462'">enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <LangVersion Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'netstandard2.0'">8.0</LangVersion>
+        <LangVersion Condition="'$(TargetFramework)' == 'net462'">8.0</LangVersion>
 
         <IsPackable>false</IsPackable>
         <IsTestProject>true</IsTestProject>
@@ -19,7 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RulebricksApi\RulebricksApi.csproj" />
+        <ProjectReference Include="..\RulebricksApi\RulebricksApi.csproj" />
     </ItemGroup>
 
 </Project>
