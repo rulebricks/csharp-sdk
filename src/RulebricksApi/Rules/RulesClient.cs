@@ -25,10 +25,8 @@ public class RulesClient
     )
     {
         var response = await _client.MakeRequestAsync(
-            new RawClient.JsonApiRequest
+            new RawClient.JsonApiRequest(HttpMethod.Post, $"api/v1/solve/{slug}")
             {
-                Method = HttpMethod.Post,
-                Path = $"api/v1/solve/{slug}",
                 Body = request
             }
         );
@@ -49,10 +47,8 @@ public class RulesClient
     )
     {
         var response = await _client.MakeRequestAsync(
-            new RawClient.JsonApiRequest
+            new RawClient.JsonApiRequest(HttpMethod.Post, $"api/v1/bulk-solve/{slug}")
             {
-                Method = HttpMethod.Post,
-                Path = $"api/v1/bulk-solve/{slug}",
                 Body = request
             }
         );
@@ -74,10 +70,8 @@ public class RulesClient
     )
     {
         var response = await _client.MakeRequestAsync(
-            new RawClient.JsonApiRequest
+            new RawClient.JsonApiRequest(HttpMethod.Post, "api/v1/parallel-solve")
             {
-                Method = HttpMethod.Post,
-                Path = "api/v1/parallel-solve",
                 Body = request
             }
         );
@@ -95,7 +89,7 @@ public class RulesClient
     public async Task<IEnumerable<ListResponseItem>> ListAsync()
     {
         var response = await _client.MakeRequestAsync(
-            new RawClient.JsonApiRequest { Method = HttpMethod.Get, Path = "api/v1/list" }
+            new RawClient.JsonApiRequest(HttpMethod.Get, "api/v1/list")
         );
         var responseBody = await response.Raw.Content.ReadAsStringAsync();
         if (response.StatusCode is >= 200 and < 400)
@@ -111,7 +105,7 @@ public class RulesClient
     public async Task<UsageResponse> UsageAsync()
     {
         var response = await _client.MakeRequestAsync(
-            new RawClient.JsonApiRequest { Method = HttpMethod.Get, Path = "api/v1/usage" }
+            new RawClient.JsonApiRequest(HttpMethod.Get, "api/v1/usage")
         );
         var responseBody = await response.Raw.Content.ReadAsStringAsync();
         if (response.StatusCode is >= 200 and < 400)
