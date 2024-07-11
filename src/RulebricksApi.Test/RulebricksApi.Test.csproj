@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFrameworks>net6.0;net462;netstandard2.0</TargetFrameworks>
-        <ImplicitUsings Condition="'$(TargetFramework)' != 'net462'">enable</ImplicitUsings>
+        <ImplicitUsings Condition="'$(TargetFramework)' != 'net462' and '$(TargetFramework)' != 'netstandard2.0'">enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <LangVersion Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'netstandard2.0'">8.0</LangVersion>
 
