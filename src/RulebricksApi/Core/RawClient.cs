@@ -64,7 +64,7 @@ namespace RulebricksApi.Core
             }
             // Send the request
             var response = await _clientOptions.HttpClient.SendAsync(httpRequest);
-            return new ApiResponse { StatusCode = (int)response.StatusCode, Raw = response };
+            return new ApiResponse((int)response.StatusCode, response);
         }
 
         public record BaseApiRequest
