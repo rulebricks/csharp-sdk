@@ -1,3 +1,4 @@
-namespace RulebricksApi.Test;
-
-public class TestClient { }
+namespace RulebricksApi.Test
+{
+    public class TestClient { }
+}
