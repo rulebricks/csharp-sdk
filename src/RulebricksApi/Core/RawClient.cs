@@ -69,9 +69,9 @@ namespace RulebricksApi.Core
 
         public record BaseApiRequest
         {
-            public required HttpMethod Method { get; init; }
+            public HttpMethod Method { get; init; }
 
-            public required string Path { get; init; }
+            public string Path { get; init; }
 
             public string? ContentType { get; init; }
 
@@ -80,6 +80,12 @@ namespace RulebricksApi.Core
             public Dictionary<string, string> Headers { get; init; } = new();
 
             public object? RequestOptions { get; init; }
+
+            public BaseApiRequest(HttpMethod method, string path)
+            {
+                Method = method;
+                Path = path;
+            }
         }
 
         /// <summary>
@@ -88,6 +94,8 @@ namespace RulebricksApi.Core
         public record StreamApiRequest : BaseApiRequest
         {
             public Stream? Body { get; init; }
+
+            public StreamApiRequest(HttpMethod method, string path) : base(method, path) { }
         }
 
         /// <summary>
@@ -96,6 +104,8 @@ namespace RulebricksApi.Core
         public record JsonApiRequest : BaseApiRequest
         {
             public object? Body { get; init; }
+
+            public JsonApiRequest(HttpMethod method, string path) : base(method, path) { }
         }
 
         /// <summary>
@@ -103,9 +113,15 @@ namespace RulebricksApi.Core
         /// </summary>
         public record ApiResponse
         {
-            public required int StatusCode { get; init; }
+            public int StatusCode { get; init; }
 
-            public required HttpResponseMessage Raw { get; init; }
+            public HttpResponseMessage Raw { get; init; }
+
+            public ApiResponse(int statusCode, HttpResponseMessage raw)
+            {
+                StatusCode = statusCode;
+                Raw = raw;
+            }
         }
 
         private string BuildUrl(string path, Dictionary<string, object> query)
