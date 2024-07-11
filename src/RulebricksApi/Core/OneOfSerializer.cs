@@ -24,7 +24,7 @@ public class OneOfSerializer<TOneOf> : JsonConverter<TOneOf>
                 var readerCopy = reader;
                 var result = JsonSerializer.Deserialize(ref readerCopy, type, options);
                 reader.Skip();
-                return (TOneOf)cast.Invoke(null, [result])!;
+                return (TOneOf)cast.Invoke(null, new object[] { result })!;
             }
             catch (JsonException) { }
         }
