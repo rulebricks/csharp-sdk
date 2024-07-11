@@ -23,7 +23,7 @@ public class ValuesClient
     public async Task<IEnumerable<ListValuesResponseItem>> ListValuesAsync()
     {
         var response = await _client.MakeRequestAsync(
-            new RawClient.JsonApiRequest { Method = HttpMethod.Get, Path = "api/v1/values" }
+            new RawClient.JsonApiRequest(HttpMethod.Get, "api/v1/values")
         );
         var responseBody = await response.Raw.Content.ReadAsStringAsync();
         if (response.StatusCode is >= 200 and < 400)
@@ -41,10 +41,8 @@ public class ValuesClient
     )
     {
         var response = await _client.MakeRequestAsync(
-            new RawClient.JsonApiRequest
+            new RawClient.JsonApiRequest(HttpMethod.Post, "api/v1/values")
             {
-                Method = HttpMethod.Post,
-                Path = "api/v1/values",
                 Body = request
             }
         );
@@ -63,10 +61,8 @@ public class ValuesClient
     {
         var _query = new Dictionary<string, object>() { { "id", request.Id }, };
         var response = await _client.MakeRequestAsync(
-            new RawClient.JsonApiRequest
+            new RawClient.JsonApiRequest(HttpMethod.Delete, "api/v1/values")
             {
-                Method = HttpMethod.Delete,
-                Path = "api/v1/values",
                 Query = _query
             }
         );
