@@ -5,6 +5,8 @@ on:
     branches: [ main, init-csharp-sdk ]
   pull_request:
     branches: [ main, init-csharp-sdk ]
+  release:
+    types: [created]
 
 jobs:
   build:
@@ -29,3 +31,30 @@ jobs:
 
     - name: Test
       run: dotnet test src/RulebricksApi.Test/RulebricksApi.Test.csproj --configuration Release --framework ${{ matrix.framework }}
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore src/RulebricksApi/RulebricksApi.csproj
+
+    - name: Build
+      run: dotnet build src/RulebricksApi/RulebricksApi.csproj --configuration Release
+
+    - name: Pack
+      run: dotnet pack src/RulebricksApi/RulebricksApi.csproj --configuration Release
+
+    - name: Publish to NuGet
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push "src/RulebricksApi/bin/Release/RulebricksApi.*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source "https://api.nuget.org/v3/index.json"
