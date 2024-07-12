@@ -9,7 +9,7 @@ The Rulebricks C# SDK provides a convenient way to interact with the Rulebricks 
 To install the Rulebricks C# SDK, add the following package reference to your project file:
 
 ```xml
-<PackageReference Include="RulebricksApi" Version="0.0.43" />
+<PackageReference Include="RulebricksApi" Version="1.0.0" />
 ```
 
 ## Usage
@@ -25,15 +25,6 @@ var apiKey = "your_api_key";
 var client = new RulebricksApiClient(apiKey);
 ```
 
-### Authenticating
-
-Before you can start using the SDK, you need to configure it with your Rulebricks API key:
-
-```csharp
-var apiKey = "YOUR_API_KEY";
-var client = new RulebricksApiClient(apiKey);
-```
-
 ### Solving a Rule
 
 Here's a simple example of how to solve a rule:
@@ -41,10 +32,10 @@ Here's a simple example of how to solve a rule:
 ```csharp
 var requestData = new Dictionary<string, object>
 {
-    { "dataKey", "dataValue" } // Replace with actual rule data keys and values
+    { "exampleKey", "exampleValue" } // Replace with actual rule data keys and values
 };
 
-var result = client.Rules.Solve("rule-slug", requestData);
+var result = client.Rules.Solve("example-rule-slug", requestData);
 Console.WriteLine($"Result: {result}");
 ```
 
@@ -55,10 +46,10 @@ Here's a simple example of how to solve a flow:
 ```csharp
 var requestData = new Dictionary<string, object>
 {
-    { "dataKey", "dataValue" } // Replace with actual flow data keys and values
+    { "exampleKey", "exampleValue" } // Replace with actual flow data keys and values
 };
 
-var result = client.Flows.Solve("flow-slug", requestData);
+var result = client.Flows.Solve("example-flow-slug", requestData);
 Console.WriteLine($"Result: {result}");
 ```
 
@@ -142,9 +133,29 @@ To run the tests for the SDK, use the following command:
 dotnet test src/RulebricksApi.Test/RulebricksApi.Test.csproj --configuration Release --framework net6.0
 ```
 
+The tests cover various functionalities of the SDK, including rule solving, flow solving, and value management. Ensure that you have the necessary environment setup and dependencies installed before running the tests.
+
 ## Contributing
 
-We welcome contributions to the Rulebricks C# SDK. Please open an issue or submit a pull request on GitHub.
+We welcome contributions to the Rulebricks C# SDK. Please follow these steps to contribute:
+
+1. Fork the repository on GitHub.
+2. Create a new branch with a descriptive name.
+3. Make your changes and commit them with clear and concise messages.
+4. Push your changes to your forked repository.
+5. Open a pull request on the main repository.
+
+For major changes, please open an issue first to discuss what you would like to change.
+
+## Troubleshooting
+
+If you encounter any issues while using the SDK, please check the following:
+
+- Ensure that you have the correct API key and that it has the necessary permissions.
+- Verify that you are using the correct version of the SDK and .NET framework.
+- Check the API reference documentation for any changes or updates to the API endpoints.
+
+If the issue persists, please open an issue on GitHub with detailed information about the problem.
 
 ## License
 
