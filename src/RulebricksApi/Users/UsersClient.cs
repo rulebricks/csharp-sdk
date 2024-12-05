@@ -1,89 +1,79 @@
 using System.Net.Http;
 using System.Text.Json;
+using RulebricksApi;
 using RulebricksApi.Core;
 
 #nullable enable
 
 namespace RulebricksApi;
 
-public class RulesClient
+public class UsersClient
 {
     private RawClient _client;
 
-    public RulesClient(RawClient client)
+    public UsersClient(RawClient client)
     {
         _client = client;
     }
 
     /// <summary>
-    /// Executes a single rule identified by a unique slug. The request and response formats are dynamic, dependent on the rule configuration.
+    /// Invite a new user to the organization or update groupspermissions for an existing user.
     /// </summary>
-    public async Task<Dictionary<string, object>> SolveAsync(
-        string slug,
-        Dictionary<string, object> request
-    )
+    public async Task<InviteResponse> InviteAsync(InviteRequest request)
     {
         var response = await _client.MakeRequestAsync(
             new RawClient.JsonApiRequest
             {
                 Method = HttpMethod.Post,
-                Path = $"api/v1/solve/{slug}",
+                Path = "api/v1/admin/users/invite",
                 Body = request
             }
         );
         var responseBody = await response.Raw.Content.ReadAsStringAsync();
         if (response.StatusCode is >= 200 and < 400)
         {
-            return JsonSerializer.Deserialize<Dictionary<string, object>>(responseBody)!;
+            return JsonSerializer.Deserialize<InviteResponse>(responseBody)!;
         }
         throw new Exception(responseBody);
     }
 
     /// <summary>
-    /// Executes a particular rule against multiple request data payloads provided in a list.
+    /// List all user groups available in your Rulebricks organization.
     /// </summary>
-    public async Task<IEnumerable<Dictionary<string, object>>> BulkSolveAsync(
-        string slug,
-        IEnumerable<Dictionary<string, object>> request
-    )
+    public async Task<IEnumerable<ListGroupsResponseItem>> ListGroupsAsync()
     {
         var response = await _client.MakeRequestAsync(
             new RawClient.JsonApiRequest
             {
-                Method = HttpMethod.Post,
-                Path = $"api/v1/bulk-solve/{slug}",
-                Body = request
+                Method = HttpMethod.Get,
+                Path = "api/v1/admin/users/groups"
             }
         );
         var responseBody = await response.Raw.Content.ReadAsStringAsync();
         if (response.StatusCode is >= 200 and < 400)
         {
-            return JsonSerializer.Deserialize<IEnumerable<Dictionary<string, object>>>(
-                responseBody
-            )!;
+            return JsonSerializer.Deserialize<IEnumerable<ListGroupsResponseItem>>(responseBody)!;
         }
         throw new Exception(responseBody);
     }
 
     /// <summary>
-    /// Executes multiple rules or flows in parallel based on a provided mapping of rule/flow slugs to payloads.
+    /// Create a new user group in your Rulebricks organization.
     /// </summary>
-    public async Task<Dictionary<string, object>> ParallelSolveAsync(
-        Dictionary<string, object> request
-    )
+    public async Task<CreateGroupResponse> CreateGroupAsync(CreateGroupRequest request)
     {
         var response = await _client.MakeRequestAsync(
             new RawClient.JsonApiRequest
             {
                 Method = HttpMethod.Post,
-                Path = "api/v1/parallel-solve",
+                Path = "api/v1/admin/users/groups",
                 Body = request
             }
         );
         var responseBody = await response.Raw.Content.ReadAsStringAsync();
         if (response.StatusCode is >= 200 and < 400)
         {
-            return JsonSerializer.Deserialize<Dictionary<string, object>>(responseBody)!;
+            return JsonSerializer.Deserialize<CreateGroupResponse>(responseBody)!;
         }
         throw new Exception(responseBody);
     }

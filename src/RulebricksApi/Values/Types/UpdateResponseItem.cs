@@ -7,7 +7,7 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public record UpdateValuesResponseItem
+public record UpdateResponseItem
 {
     /// <summary>
     /// Unique identifier for the dynamic value.
@@ -25,7 +25,7 @@ public record UpdateValuesResponseItem
     /// Data type of the dynamic value.
     /// </summary>
     [JsonPropertyName("type")]
-    public UpdateValuesResponseItemType? Type { get; init; }
+    public UpdateResponseItemType? Type { get; init; }
 
     /// <summary>
     /// Value of the dynamic value.

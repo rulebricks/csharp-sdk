@@ -7,8 +7,8 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-[JsonConverter(typeof(StringEnumSerializer<ListValuesResponseItemType>))]
-public enum ListValuesResponseItemType
+[JsonConverter(typeof(StringEnumSerializer<UpdateResponseItemType>))]
+public enum UpdateResponseItemType
 {
     [EnumMember(Value = "string")]
     String,

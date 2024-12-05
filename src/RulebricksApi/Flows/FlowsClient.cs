@@ -24,8 +24,10 @@ public class FlowsClient
     )
     {
         var response = await _client.MakeRequestAsync(
-            new RawClient.JsonApiRequest(HttpMethod.Post, $"api/v1/flow/{slug}")
+            new RawClient.JsonApiRequest
             {
+                Method = HttpMethod.Post,
+                Path = $"api/v1/flows/{slug}",
                 Body = request
             }
         );

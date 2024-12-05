@@ -4,11 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace RulebricksApi;
 
-public record DeleteValueResponse
+public record DeleteRuleResponse
 {
-    /// <summary>
-    /// Confirmation message of successful deletion.
-    /// </summary>
     [JsonPropertyName("message")]
     public string? Message { get; init; }
 }

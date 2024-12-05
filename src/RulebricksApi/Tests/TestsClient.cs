@@ -1,6 +1,5 @@
 using System.Net.Http;
 using System.Text.Json;
-using OneOf;
 using RulebricksApi;
 using RulebricksApi.Core;
 
@@ -8,88 +7,72 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public class ValuesClient
+public class TestsClient
 {
     private RawClient _client;
 
-    public ValuesClient(RawClient client)
+    public TestsClient(RawClient client)
     {
         _client = client;
     }
 
     /// <summary>
-    /// Retrieve all dynamic values for the authenticated user.
+    /// Retrieves a list of tests associated with the flow identified by the slug.
     /// </summary>
-    public async Task<IEnumerable<ListDynamicValuesResponseItem>> ListDynamicValuesAsync(
-        ListDynamicValuesRequest request
-    )
+    public async Task<IEnumerable<ListTestsResponseItem>> ListTestsAsync(string slug)
     {
-        var _query = new Dictionary<string, object>() { };
-        if (request.Name != null)
-        {
-            _query["name"] = request.Name;
-        }
         var response = await _client.MakeRequestAsync(
             new RawClient.JsonApiRequest
             {
                 Method = HttpMethod.Get,
-                Path = "api/v1/values",
-                Query = _query
+                Path = $"api/v1/admin/flows/{slug}/tests"
             }
         );
         var responseBody = await response.Raw.Content.ReadAsStringAsync();
         if (response.StatusCode is >= 200 and < 400)
         {
-            return JsonSerializer.Deserialize<IEnumerable<ListDynamicValuesResponseItem>>(
-                responseBody
-            )!;
+            return JsonSerializer.Deserialize<IEnumerable<ListTestsResponseItem>>(responseBody)!;
         }
         throw new Exception(responseBody);
     }
 
     /// <summary>
-    /// Update existing dynamic values or add new ones for the authenticated user.
+    /// Adds a new test to the test suite of a flow identified by the slug.
     /// </summary>
-    public async Task<IEnumerable<UpdateResponseItem>> UpdateAsync(
-        Dictionary<string, OneOf<string, double, bool, IEnumerable<object>>> request
-    )
+    public async Task<CreateTestResponse> CreateTestAsync(string slug, CreateTestRequest request)
     {
         var response = await _client.MakeRequestAsync(
             new RawClient.JsonApiRequest
             {
                 Method = HttpMethod.Post,
-                Path = "api/v1/values",
+                Path = $"api/v1/admin/flows/{slug}/tests",
                 Body = request
             }
         );
         var responseBody = await response.Raw.Content.ReadAsStringAsync();
         if (response.StatusCode is >= 200 and < 400)
         {
-            return JsonSerializer.Deserialize<IEnumerable<UpdateResponseItem>>(responseBody)!;
+            return JsonSerializer.Deserialize<CreateTestResponse>(responseBody)!;
         }
         throw new Exception(responseBody);
     }
 
     /// <summary>
-    /// Delete a specific dynamic value for the authenticated user by its ID.
+    /// Deletes a test from the test suite of a flow identified by the slug.
     /// </summary>
-    public async Task<DeleteDynamicValueResponse> DeleteDynamicValueAsync(
-        DeleteDynamicValueRequest request
-    )
+    public async Task<DeleteTestResponse> DeleteTestAsync(string slug, string testId)
     {
-        var _query = new Dictionary<string, object>() { { "id", request.Id }, };
         var response = await _client.MakeRequestAsync(
             new RawClient.JsonApiRequest
             {
                 Method = HttpMethod.Delete,
-                Path = "api/v1/values",
-                Query = _query
+                Path = $"api/v1/admin/flows/{slug}/tests/{testId}"
             }
         );
         var responseBody = await response.Raw.Content.ReadAsStringAsync();
         if (response.StatusCode is >= 200 and < 400)
         {
-            return JsonSerializer.Deserialize<DeleteDynamicValueResponse>(responseBody)!;
+            return JsonSerializer.Deserialize<DeleteTestResponse>(responseBody)!;
         }
         throw new Exception(responseBody);
     }

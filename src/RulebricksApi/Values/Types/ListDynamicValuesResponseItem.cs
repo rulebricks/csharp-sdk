@@ -7,7 +7,7 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public record ListValuesResponseItem
+public record ListDynamicValuesResponseItem
 {
     /// <summary>
     /// Unique identifier for the dynamic value.
@@ -25,7 +25,7 @@ public record ListValuesResponseItem
     /// Data type of the dynamic value.
     /// </summary>
     [JsonPropertyName("type")]
-    public ListValuesResponseItemType? Type { get; init; }
+    public ListDynamicValuesResponseItemType? Type { get; init; }
 
     /// <summary>
     /// Value of the dynamic value.
@@ -35,5 +35,5 @@ public record ListValuesResponseItem
     public OneOf<string, double, bool, IEnumerable<object>>? Value { get; init; }
 
     [JsonPropertyName("usages")]
-    public IEnumerable<string>? Usages { get; init; }
+    public IEnumerable<ListDynamicValuesResponseItemUsagesItem>? Usages { get; init; }
 }

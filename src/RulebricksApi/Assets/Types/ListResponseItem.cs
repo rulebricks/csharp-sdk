@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using RulebricksApi;
 
 #nullable enable
 
@@ -26,10 +25,10 @@ public record ListResponseItem
     public string? Description { get; init; }
 
     /// <summary>
-    /// The creation date of the rule.
+    /// Whether the rule is published.
     /// </summary>
-    [JsonPropertyName("created_at")]
-    public string? CreatedAt { get; init; }
+    [JsonPropertyName("published")]
+    public bool? Published { get; init; }
 
     /// <summary>
     /// The unique slug for the rule used in API requests.
@@ -37,9 +36,9 @@ public record ListResponseItem
     [JsonPropertyName("slug")]
     public string? Slug { get; init; }
 
-    [JsonPropertyName("request_schema")]
-    public IEnumerable<ListResponseItemRequestSchemaItem>? RequestSchema { get; init; }
-
-    [JsonPropertyName("response_schema")]
-    public IEnumerable<ListResponseItemResponseSchemaItem>? ResponseSchema { get; init; }
+    /// <summary>
+    /// The date this rule was last updated.
+    /// </summary>
+    [JsonPropertyName("updated_at")]
+    public string? UpdatedAt { get; init; }
 }
