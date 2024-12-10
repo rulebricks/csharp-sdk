@@ -81,15 +81,21 @@ public class AssetsClient
     }
 
     /// <summary>
-    /// List all rules in the organization.
+    /// List all rules in the organization. Optionally filter by folder name or ID.
     /// </summary>
-    public async Task<IEnumerable<ListRulesResponseItem>> ListRulesAsync()
+    public async Task<IEnumerable<ListRulesResponseItem>> ListRulesAsync(ListRulesRequest request)
     {
+        var _query = new Dictionary<string, object>() { };
+        if (request.Folder != null)
+        {
+            _query["folder"] = request.Folder;
+        }
         var response = await _client.MakeRequestAsync(
             new RawClient.JsonApiRequest
             {
                 Method = HttpMethod.Get,
-                Path = "api/v1/admin/rules/list"
+                Path = "api/v1/admin/rules/list",
+                Query = _query
             }
         );
         var responseBody = await response.Raw.Content.ReadAsStringAsync();
@@ -126,6 +132,64 @@ public class AssetsClient
         if (response.StatusCode is >= 200 and < 400)
         {
             return JsonSerializer.Deserialize<UsageResponse>(responseBody)!;
+        }
+        throw new Exception(responseBody);
+    }
+
+    /// <summary>
+    /// Retrieve all rule folders for the authenticated user.
+    /// </summary>
+    public async Task<IEnumerable<ListFoldersResponseItem>> ListFoldersAsync()
+    {
+        var response = await _client.MakeRequestAsync(
+            new RawClient.JsonApiRequest { Method = HttpMethod.Get, Path = "api/v1/admin/folders" }
+        );
+        var responseBody = await response.Raw.Content.ReadAsStringAsync();
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            return JsonSerializer.Deserialize<IEnumerable<ListFoldersResponseItem>>(responseBody)!;
+        }
+        throw new Exception(responseBody);
+    }
+
+    /// <summary>
+    /// Create a new rule folder or update an existing one for the authenticated user.
+    /// </summary>
+    public async Task<UpsertFolderResponse> UpsertFolderAsync(UpsertFolderRequest request)
+    {
+        var response = await _client.MakeRequestAsync(
+            new RawClient.JsonApiRequest
+            {
+                Method = HttpMethod.Post,
+                Path = "api/v1/admin/folders",
+                Body = request
+            }
+        );
+        var responseBody = await response.Raw.Content.ReadAsStringAsync();
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            return JsonSerializer.Deserialize<UpsertFolderResponse>(responseBody)!;
+        }
+        throw new Exception(responseBody);
+    }
+
+    /// <summary>
+    /// Delete a specific rule folder for the authenticated user. This does not delete the rules within the folder.
+    /// </summary>
+    public async Task<DeleteFolderResponse> DeleteFolderAsync(DeleteFolderRequest request)
+    {
+        var response = await _client.MakeRequestAsync(
+            new RawClient.JsonApiRequest
+            {
+                Method = HttpMethod.Delete,
+                Path = "api/v1/admin/folders",
+                Body = request
+            }
+        );
+        var responseBody = await response.Raw.Content.ReadAsStringAsync();
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            return JsonSerializer.Deserialize<DeleteFolderResponse>(responseBody)!;
         }
         throw new Exception(responseBody);
     }

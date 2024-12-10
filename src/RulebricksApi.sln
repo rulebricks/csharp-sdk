@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi", "RulebricksApi\RulebricksApi.csproj", "{C99DC578-76FE-447D-906E-E35F011F3CC3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi", "RulebricksApi\RulebricksApi.csproj", "{C30303C3-E4F0-40F7-8454-2ABBC60CCAE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi.Test", "RulebricksApi.Test\RulebricksApi.Test.csproj", "{DE305432-5839-4404-AC97-A9D8B2D95684}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi.Test", "RulebricksApi.Test\RulebricksApi.Test.csproj", "{56CF481F-4FA2-4C96-BE2D-BE67B296434F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,13 +16,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C99DC578-76FE-447D-906E-E35F011F3CC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C99DC578-76FE-447D-906E-E35F011F3CC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C99DC578-76FE-447D-906E-E35F011F3CC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C99DC578-76FE-447D-906E-E35F011F3CC3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DE305432-5839-4404-AC97-A9D8B2D95684}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE305432-5839-4404-AC97-A9D8B2D95684}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE305432-5839-4404-AC97-A9D8B2D95684}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE305432-5839-4404-AC97-A9D8B2D95684}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C30303C3-E4F0-40F7-8454-2ABBC60CCAE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C30303C3-E4F0-40F7-8454-2ABBC60CCAE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C30303C3-E4F0-40F7-8454-2ABBC60CCAE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C30303C3-E4F0-40F7-8454-2ABBC60CCAE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56CF481F-4FA2-4C96-BE2D-BE67B296434F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56CF481F-4FA2-4C96-BE2D-BE67B296434F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56CF481F-4FA2-4C96-BE2D-BE67B296434F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56CF481F-4FA2-4C96-BE2D-BE67B296434F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
