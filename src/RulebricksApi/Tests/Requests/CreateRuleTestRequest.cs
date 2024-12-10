@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace RulebricksApi;
 
-public record CreateTestRequest
+public record CreateRuleTestRequest
 {
     /// <summary>
     /// The name of the test.

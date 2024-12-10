@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace RulebricksApi;
 
-public record ListResponseItem
+public record ListRulesResponseItem
 {
     /// <summary>
     /// The unique identifier for the rule.

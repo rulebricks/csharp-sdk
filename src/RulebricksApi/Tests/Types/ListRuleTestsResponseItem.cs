@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace RulebricksApi;
 
-public record ListTestsResponseItem
+public record ListRuleTestsResponseItem
 {
     /// <summary>
     /// Unique identifier for the test.

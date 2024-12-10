@@ -81,9 +81,29 @@ public class AssetsClient
     }
 
     /// <summary>
+    /// List all rules in the organization.
+    /// </summary>
+    public async Task<IEnumerable<ListRulesResponseItem>> ListRulesAsync()
+    {
+        var response = await _client.MakeRequestAsync(
+            new RawClient.JsonApiRequest
+            {
+                Method = HttpMethod.Get,
+                Path = "api/v1/admin/rules/list"
+            }
+        );
+        var responseBody = await response.Raw.Content.ReadAsStringAsync();
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            return JsonSerializer.Deserialize<IEnumerable<ListRulesResponseItem>>(responseBody)!;
+        }
+        throw new Exception(responseBody);
+    }
+
+    /// <summary>
     /// List all flows in the organization.
     /// </summary>
-    public async Task ListAsync()
+    public async Task ListFlowsAsync()
     {
         await _client.MakeRequestAsync(
             new RawClient.JsonApiRequest
