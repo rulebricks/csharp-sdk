@@ -9,7 +9,7 @@ The Rulebricks C# SDK provides a convenient way to interact with the Rulebricks 
 To install the Rulebricks C# SDK, add the following package reference to your project file:
 
 ```xml
-<PackageReference Include="RulebricksApi" Version="1.0.0" />
+<PackageReference Include="RulebricksApi" Version="1.3.0" />
 ```
 
 ## Usage
