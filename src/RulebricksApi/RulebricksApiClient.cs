@@ -17,7 +17,7 @@ public partial class RulebricksApiClient
                 { "x-api-key", apiKey },
                 { "X-Fern-Language", "C#" },
                 { "X-Fern-SDK-Name", "RulebricksApi" },
-                { "X-Fern-SDK-Version", "0.0.69" },
+                { "X-Fern-SDK-Version", "0.0.74" },
             },
             clientOptions ?? new ClientOptions()
         );

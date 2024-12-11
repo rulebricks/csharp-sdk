@@ -47,11 +47,11 @@ public record ListRulesResponseItem
     /// The published request schema for the rule.
     /// </summary>
     [JsonPropertyName("request_schema")]
-    public Dictionary<string, object>? RequestSchema { get; init; }
+    public IEnumerable<object>? RequestSchema { get; init; }
 
     /// <summary>
     /// The published response schema for the rule.
     /// </summary>
     [JsonPropertyName("response_schema")]
-    public Dictionary<string, object>? ResponseSchema { get; init; }
+    public IEnumerable<object>? ResponseSchema { get; init; }
 }
