@@ -62,7 +62,7 @@ public class AssetsClient
     /// <summary>
     /// Import a rule into the user's account.
     /// </summary>
-    public async Task<ImportRuleResponse> ImportRuleAsync(ImportRuleRequest request)
+    public async Task<Dictionary<string, object>> ImportRuleAsync(ImportRuleRequest request)
     {
         var response = await _client.MakeRequestAsync(
             new RawClient.JsonApiRequest
@@ -75,7 +75,7 @@ public class AssetsClient
         var responseBody = await response.Raw.Content.ReadAsStringAsync();
         if (response.StatusCode is >= 200 and < 400)
         {
-            return JsonSerializer.Deserialize<ImportRuleResponse>(responseBody)!;
+            return JsonSerializer.Deserialize<Dictionary<string, object>>(responseBody)!;
         }
         throw new Exception(responseBody);
     }
@@ -109,15 +109,21 @@ public class AssetsClient
     /// <summary>
     /// List all flows in the organization.
     /// </summary>
-    public async Task ListFlowsAsync()
+    public async Task<IEnumerable<ListFlowsResponseItem>> ListFlowsAsync()
     {
-        await _client.MakeRequestAsync(
+        var response = await _client.MakeRequestAsync(
             new RawClient.JsonApiRequest
             {
                 Method = HttpMethod.Get,
                 Path = "api/v1/admin/flows/list"
             }
         );
+        var responseBody = await response.Raw.Content.ReadAsStringAsync();
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            return JsonSerializer.Deserialize<IEnumerable<ListFlowsResponseItem>>(responseBody)!;
+        }
+        throw new Exception(responseBody);
     }
 
     /// <summary>

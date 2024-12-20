@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi", "RulebricksApi\RulebricksApi.csproj", "{F90577BA-6D6A-4C31-A6F6-E7D4F91DA110}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi", "RulebricksApi\RulebricksApi.csproj", "{7FF86382-26FB-44D4-BFEA-29BF69653774}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi.Test", "RulebricksApi.Test\RulebricksApi.Test.csproj", "{CC964434-397A-4DCA-85A2-A4E4BD75D01C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi.Test", "RulebricksApi.Test\RulebricksApi.Test.csproj", "{784DE299-01FE-4A14-B9D8-9B5B72232A86}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,13 +16,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F90577BA-6D6A-4C31-A6F6-E7D4F91DA110}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F90577BA-6D6A-4C31-A6F6-E7D4F91DA110}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F90577BA-6D6A-4C31-A6F6-E7D4F91DA110}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F90577BA-6D6A-4C31-A6F6-E7D4F91DA110}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CC964434-397A-4DCA-85A2-A4E4BD75D01C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CC964434-397A-4DCA-85A2-A4E4BD75D01C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CC964434-397A-4DCA-85A2-A4E4BD75D01C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CC964434-397A-4DCA-85A2-A4E4BD75D01C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7FF86382-26FB-44D4-BFEA-29BF69653774}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FF86382-26FB-44D4-BFEA-29BF69653774}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FF86382-26FB-44D4-BFEA-29BF69653774}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FF86382-26FB-44D4-BFEA-29BF69653774}.Release|Any CPU.Build.0 = Release|Any CPU
+		{784DE299-01FE-4A14-B9D8-9B5B72232A86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{784DE299-01FE-4A14-B9D8-9B5B72232A86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{784DE299-01FE-4A14-B9D8-9B5B72232A86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{784DE299-01FE-4A14-B9D8-9B5B72232A86}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

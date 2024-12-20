@@ -1,8 +1,11 @@
-# Rulebricks C# SDK
+![Banner](banner.png)
 
-## Overview
-
-The Rulebricks C# SDK provides a convenient way to interact with the Rulebricks API. It allows you to manage rules, flows, and values within your application.
+<p>
+    <a href="https://www.nuget.org/packages/RulebricksApi" alt="NuGet">
+        <img src="https://img.shields.io/nuget/v/RulebricksApi" /></a>
+    <a href="https://github.com/rulebricks/csharp-sdk" alt="License">
+        <img src="https://img.shields.io/github/license/rulebricks/csharp-sdk" /></a>
+</p>
 
 ## Installation
 
