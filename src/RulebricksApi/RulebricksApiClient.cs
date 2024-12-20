@@ -14,7 +14,7 @@ public partial class RulebricksApiClient
         _client = new RawClient(
             new Dictionary<string, string>()
             {
-                { "x-api-key", apiKey },
+                { "x-api-key", apiKey ?? string.Empty },
                 { "X-Fern-Language", "C#" },
                 { "X-Fern-SDK-Name", "RulebricksApi" },
                 { "X-Fern-SDK-Version", "0.0.107" },

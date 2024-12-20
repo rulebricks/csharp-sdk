@@ -10,25 +10,25 @@ namespace RulebricksApi.Forge
 {
     public class Rule
     {
-        private RulebricksApiClient _workspace;
+        private readonly RulebricksApiClient? _workspace;
         private readonly Dictionary<string, Field> _requestFields = new();
         private readonly Dictionary<string, Field> _responseFields = new();
         internal readonly List<Dictionary<string, object>> _conditions = new();
         private readonly List<RuleTest> _testSuite = new();
         private readonly List<string> _accessGroups = new();
 
-        public string Id { get; private set; }
-        public string Name { get; private set; }
-        public string Description { get; private set; }
-        public string Slug { get; private set; }
-        public string FolderId { get; private set; }
+        public string Id { get; private set; } = string.Empty;
+        public string Name { get; private set; } = string.Empty;
+        public string Description { get; private set; } = string.Empty;
+        public string Slug { get; private set; } = string.Empty;
+        public string? FolderId { get; private set; }
         public bool Published { get; private set; }
-        public string PublishedAt { get; private set; }
-        public string CreatedAt { get; private set; }
-        public string UpdatedAt { get; private set; }
-        public string UpdatedBy { get; private set; }
+        public string? PublishedAt { get; private set; }
+        public string CreatedAt { get; private set; } = string.Empty;
+        public string UpdatedAt { get; private set; } = string.Empty;
+        public string UpdatedBy { get; private set; } = string.Empty;
 
-        public Rule(RulebricksApiClient workspace = null)
+        public Rule(RulebricksApiClient? workspace = null)
         {
             _workspace = workspace;
             Id = Guid.NewGuid().ToString();
@@ -76,7 +76,8 @@ namespace RulebricksApi.Forge
             {
                 if (folders.Any(f => f.Name == folderName))
                     throw new InvalidOperationException("Folder name conflicts with an existing folder");
-                folder = await _workspace.Assets.UpsertFolderAsync(new UpsertFolderRequest { Name = folderName });
+                var response = await _workspace.Assets.UpsertFolderAsync(new UpsertFolderRequest { Name = folderName });
+                folder = new ListFoldersResponseItem { Id = response.Id, Name = response.Name };
             }
 
             if (folder == null)
@@ -114,7 +115,7 @@ namespace RulebricksApi.Forge
             return field;
         }
 
-        public ListField AddListField(string name, string description = "", List<object> defaultValue = null)
+        public ListField AddListField(string name, string description = "", IEnumerable<object>? defaultValue = null)
         {
             var field = new ListField(name, description, defaultValue ?? new List<object>());
             _requestFields[name] = field;
@@ -149,7 +150,7 @@ namespace RulebricksApi.Forge
             return field;
         }
 
-        public ListField AddListResponse(string name, string description = "", List<object> defaultValue = null)
+        public ListField AddListResponse(string name, string description = "", IEnumerable<object>? defaultValue = null)
         {
             var field = new ListField(name, description, defaultValue ?? new List<object>());
             _responseFields[name] = field;
@@ -184,7 +185,7 @@ namespace RulebricksApi.Forge
                 throw new InvalidOperationException("A Rulebricks client is required to load a rule from the workspace");
 
             var ruleData = await _workspace.Assets.ExportRuleAsync(new ExportRuleRequest { Id = ruleId });
-            return FromJson(ruleData);
+            return FromJson(JsonSerializer.Serialize(ruleData));
         }
 
         public Dictionary<string, object> ToDict()

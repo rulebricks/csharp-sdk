@@ -370,7 +370,7 @@ namespace RulebricksApi.Forge
 
     public class ListField : Field
     {
-        public ListField(string name, string description, IEnumerable<object> defaultValue = null)
+        public ListField(string name, string description, IEnumerable<object>? defaultValue = null)
             : base(name, description, FieldType.List, defaultValue ?? Array.Empty<object>())
         {
         }

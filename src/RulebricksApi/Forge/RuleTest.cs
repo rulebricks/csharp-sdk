@@ -12,8 +12,8 @@ namespace RulebricksApi.Forge
         public Dictionary<string, object> Response { get; private set; }
         public bool Critical { get; private set; }
         public DateTime? LastExecuted { get; private set; }
-        public string TestState { get; private set; }
-        public string Error { get; private set; }
+        public string? TestState { get; private set; }
+        public string? Error { get; private set; }
         public bool? Success { get; private set; }
 
         public RuleTest()

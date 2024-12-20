@@ -15,8 +15,8 @@ namespace RulebricksApi.Forge
 
         public DynamicValue(string id, string name, DynamicValueType valueType)
         {
-            Id = id;
-            Name = name;
+            Id = id ?? throw new ArgumentNullException(nameof(id));
+            Name = name ?? throw new ArgumentNullException(nameof(name));
             ValueType = valueType;
         }
 
@@ -52,12 +52,12 @@ namespace RulebricksApi.Forge
 
     public static class DynamicValues
     {
-        private static RulebricksApiClient _workspace;
+        private static RulebricksApiClient? _workspace;
         private static readonly Dictionary<string, DynamicValue> _cache = new();
 
         public static void Configure(RulebricksApiClient client)
         {
-            _workspace = client;
+            _workspace = client ?? throw new ArgumentNullException(nameof(client));
             _cache.Clear();
         }
 
@@ -84,12 +84,11 @@ namespace RulebricksApi.Forge
             var dynamicValue = new DynamicValue(
                 value.Id,
                 value.Name,
-                value.Type.Value.ToDynamicValueType()
+                value.Type?.ToDynamicValueType() ?? throw new InvalidOperationException($"Dynamic value '{name}' has no type")
             );
 
             _cache[name] = dynamicValue;
             return dynamicValue;
-        }
 
         public static async Task Set(Dictionary<string, object> dynamicValues)
         {
@@ -100,7 +99,14 @@ namespace RulebricksApi.Forge
 
             var request = dynamicValues.ToDictionary(
                 kvp => kvp.Key,
-                kvp => OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT0(kvp.Value.ToString())
+                kvp => kvp.Value switch
+                {
+                    string s => OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT0(s),
+                    double d => OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT1(d),
+                    bool b => OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT2(b),
+                    IEnumerable<object> list => OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT3(list),
+                    _ => OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT0(kvp.Value?.ToString() ?? string.Empty)
+                }
             );
 
             await _workspace.Values.UpdateAsync(request);
