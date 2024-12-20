@@ -38,11 +38,9 @@ namespace RulebricksApi.Forge
                 { DynamicValueType.String, typeof(string) },
                 { DynamicValueType.Number, typeof(double) },
                 { DynamicValueType.Boolean, typeof(bool) },
-                { DynamicValueType.Date, typeof(DateTime) },
-                { DynamicValueType.List, typeof(List<object>) },
-                { DynamicValueType.Object, typeof(Dictionary<string, object>) }
+                { DynamicValueType.List, typeof(List<object>) }
             };
-            return typeMapping[valueType];
+            return typeMapping.TryGetValue(valueType, out var type) ? type : typeof(string);
         }
 
         public override string ToString()
@@ -99,25 +97,25 @@ namespace RulebricksApi.Forge
                 throw new InvalidOperationException("DynamicValues not configured. Call Configure() first.");
             }
 
-            var request = new Dictionary<string, object>();
+            var request = new Dictionary<string, OneOf<string, double, bool, IEnumerable<object>>>();
             foreach (var kvp in dynamicValues)
             {
                 switch (kvp.Value)
                 {
                     case string s:
-                        request[kvp.Key] = s;
+                        request[kvp.Key] = OneOf<string, double, bool, IEnumerable<object>>.FromT0(s);
                         break;
                     case double d:
-                        request[kvp.Key] = d;
+                        request[kvp.Key] = OneOf<string, double, bool, IEnumerable<object>>.FromT1(d);
                         break;
                     case bool b:
-                        request[kvp.Key] = b;
+                        request[kvp.Key] = OneOf<string, double, bool, IEnumerable<object>>.FromT2(b);
                         break;
                     case IEnumerable<object> list:
-                        request[kvp.Key] = list;
+                        request[kvp.Key] = OneOf<string, double, bool, IEnumerable<object>>.FromT3(list);
                         break;
                     default:
-                        request[kvp.Key] = kvp.Value?.ToString() ?? string.Empty;
+                        request[kvp.Key] = OneOf<string, double, bool, IEnumerable<object>>.FromT0(kvp.Value?.ToString() ?? string.Empty);
                         break;
                 }
             }
