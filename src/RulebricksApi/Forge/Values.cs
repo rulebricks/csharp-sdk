@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Linq;
 using RulebricksApi.Forge.Types;
 using RulebricksApi.Values.Types;
+using OneOf;
 
 namespace RulebricksApi.Forge
 {
@@ -97,25 +98,25 @@ namespace RulebricksApi.Forge
                 throw new InvalidOperationException("DynamicValues not configured. Call Configure() first.");
             }
 
-            var request = new Dictionary<string, OneOf<string, double, bool, IEnumerable<object>>>();
+            var request = new Dictionary<string, OneOf.OneOf<string, double, bool, IEnumerable<object>>>();
             foreach (var kvp in dynamicValues)
             {
                 switch (kvp.Value)
                 {
                     case string s:
-                        request[kvp.Key] = OneOf<string, double, bool, IEnumerable<object>>.FromT0(s);
+                        request[kvp.Key] = OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT0(s);
                         break;
                     case double d:
-                        request[kvp.Key] = OneOf<string, double, bool, IEnumerable<object>>.FromT1(d);
+                        request[kvp.Key] = OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT1(d);
                         break;
                     case bool b:
-                        request[kvp.Key] = OneOf<string, double, bool, IEnumerable<object>>.FromT2(b);
+                        request[kvp.Key] = OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT2(b);
                         break;
                     case IEnumerable<object> list:
-                        request[kvp.Key] = OneOf<string, double, bool, IEnumerable<object>>.FromT3(list);
+                        request[kvp.Key] = OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT3(list);
                         break;
                     default:
-                        request[kvp.Key] = OneOf<string, double, bool, IEnumerable<object>>.FromT0(kvp.Value?.ToString() ?? string.Empty);
+                        request[kvp.Key] = OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT0(kvp.Value?.ToString() ?? string.Empty);
                         break;
                 }
             }
