@@ -99,7 +99,7 @@ namespace RulebricksApi.Forge
                 throw new InvalidOperationException("DynamicValues not configured. Call Configure() first.");
             }
 
-            var request = new Dictionary<string, OneOf<string, double, bool, IEnumerable<object>>>();
+            var request = new Dictionary<string, object>();
             foreach (var kvp in dynamicValues)
             {
                 switch (kvp.Value)
