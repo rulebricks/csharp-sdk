@@ -99,32 +99,30 @@ namespace RulebricksApi.Forge
                 throw new InvalidOperationException("DynamicValues not configured. Call Configure() first.");
             }
 
-            var request = new Dictionary<string, UpdateRequestValue>();
+            var request = new Dictionary<string, OneOf<string, double, bool, IEnumerable<object>>>();
             foreach (var kvp in dynamicValues)
             {
-                var value = new UpdateRequestValue();
                 switch (kvp.Value)
                 {
                     case string s:
-                        value.StringValue = s;
+                        request[kvp.Key] = s;
                         break;
                     case double d:
-                        value.NumberValue = d;
+                        request[kvp.Key] = d;
                         break;
                     case bool b:
-                        value.BooleanValue = b;
+                        request[kvp.Key] = b;
                         break;
                     case IEnumerable<object> list:
-                        value.ListValue = list;
+                        request[kvp.Key] = list;
                         break;
                     default:
-                        value.StringValue = kvp.Value?.ToString() ?? string.Empty;
+                        request[kvp.Key] = kvp.Value?.ToString() ?? string.Empty;
                         break;
                 }
-                request[kvp.Key] = value;
             }
 
-            await _workspace.Values.UpdateAsync(new UpdateRequest { Values = request });
+            await _workspace.Values.UpdateAsync(request);
             _cache.Clear();
         }
 
