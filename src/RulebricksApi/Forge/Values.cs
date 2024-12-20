@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using OneOf;
 using RulebricksApi.Forge.Types;
+using RulebricksApi.Values.Types;
 
 namespace RulebricksApi.Forge
 {
@@ -61,7 +63,7 @@ namespace RulebricksApi.Forge
             _cache.Clear();
         }
 
-        public static async Task<DynamicValue> Get(string name)
+        public static async Task&lt;DynamicValue&gt; Get(string name)
         {
             if (_workspace == null)
             {
@@ -89,6 +91,7 @@ namespace RulebricksApi.Forge
 
             _cache[name] = dynamicValue;
             return dynamicValue;
+        }
 
         public static async Task Set(Dictionary<string, object> dynamicValues)
         {
@@ -97,17 +100,19 @@ namespace RulebricksApi.Forge
                 throw new InvalidOperationException("DynamicValues not configured. Call Configure() first.");
             }
 
-            var request = dynamicValues.ToDictionary(
-                kvp => kvp.Key,
-                kvp => kvp.Value switch
+            var request = new Dictionary<string, OneOf<string, double, bool, IEnumerable<object>>>();
+            foreach (var kvp in dynamicValues)
+            {
+                OneOf<string, double, bool, IEnumerable<object>> value = kvp.Value switch
                 {
-                    string s => OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT0(s),
-                    double d => OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT1(d),
-                    bool b => OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT2(b),
-                    IEnumerable<object> list => OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT3(list),
-                    _ => OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT0(kvp.Value?.ToString() ?? string.Empty)
-                }
-            );
+                    string s => OneOf<string, double, bool, IEnumerable<object>>.FromT0(s),
+                    double d => OneOf<string, double, bool, IEnumerable<object>>.FromT1(d),
+                    bool b => OneOf<string, double, bool, IEnumerable<object>>.FromT2(b),
+                    IEnumerable<object> list => OneOf<string, double, bool, IEnumerable<object>>.FromT3(list),
+                    _ => OneOf<string, double, bool, IEnumerable<object>>.FromT0(kvp.Value?.ToString() ?? string.Empty)
+                };
+                request[kvp.Key] = value;
+            }
 
             await _workspace.Values.UpdateAsync(request);
             _cache.Clear();

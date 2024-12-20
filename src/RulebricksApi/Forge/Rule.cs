@@ -17,27 +17,28 @@ namespace RulebricksApi.Forge
         private readonly List<RuleTest> _testSuite = new();
         private readonly List<string> _accessGroups = new();
 
-        public string Id { get; private set; } = string.Empty;
-        public string Name { get; private set; } = string.Empty;
-        public string Description { get; private set; } = string.Empty;
-        public string Slug { get; private set; } = string.Empty;
+        public string Id { get; private set; }
+        public string Name { get; private set; }
+        public string Description { get; private set; }
+        public string Slug { get; private set; }
         public string? FolderId { get; private set; }
         public bool Published { get; private set; }
         public string? PublishedAt { get; private set; }
-        public string CreatedAt { get; private set; } = string.Empty;
-        public string UpdatedAt { get; private set; } = string.Empty;
-        public string UpdatedBy { get; private set; } = string.Empty;
+        public string CreatedAt { get; private set; }
+        public string UpdatedAt { get; private set; }
+        public string UpdatedBy { get; private set; }
 
         public Rule(RulebricksApiClient? workspace = null)
         {
             _workspace = workspace;
             Id = Guid.NewGuid().ToString();
             Name = "Untitled Rule";
-            Description = "";
+            Description = string.Empty;
             Slug = GenerateSlug();
             CreatedAt = DateTime.UtcNow.ToString("O");
             UpdatedAt = CreatedAt;
             UpdatedBy = "Rulebricks Forge SDK";
+            Published = false;
         }
 
         public Rule SetWorkspace(RulebricksApiClient client)
@@ -222,17 +223,18 @@ namespace RulebricksApi.Forge
 
         public static Rule FromJson(string jsonString)
         {
-            var data = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(jsonString);
+            var data = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(jsonString)
+                ?? throw new ArgumentException("Invalid JSON string", nameof(jsonString));
             var rule = new Rule();
 
             if (data.TryGetValue("id", out var id))
-                rule.Id = id.GetString();
+                rule.Id = id.GetString() ?? string.Empty;
             if (data.TryGetValue("name", out var name))
-                rule.Name = name.GetString();
+                rule.Name = name.GetString() ?? string.Empty;
             if (data.TryGetValue("description", out var description))
-                rule.Description = description.GetString();
+                rule.Description = description.GetString() ?? string.Empty;
             if (data.TryGetValue("slug", out var slug))
-                rule.Slug = slug.GetString();
+                rule.Slug = slug.GetString() ?? string.Empty;
             if (data.TryGetValue("tag", out var tag))
                 rule.FolderId = tag.GetString();
             if (data.TryGetValue("published", out var published))
@@ -240,20 +242,20 @@ namespace RulebricksApi.Forge
             if (data.TryGetValue("publishedAt", out var publishedAt))
                 rule.PublishedAt = publishedAt.GetString();
             if (data.TryGetValue("createdAt", out var createdAt))
-                rule.CreatedAt = createdAt.GetString();
+                rule.CreatedAt = createdAt.GetString() ?? string.Empty;
             if (data.TryGetValue("updatedAt", out var updatedAt))
-                rule.UpdatedAt = updatedAt.GetString();
+                rule.UpdatedAt = updatedAt.GetString() ?? string.Empty;
             if (data.TryGetValue("updatedBy", out var updatedBy))
-                rule.UpdatedBy = updatedBy.GetString();
+                rule.UpdatedBy = updatedBy.GetString() ?? string.Empty;
 
             if (data.TryGetValue("requestSchema", out var requestSchema))
             {
                 foreach (var field in requestSchema.EnumerateArray())
                 {
                     var fieldData = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(field.GetRawText());
-                    var fieldType = Enum.Parse<FieldType>(fieldData["type"].GetString(), true);
-                    var key = fieldData["key"].GetString();
-                    var fieldDescription = fieldData.GetValueOrDefault("description").GetString() ?? "";
+                    var fieldType = Enum.Parse<FieldType>(fieldData["type"].GetString() ?? throw new ArgumentException("Field type is required"), true);
+                    var key = fieldData["key"].GetString() ?? throw new ArgumentException("Field key is required");
+                    var fieldDescription = fieldData.GetValueOrDefault("description").GetString() ?? string.Empty;
 
                     switch (fieldType)
                     {
@@ -281,9 +283,9 @@ namespace RulebricksApi.Forge
                 foreach (var field in responseSchema.EnumerateArray())
                 {
                     var fieldData = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(field.GetRawText());
-                    var fieldType = Enum.Parse<FieldType>(fieldData["type"].GetString(), true);
-                    var key = fieldData["key"].GetString();
-                    var fieldDescription = fieldData.GetValueOrDefault("description").GetString() ?? "";
+                    var fieldType = Enum.Parse<FieldType>(fieldData["type"].GetString() ?? throw new ArgumentException("Field type is required"), true);
+                    var key = fieldData["key"].GetString() ?? throw new ArgumentException("Field key is required");
+                    var fieldDescription = fieldData.GetValueOrDefault("description").GetString() ?? string.Empty;
 
                     switch (fieldType)
                     {
@@ -333,12 +335,12 @@ namespace RulebricksApi.Forge
             _testSuite.RemoveAll(t => t.Id == testId);
         }
 
-        public RuleTest FindTestById(string testId)
+        public RuleTest? FindTestById(string testId)
         {
             return _testSuite.FirstOrDefault(t => t.Id == testId);
         }
 
-        public RuleTest FindTestByName(string testName)
+        public RuleTest? FindTestByName(string testName)
         {
             return _testSuite.FirstOrDefault(t => t.Name == testName);
         }
