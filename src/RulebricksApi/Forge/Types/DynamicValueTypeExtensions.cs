@@ -11,10 +11,8 @@ namespace RulebricksApi
                 ListDynamicValuesResponseItemType.String => DynamicValueType.String,
                 ListDynamicValuesResponseItemType.Number => DynamicValueType.Number,
                 ListDynamicValuesResponseItemType.Boolean => DynamicValueType.Boolean,
-                ListDynamicValuesResponseItemType.Date => DynamicValueType.Date,
                 ListDynamicValuesResponseItemType.List => DynamicValueType.List,
-                ListDynamicValuesResponseItemType.Object => DynamicValueType.Object,
-                _ => throw new System.ArgumentException($"Unknown type: {type}")
+                _ => DynamicValueType.String // Default to string for unknown types
             };
         }
     }
