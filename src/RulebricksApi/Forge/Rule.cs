@@ -69,14 +69,14 @@ namespace RulebricksApi.Forge
             if (_workspace == null)
                 throw new InvalidOperationException("A Rulebricks client is required to set a folder by name");
 
-            var folders = await _workspace.Assets.ListFolders();
+            var folders = await _workspace.Assets.ListFoldersAsync();
             var folder = folders.FirstOrDefault(f => f.Name == folderName);
 
             if (folder == null && createIfMissing)
             {
                 if (folders.Any(f => f.Name == folderName))
                     throw new InvalidOperationException("Folder name conflicts with an existing folder");
-                folder = await _workspace.Assets.UpsertFolder(folderName);
+                folder = await _workspace.Assets.UpsertFolderAsync(new UpsertFolderRequest { Name = folderName });
             }
 
             if (folder == null)
@@ -161,7 +161,7 @@ namespace RulebricksApi.Forge
             if (_workspace == null)
                 throw new InvalidOperationException("A Rulebricks client is required to push a rule to the workspace");
 
-            await _workspace.Assets.ImportRule(ToDict());
+            await _workspace.Assets.ImportRuleAsync(new ImportRuleRequest { Rule = ToDict() });
             var updatedRule = await FromWorkspace(Id);
             return updatedRule;
         }
@@ -173,7 +173,7 @@ namespace RulebricksApi.Forge
 
             var ruleDict = ToDict();
             ruleDict["_publish"] = true;
-            await _workspace.Assets.ImportRule(ruleDict);
+            await _workspace.Assets.ImportRuleAsync(new ImportRuleRequest { Rule = ruleDict });
             var publishedRule = await FromWorkspace(Id);
             return publishedRule;
         }
@@ -183,7 +183,7 @@ namespace RulebricksApi.Forge
             if (_workspace == null)
                 throw new InvalidOperationException("A Rulebricks client is required to load a rule from the workspace");
 
-            var ruleData = await _workspace.Assets.ExportRule(ruleId);
+            var ruleData = await _workspace.Assets.ExportRuleAsync(new ExportRuleRequest { Id = ruleId });
             return FromJson(ruleData);
         }
 

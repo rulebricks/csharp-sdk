@@ -73,7 +73,7 @@ namespace RulebricksApi.Forge
                 return cachedValue;
             }
 
-            var values = await _workspace.Values.ListDynamicValues();
+            var values = await _workspace.Values.ListDynamicValuesAsync(new ListDynamicValuesRequest { Name = name });
             var value = values.FirstOrDefault(v => v.Name == name);
 
             if (value == null)
@@ -98,7 +98,12 @@ namespace RulebricksApi.Forge
                 throw new InvalidOperationException("DynamicValues not configured. Call Configure() first.");
             }
 
-            await _workspace.Values.Update(new { request = dynamicValues });
+            var request = dynamicValues.ToDictionary(
+                kvp => kvp.Key,
+                kvp => OneOf.OneOf<string, double, bool, IEnumerable<object>>.FromT0(kvp.Value.ToString())
+            );
+
+            await _workspace.Values.UpdateAsync(request);
             _cache.Clear();
         }
 
