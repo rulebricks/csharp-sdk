@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using RulebricksApi.Forge.Types;
 
 namespace RulebricksApi.Forge
@@ -10,6 +11,7 @@ namespace RulebricksApi.Forge
         public string Id { get; }
         public string Name { get; }
         public DynamicValueType ValueType { get; }
+        private readonly string _rbType = "globalValue";
 
         public DynamicValue(string id, string name, DynamicValueType valueType)
         {
@@ -23,21 +25,35 @@ namespace RulebricksApi.Forge
             return new Dictionary<string, object>
             {
                 { "id", Id },
-                { "name", Name },
-                { "type", new Dictionary<string, string> { { "value", ValueType.ToString().ToLower() } } }
+                { "$rb", _rbType },
+                { "name", Name }
             };
+        }
+
+        public static Type GetExpectedType(DynamicValueType valueType)
+        {
+            var typeMapping = new Dictionary<DynamicValueType, Type>
+            {
+                { DynamicValueType.String, typeof(string) },
+                { DynamicValueType.Number, typeof(double) },
+                { DynamicValueType.Boolean, typeof(bool) },
+                { DynamicValueType.Date, typeof(DateTime) },
+                { DynamicValueType.List, typeof(List<object>) },
+                { DynamicValueType.Object, typeof(Dictionary<string, object>) }
+            };
+            return typeMapping[valueType];
         }
 
         public override string ToString()
         {
-            return $"DynamicValue(id={Id}, name={Name}, type={ValueType})";
+            return $"<{Name.ToUpper()}>";
         }
     }
 
     public static class DynamicValues
     {
         private static RulebricksApiClient _workspace;
-        private static readonly Dictionary<string, DynamicValue> _cache = new Dictionary<string, DynamicValue>();
+        private static readonly Dictionary<string, DynamicValue> _cache = new();
 
         public static void Configure(RulebricksApiClient client)
         {
@@ -49,7 +65,7 @@ namespace RulebricksApi.Forge
         {
             if (_workspace == null)
             {
-                throw new InvalidOperationException("Workspace not configured. Call Configure() first.");
+                throw new InvalidOperationException("DynamicValues not configured. Call Configure() first.");
             }
 
             if (_cache.TryGetValue(name, out var cachedValue))
@@ -58,17 +74,17 @@ namespace RulebricksApi.Forge
             }
 
             var values = await _workspace.Values.ListDynamicValues();
-            var value = values.Find(v => v.Name == name);
+            var value = values.FirstOrDefault(v => v.Name == name);
 
             if (value == null)
             {
-                throw new DynamicValueNotFoundException($"Dynamic value '{name}' not found");
+                throw new DynamicValueNotFoundError($"Dynamic value '{name}' not found");
             }
 
             var dynamicValue = new DynamicValue(
                 value.Id,
                 value.Name,
-                Enum.Parse<DynamicValueType>(value.Type.Value, true)
+                value.Type.Value.ToDynamicValueType()
             );
 
             _cache[name] = dynamicValue;
@@ -79,7 +95,7 @@ namespace RulebricksApi.Forge
         {
             if (_workspace == null)
             {
-                throw new InvalidOperationException("Workspace not configured. Call Configure() first.");
+                throw new InvalidOperationException("DynamicValues not configured. Call Configure() first.");
             }
 
             await _workspace.Values.Update(new { request = dynamicValues });
