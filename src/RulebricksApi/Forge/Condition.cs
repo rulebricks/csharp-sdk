@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace RulebricksApi.Forge
 {
@@ -8,15 +9,21 @@ namespace RulebricksApi.Forge
         private readonly Dictionary<string, (string, object[])> _conditions;
         private readonly Dictionary<string, object> _options;
 
-        public Condition(Rule rule, Dictionary<string, (string, object[])> conditions, Dictionary<string, object> options = null)
+        public Condition(
+            [NotNull] Rule rule,
+            [NotNull] Dictionary<string, (string, object[])> conditions,
+            Dictionary<string, object>? options = null)
         {
-            _rule = rule;
-            _conditions = conditions;
+            _rule = rule ?? throw new ArgumentNullException(nameof(rule));
+            _conditions = conditions ?? throw new ArgumentNullException(nameof(conditions));
             _options = options ?? new Dictionary<string, object>();
         }
 
-        public Rule Then(Dictionary<string, object> response)
+        public Rule Then([NotNull] Dictionary<string, object> response)
         {
+            if (response == null)
+                throw new ArgumentNullException(nameof(response));
+
             var condition = new Dictionary<string, object>
             {
                 { "conditions", _conditions },
