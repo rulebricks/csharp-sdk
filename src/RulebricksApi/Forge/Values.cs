@@ -63,7 +63,7 @@ namespace RulebricksApi.Forge
             _cache.Clear();
         }
 
-        public static async Task&lt;DynamicValue&gt; Get(string name)
+        public static async Task<DynamicValue> Get(string name)
         {
             if (_workspace == null)
             {
@@ -100,21 +100,32 @@ namespace RulebricksApi.Forge
                 throw new InvalidOperationException("DynamicValues not configured. Call Configure() first.");
             }
 
-            var request = new Dictionary<string, OneOf<string, double, bool, IEnumerable<object>>>();
+            var request = new Dictionary<string, UpdateRequestValue>();
             foreach (var kvp in dynamicValues)
             {
-                OneOf<string, double, bool, IEnumerable<object>> value = kvp.Value switch
+                var value = new UpdateRequestValue();
+                switch (kvp.Value)
                 {
-                    string s => OneOf<string, double, bool, IEnumerable<object>>.FromT0(s),
-                    double d => OneOf<string, double, bool, IEnumerable<object>>.FromT1(d),
-                    bool b => OneOf<string, double, bool, IEnumerable<object>>.FromT2(b),
-                    IEnumerable<object> list => OneOf<string, double, bool, IEnumerable<object>>.FromT3(list),
-                    _ => OneOf<string, double, bool, IEnumerable<object>>.FromT0(kvp.Value?.ToString() ?? string.Empty)
-                };
+                    case string s:
+                        value.StringValue = s;
+                        break;
+                    case double d:
+                        value.NumberValue = d;
+                        break;
+                    case bool b:
+                        value.BooleanValue = b;
+                        break;
+                    case IEnumerable<object> list:
+                        value.ListValue = list;
+                        break;
+                    default:
+                        value.StringValue = kvp.Value?.ToString() ?? string.Empty;
+                        break;
+                }
                 request[kvp.Key] = value;
             }
 
-            await _workspace.Values.UpdateAsync(request);
+            await _workspace.Values.UpdateAsync(new UpdateRequest { Values = request });
             _cache.Clear();
         }
 
