@@ -13,7 +13,7 @@ namespace RulebricksApi.Forge
         private RulebricksApiClient _workspace;
         private readonly Dictionary<string, Field> _requestFields = new();
         private readonly Dictionary<string, Field> _responseFields = new();
-        private readonly List<Dictionary<string, object>> _conditions = new();
+        internal readonly List<Dictionary<string, object>> _conditions = new();
         private readonly List<RuleTest> _testSuite = new();
         private readonly List<string> _accessGroups = new();
 
