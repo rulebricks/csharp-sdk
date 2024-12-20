@@ -10,12 +10,12 @@ namespace RulebricksApi.Forge
 {
     public class Rule
     {
-        private readonly RulebricksApiClient? _workspace;
-        private readonly Dictionary<string, Field> _requestFields = new();
-        private readonly Dictionary<string, Field> _responseFields = new();
-        internal readonly List<Dictionary<string, object>> _conditions = new();
-        private readonly List<RuleTest> _testSuite = new();
-        private readonly List<string> _accessGroups = new();
+        private RulebricksApiClient? _workspace;
+        private Dictionary<string, Field> _requestFields = new();
+        private Dictionary<string, Field> _responseFields = new();
+        internal List<Dictionary<string, object>> _conditions = new();
+        private List<RuleTest> _testSuite = new();
+        private List<string> _accessGroups = new();
 
         public string Id { get; private set; }
         public string Name { get; private set; }
