@@ -12,7 +12,7 @@
 To install the Rulebricks C# SDK, add the following package reference to your project file:
 
 ```xml
-<PackageReference Include="RulebricksApi" Version="1.5.0" />
+<PackageReference Include="RulebricksApi" Version="1.6.0" />
 ```
 
 ## Usage
