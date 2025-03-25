@@ -1,17 +1,15 @@
 using System.Net.Http;
 using System.Text.Json;
-using RulebricksApi;
+using System.Threading;
 using RulebricksApi.Core;
-
-#nullable enable
 
 namespace RulebricksApi;
 
-public class DecisionsClient
+public partial class DecisionsClient
 {
     private RawClient _client;
 
-    public DecisionsClient(RawClient client)
+    internal DecisionsClient(RawClient client)
     {
         _client = client;
     }
@@ -19,16 +17,24 @@ public class DecisionsClient
     /// <summary>
     /// Retrieve logs for a specific user and rule, with optional date range and pagination.
     /// </summary>
-    public async Task<QueryResponse> QueryAsync(QueryRequest request)
+    /// <example><code>
+    /// await client.Decisions.QueryDecisionsAsync(new QueryDecisionsRequest { Slug = "slug" });
+    /// </code></example>
+    public async Task<DecisionLogResponse> QueryDecisionsAsync(
+        QueryDecisionsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
     {
-        var _query = new Dictionary<string, object>() { { "slug", request.Slug }, };
+        var _query = new Dictionary<string, object>();
+        _query["slug"] = request.Slug;
         if (request.From != null)
         {
-            _query["from"] = request.From.Value.ToString("o0");
+            _query["from"] = request.From.Value.ToString(Constants.DateTimeFormat);
         }
         if (request.To != null)
         {
-            _query["to"] = request.To.Value.ToString("o0");
+            _query["to"] = request.To.Value.ToString(Constants.DateTimeFormat);
         }
         if (request.Cursor != null)
         {
@@ -38,19 +44,53 @@ public class DecisionsClient
         {
             _query["limit"] = request.Limit.Value.ToString();
         }
-        var response = await _client.MakeRequestAsync(
-            new RawClient.JsonApiRequest
-            {
-                Method = HttpMethod.Get,
-                Path = "api/v1/decisions/query",
-                Query = _query
-            }
-        );
-        var responseBody = await response.Raw.Content.ReadAsStringAsync();
+        var response = await _client
+            .SendRequestAsync(
+                new RawClient.JsonApiRequest
+                {
+                    BaseUrl = _client.Options.BaseUrl,
+                    Method = HttpMethod.Get,
+                    Path = "api/v1/decisions/query",
+                    Query = _query,
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            return JsonSerializer.Deserialize<QueryResponse>(responseBody)!;
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                return JsonUtils.Deserialize<DecisionLogResponse>(responseBody)!;
+            }
+            catch (JsonException e)
+            {
+                throw new RulebricksApiException("Failed to deserialize response", e);
+            }
         }
-        throw new Exception(responseBody);
+
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
+                    case 500:
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new RulebricksApiApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
     }
 }

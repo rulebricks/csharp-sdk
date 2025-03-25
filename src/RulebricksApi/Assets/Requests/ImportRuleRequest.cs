@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
-
-#nullable enable
+using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
@@ -10,5 +9,11 @@ public record ImportRuleRequest
     /// The rule data to import.
     /// </summary>
     [JsonPropertyName("rule")]
-    public Dictionary<string, object> Rule { get; init; } = new Dictionary<string, object>();
+    public object Rule { get; set; } = new Dictionary<string, object?>();
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return JsonUtils.Serialize(this);
+    }
 }

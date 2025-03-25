@@ -1,3 +1,6 @@
+using System.Text.Json.Serialization;
+using RulebricksApi.Core;
+
 namespace RulebricksApi;
 
 public record ExportRuleRequest
@@ -5,5 +8,12 @@ public record ExportRuleRequest
     /// <summary>
     /// The ID of the rule to export.
     /// </summary>
-    public required string Id { get; init; }
+    [JsonIgnore]
+    public required string Id { get; set; }
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return JsonUtils.Serialize(this);
+    }
 }

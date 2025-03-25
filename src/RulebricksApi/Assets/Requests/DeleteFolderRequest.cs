@@ -1,6 +1,5 @@
 using System.Text.Json.Serialization;
-
-#nullable enable
+using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
@@ -10,5 +9,11 @@ public record DeleteFolderRequest
     /// ID of the folder to delete
     /// </summary>
     [JsonPropertyName("id")]
-    public required string Id { get; init; }
+    public required string Id { get; set; }
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return JsonUtils.Serialize(this);
+    }
 }

@@ -1,3 +1,6 @@
+using System.Text.Json.Serialization;
+using RulebricksApi.Core;
+
 namespace RulebricksApi;
 
 public record ListRulesRequest
@@ -5,5 +8,12 @@ public record ListRulesRequest
     /// <summary>
     /// Filter rules by folder name or folder ID
     /// </summary>
-    public string? Folder { get; init; }
+    [JsonIgnore]
+    public string? Folder { get; set; }
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return JsonUtils.Serialize(this);
+    }
 }

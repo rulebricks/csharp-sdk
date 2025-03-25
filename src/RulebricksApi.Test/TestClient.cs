@@ -1,3 +1,6 @@
+using NUnit.Framework;
+
 namespace RulebricksApi.Test;
 
-public class TestClient { }
+[TestFixture]
+public class TestClient;

@@ -1,26 +1,31 @@
-using RulebricksApi;
 using RulebricksApi.Core;
-
-#nullable enable
 
 namespace RulebricksApi;
 
 public partial class RulebricksApiClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     public RulebricksApiClient(string? apiKey = null, ClientOptions? clientOptions = null)
     {
-        _client = new RawClient(
+        var defaultHeaders = new Headers(
             new Dictionary<string, string>()
             {
-                { "x-api-key", apiKey ?? string.Empty },
+                { "x-api-key", apiKey },
                 { "X-Fern-Language", "C#" },
                 { "X-Fern-SDK-Name", "RulebricksApi" },
-                { "X-Fern-SDK-Version", "0.0.107" },
-            },
-            clientOptions ?? new ClientOptions()
+                { "X-Fern-SDK-Version", Version.Current },
+            }
         );
+        clientOptions ??= new ClientOptions();
+        foreach (var header in defaultHeaders)
+        {
+            if (!clientOptions.Headers.ContainsKey(header.Key))
+            {
+                clientOptions.Headers[header.Key] = header.Value;
+            }
+        }
+        _client = new RawClient(clientOptions);
         Rules = new RulesClient(_client);
         Flows = new FlowsClient(_client);
         Decisions = new DecisionsClient(_client);

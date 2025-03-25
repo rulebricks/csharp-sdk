@@ -1,3 +1,6 @@
+using System.Text.Json.Serialization;
+using RulebricksApi.Core;
+
 namespace RulebricksApi;
 
 public record DeleteDynamicValueRequest
@@ -5,5 +8,12 @@ public record DeleteDynamicValueRequest
     /// <summary>
     /// ID of the dynamic value to delete
     /// </summary>
-    public required string Id { get; init; }
+    [JsonIgnore]
+    public required string Id { get; set; }
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return JsonUtils.Serialize(this);
+    }
 }
