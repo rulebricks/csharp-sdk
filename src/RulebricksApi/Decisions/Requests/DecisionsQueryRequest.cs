@@ -3,7 +3,7 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public record QueryRequest
+public record DecisionsQueryRequest
 {
     /// <summary>
     /// The slug of the rule to query logs for.

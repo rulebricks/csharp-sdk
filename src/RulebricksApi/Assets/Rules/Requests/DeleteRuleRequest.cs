@@ -1,12 +1,12 @@
 using System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
-namespace RulebricksApi;
+namespace RulebricksApi.Assets;
 
-public record DeleteFolderRequest
+public record DeleteRuleRequest
 {
     /// <summary>
-    /// ID of the folder to delete
+    /// The ID of the rule to delete.
     /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; set; }

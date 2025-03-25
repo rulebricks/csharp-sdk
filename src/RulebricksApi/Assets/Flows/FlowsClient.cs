@@ -1,9 +1,10 @@
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
+using RulebricksApi;
 using RulebricksApi.Core;
 
-namespace RulebricksApi;
+namespace RulebricksApi.Assets;
 
 public partial class FlowsClient
 {
@@ -15,22 +16,12 @@ public partial class FlowsClient
     }
 
     /// <summary>
-    /// Execute a flow by its slug.
+    /// List all flows in the organization.
     /// </summary>
     /// <example><code>
-    /// await client.Flows.ExecuteAsync(
-    ///     "slug",
-    ///     new Dictionary&lt;string, object&gt;()
-    ///     {
-    ///         { "name", "John Doe" },
-    ///         { "age", 30 },
-    ///         { "email", "jdoe@acme.co" },
-    ///     }
-    /// );
+    /// await client.Assets.Flows.ListAsync();
     /// </code></example>
-    public async Task<object> ExecuteAsync(
-        string slug,
-        object request,
+    public async Task<IEnumerable<FlowDetail>> ListAsync(
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -40,10 +31,8 @@ public partial class FlowsClient
                 new RawClient.JsonApiRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
-                    Method = HttpMethod.Post,
-                    Path = string.Format("flows/{0}", ValueConvert.ToPathParameterString(slug)),
-                    Body = request,
-                    ContentType = "application/json",
+                    Method = HttpMethod.Get,
+                    Path = "admin/flows/list",
                     Options = options,
                 },
                 cancellationToken
@@ -54,7 +43,7 @@ public partial class FlowsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<object>(responseBody)!;
+                return JsonUtils.Deserialize<IEnumerable<FlowDetail>>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -68,8 +57,6 @@ public partial class FlowsClient
             {
                 switch (response.StatusCode)
                 {
-                    case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }

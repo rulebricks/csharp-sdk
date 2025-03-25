@@ -1,44 +1,42 @@
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
+using RulebricksApi;
 using RulebricksApi.Core;
 
-namespace RulebricksApi;
+namespace RulebricksApi.Tests;
 
-public partial class ValuesClient
+public partial class FlowsClient
 {
     private RawClient _client;
 
-    internal ValuesClient(RawClient client)
+    internal FlowsClient(RawClient client)
     {
         _client = client;
     }
 
     /// <summary>
-    /// Retrieve all dynamic values for the authenticated user.
+    /// Retrieves a list of tests associated with the flow identified by the slug.
     /// </summary>
     /// <example><code>
-    /// await client.Values.ListAsync(new ValuesListRequest());
+    /// await client.Tests.Flows.ListAsync("slug");
     /// </code></example>
-    public async Task<IEnumerable<object>> ListAsync(
-        ValuesListRequest request,
+    public async Task<IEnumerable<Test>> ListAsync(
+        string slug,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var _query = new Dictionary<string, object>();
-        if (request.Name != null)
-        {
-            _query["name"] = request.Name;
-        }
         var response = await _client
             .SendRequestAsync(
                 new RawClient.JsonApiRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Get,
-                    Path = "values",
-                    Query = _query,
+                    Path = string.Format(
+                        "admin/flows/{0}/tests",
+                        ValueConvert.ToPathParameterString(slug)
+                    ),
                     Options = options,
                 },
                 cancellationToken
@@ -49,7 +47,7 @@ public partial class ValuesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<IEnumerable<object>>(responseBody)!;
+                return JsonUtils.Deserialize<IEnumerable<Test>>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -63,6 +61,8 @@ public partial class ValuesClient
             {
                 switch (response.StatusCode)
                 {
+                    case 404:
+                        throw new NotFoundError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
@@ -80,28 +80,23 @@ public partial class ValuesClient
     }
 
     /// <summary>
-    /// Update existing dynamic values or add new ones for the authenticated user.
+    /// Adds a new test to the test suite of a flow identified by the slug.
     /// </summary>
     /// <example><code>
-    /// await client.Values.UpdateAsync(
-    ///     new UpdateValuesRequest
+    /// await client.Tests.Flows.CreateAsync(
+    ///     "slug",
+    ///     new CreateTestRequest
     ///     {
-    ///         Values = new Dictionary&lt;string, OneOf&lt;string, double, bool, IEnumerable&lt;string&gt;&gt;&gt;()
-    ///         {
-    ///             { "Favorite Color", "blue" },
-    ///             { "Age", 30 },
-    ///             { "Is Student", false },
-    ///             {
-    ///                 "Hobbies",
-    ///                 new List&lt;string&gt;() { "reading", "cycling" }
-    ///             },
-    ///         },
-    ///         AccessGroups = new List&lt;string&gt;() { "marketing", "developers" },
+    ///         Name = "Test 3",
+    ///         Request = new Dictionary&lt;string, object&gt;() { { "param1", "value1" } },
+    ///         Response = new Dictionary&lt;string, object&gt;() { { "status", "success" } },
+    ///         Critical = true,
     ///     }
     /// );
     /// </code></example>
-    public async Task<IEnumerable<object>> UpdateAsync(
-        UpdateValuesRequest request,
+    public async Task<Test> CreateAsync(
+        string slug,
+        CreateTestRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -112,7 +107,10 @@ public partial class ValuesClient
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
-                    Path = "values",
+                    Path = string.Format(
+                        "admin/flows/{0}/tests",
+                        ValueConvert.ToPathParameterString(slug)
+                    ),
                     Body = request,
                     ContentType = "application/json",
                     Options = options,
@@ -125,7 +123,7 @@ public partial class ValuesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<IEnumerable<object>>(responseBody)!;
+                return JsonUtils.Deserialize<Test>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -141,6 +139,8 @@ public partial class ValuesClient
                 {
                     case 400:
                         throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
+                    case 404:
+                        throw new NotFoundError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
@@ -158,27 +158,29 @@ public partial class ValuesClient
     }
 
     /// <summary>
-    /// Delete a specific dynamic value for the authenticated user by its ID.
+    /// Deletes a test from the test suite of a flow identified by the slug.
     /// </summary>
     /// <example><code>
-    /// await client.Values.DeleteAsync(new ValuesDeleteRequest { Id = "id" });
+    /// await client.Tests.Flows.DeleteAsync("slug", "testId");
     /// </code></example>
-    public async Task<SuccessMessage> DeleteAsync(
-        ValuesDeleteRequest request,
+    public async Task<Test> DeleteAsync(
+        string slug,
+        string testId,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var _query = new Dictionary<string, object>();
-        _query["id"] = request.Id;
         var response = await _client
             .SendRequestAsync(
                 new RawClient.JsonApiRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Delete,
-                    Path = "values",
-                    Query = _query,
+                    Path = string.Format(
+                        "admin/flows/{0}/tests/{1}",
+                        ValueConvert.ToPathParameterString(slug),
+                        ValueConvert.ToPathParameterString(testId)
+                    ),
                     Options = options,
                 },
                 cancellationToken
@@ -189,7 +191,7 @@ public partial class ValuesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<SuccessMessage>(responseBody)!;
+                return JsonUtils.Deserialize<Test>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -203,8 +205,6 @@ public partial class ValuesClient
             {
                 switch (response.StatusCode)
                 {
-                    case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:

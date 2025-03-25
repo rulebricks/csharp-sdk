@@ -15,7 +15,7 @@ public partial class ClientOptions
     /// <summary>
     /// The Base URL for the API.
     /// </summary>
-    public string BaseUrl { get; init; } = "";
+    public string BaseUrl { get; init; } = RulebricksApiEnvironment.Default;
 
     /// <summary>
     /// The http client used to make requests.

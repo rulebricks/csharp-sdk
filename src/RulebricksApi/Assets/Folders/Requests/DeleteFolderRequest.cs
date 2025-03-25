@@ -1,14 +1,14 @@
 using System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
-namespace RulebricksApi;
+namespace RulebricksApi.Assets;
 
-public record DeleteRequest
+public record DeleteFolderRequest
 {
     /// <summary>
-    /// ID of the dynamic value to delete
+    /// ID of the folder to delete
     /// </summary>
-    [JsonIgnore]
+    [JsonPropertyName("id")]
     public required string Id { get; set; }
 
     /// <inheritdoc />

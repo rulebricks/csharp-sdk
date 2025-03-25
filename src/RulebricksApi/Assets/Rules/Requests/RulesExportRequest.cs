@@ -1,9 +1,9 @@
 using System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
-namespace RulebricksApi;
+namespace RulebricksApi.Assets;
 
-public record ExportRuleRequest
+public record RulesExportRequest
 {
     /// <summary>
     /// The ID of the rule to export.

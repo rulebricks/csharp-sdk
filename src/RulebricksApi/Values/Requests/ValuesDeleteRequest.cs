@@ -3,12 +3,12 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public record DeleteRuleRequest
+public record ValuesDeleteRequest
 {
     /// <summary>
-    /// The ID of the rule to delete.
+    /// ID of the dynamic value to delete
     /// </summary>
-    [JsonPropertyName("id")]
+    [JsonIgnore]
     public required string Id { get; set; }
 
     /// <inheritdoc />

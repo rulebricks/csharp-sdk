@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi", "RulebricksApi\RulebricksApi.csproj", "{498CE0DA-C085-483A-A0E5-6E401127F3AE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi", "RulebricksApi\RulebricksApi.csproj", "{BF895918-7EB8-472A-9C1B-66EC64067362}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi.Test", "RulebricksApi.Test\RulebricksApi.Test.csproj", "{43E7B28B-6520-4E20-B6B6-76AE25E56E67}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi.Test", "RulebricksApi.Test\RulebricksApi.Test.csproj", "{BB0D0A2E-5D3F-47B0-90E3-46CF682B4347}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,13 +16,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{498CE0DA-C085-483A-A0E5-6E401127F3AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{498CE0DA-C085-483A-A0E5-6E401127F3AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{498CE0DA-C085-483A-A0E5-6E401127F3AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{498CE0DA-C085-483A-A0E5-6E401127F3AE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{43E7B28B-6520-4E20-B6B6-76AE25E56E67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43E7B28B-6520-4E20-B6B6-76AE25E56E67}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{43E7B28B-6520-4E20-B6B6-76AE25E56E67}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43E7B28B-6520-4E20-B6B6-76AE25E56E67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF895918-7EB8-472A-9C1B-66EC64067362}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF895918-7EB8-472A-9C1B-66EC64067362}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF895918-7EB8-472A-9C1B-66EC64067362}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF895918-7EB8-472A-9C1B-66EC64067362}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB0D0A2E-5D3F-47B0-90E3-46CF682B4347}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB0D0A2E-5D3F-47B0-90E3-46CF682B4347}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB0D0A2E-5D3F-47B0-90E3-46CF682B4347}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB0D0A2E-5D3F-47B0-90E3-46CF682B4347}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

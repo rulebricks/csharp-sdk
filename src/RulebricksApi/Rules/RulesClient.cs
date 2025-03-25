@@ -42,10 +42,7 @@ public partial class RulesClient
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
-                    Path = string.Format(
-                        "api/v1/solve/{0}",
-                        ValueConvert.ToPathParameterString(slug)
-                    ),
+                    Path = string.Format("solve/{0}", ValueConvert.ToPathParameterString(slug)),
                     Body = request,
                     ContentType = "application/json",
                     Options = options,
@@ -127,7 +124,7 @@ public partial class RulesClient
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
                     Path = string.Format(
-                        "api/v1/bulk-solve/{0}",
+                        "bulk-solve/{0}",
                         ValueConvert.ToPathParameterString(slug)
                     ),
                     Body = request,
@@ -206,7 +203,7 @@ public partial class RulesClient
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
-                    Path = "api/v1/parallel-solve",
+                    Path = "parallel-solve",
                     Body = request,
                     ContentType = "application/json",
                     Options = options,

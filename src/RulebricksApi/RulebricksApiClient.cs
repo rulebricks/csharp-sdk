@@ -1,4 +1,5 @@
 using RulebricksApi.Core;
+using RulebricksApi.Tests;
 
 namespace RulebricksApi;
 
@@ -29,10 +30,10 @@ public partial class RulebricksApiClient
         Rules = new RulesClient(_client);
         Flows = new FlowsClient(_client);
         Decisions = new DecisionsClient(_client);
-        Assets = new AssetsClient(_client);
         Users = new UsersClient(_client);
-        Tests = new TestsClient(_client);
+        Assets = new AssetsClient(_client);
         Values = new ValuesClient(_client);
+        Tests = new TestsClient(_client);
     }
 
     public RulesClient Rules { get; init; }
@@ -41,11 +42,11 @@ public partial class RulebricksApiClient
 
     public DecisionsClient Decisions { get; init; }
 
-    public AssetsClient Assets { get; init; }
-
     public UsersClient Users { get; init; }
 
-    public TestsClient Tests { get; init; }
+    public AssetsClient Assets { get; init; }
 
     public ValuesClient Values { get; init; }
+
+    public TestsClient Tests { get; init; }
 }

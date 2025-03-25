@@ -1,9 +1,9 @@
 using System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
-namespace RulebricksApi;
+namespace RulebricksApi.Assets;
 
-public record ListRulesRequest
+public record RulesListRequest
 {
     /// <summary>
     /// Filter rules by folder name or folder ID

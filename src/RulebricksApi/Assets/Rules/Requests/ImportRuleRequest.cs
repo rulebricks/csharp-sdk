@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
-namespace RulebricksApi;
+namespace RulebricksApi.Assets;
 
 public record ImportRuleRequest
 {

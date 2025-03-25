@@ -1,44 +1,38 @@
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
+using RulebricksApi;
 using RulebricksApi.Core;
 
-namespace RulebricksApi;
+namespace RulebricksApi.Assets;
 
-public partial class ValuesClient
+public partial class FoldersClient
 {
     private RawClient _client;
 
-    internal ValuesClient(RawClient client)
+    internal FoldersClient(RawClient client)
     {
         _client = client;
     }
 
     /// <summary>
-    /// Retrieve all dynamic values for the authenticated user.
+    /// Retrieve all rule folders for the authenticated user.
     /// </summary>
     /// <example><code>
-    /// await client.Values.ListAsync(new ValuesListRequest());
+    /// await client.Assets.Folders.ListAsync();
     /// </code></example>
-    public async Task<IEnumerable<object>> ListAsync(
-        ValuesListRequest request,
+    public async Task<IEnumerable<Folder>> ListAsync(
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var _query = new Dictionary<string, object>();
-        if (request.Name != null)
-        {
-            _query["name"] = request.Name;
-        }
         var response = await _client
             .SendRequestAsync(
                 new RawClient.JsonApiRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Get,
-                    Path = "values",
-                    Query = _query,
+                    Path = "admin/folders",
                     Options = options,
                 },
                 cancellationToken
@@ -49,7 +43,7 @@ public partial class ValuesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<IEnumerable<object>>(responseBody)!;
+                return JsonUtils.Deserialize<IEnumerable<Folder>>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -80,28 +74,19 @@ public partial class ValuesClient
     }
 
     /// <summary>
-    /// Update existing dynamic values or add new ones for the authenticated user.
+    /// Create a new rule folder or update an existing one for the authenticated user.
     /// </summary>
     /// <example><code>
-    /// await client.Values.UpdateAsync(
-    ///     new UpdateValuesRequest
+    /// await client.Assets.Folders.UpsertAsync(
+    ///     new UpsertFolderRequest
     ///     {
-    ///         Values = new Dictionary&lt;string, OneOf&lt;string, double, bool, IEnumerable&lt;string&gt;&gt;&gt;()
-    ///         {
-    ///             { "Favorite Color", "blue" },
-    ///             { "Age", 30 },
-    ///             { "Is Student", false },
-    ///             {
-    ///                 "Hobbies",
-    ///                 new List&lt;string&gt;() { "reading", "cycling" }
-    ///             },
-    ///         },
-    ///         AccessGroups = new List&lt;string&gt;() { "marketing", "developers" },
+    ///         Name = "Marketing Rules",
+    ///         Description = "Rules for marketing automation workflows",
     ///     }
     /// );
     /// </code></example>
-    public async Task<IEnumerable<object>> UpdateAsync(
-        UpdateValuesRequest request,
+    public async Task<Folder> UpsertAsync(
+        UpsertFolderRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -112,7 +97,7 @@ public partial class ValuesClient
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
-                    Path = "values",
+                    Path = "admin/folders",
                     Body = request,
                     ContentType = "application/json",
                     Options = options,
@@ -125,7 +110,7 @@ public partial class ValuesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<IEnumerable<object>>(responseBody)!;
+                return JsonUtils.Deserialize<Folder>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -158,27 +143,26 @@ public partial class ValuesClient
     }
 
     /// <summary>
-    /// Delete a specific dynamic value for the authenticated user by its ID.
+    /// Delete a specific rule folder for the authenticated user. This does not delete the rules within the folder.
     /// </summary>
     /// <example><code>
-    /// await client.Values.DeleteAsync(new ValuesDeleteRequest { Id = "id" });
+    /// await client.Assets.Folders.DeleteAsync(new DeleteFolderRequest { Id = "abc123" });
     /// </code></example>
-    public async Task<SuccessMessage> DeleteAsync(
-        ValuesDeleteRequest request,
+    public async Task<Folder> DeleteAsync(
+        DeleteFolderRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var _query = new Dictionary<string, object>();
-        _query["id"] = request.Id;
         var response = await _client
             .SendRequestAsync(
                 new RawClient.JsonApiRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Delete,
-                    Path = "values",
-                    Query = _query,
+                    Path = "admin/folders",
+                    Body = request,
+                    ContentType = "application/json",
                     Options = options,
                 },
                 cancellationToken
@@ -189,7 +173,7 @@ public partial class ValuesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<SuccessMessage>(responseBody)!;
+                return JsonUtils.Deserialize<Folder>(responseBody)!;
             }
             catch (JsonException e)
             {

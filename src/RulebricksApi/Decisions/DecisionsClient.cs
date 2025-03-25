@@ -18,10 +18,10 @@ public partial class DecisionsClient
     /// Retrieve logs for a specific user and rule, with optional date range and pagination.
     /// </summary>
     /// <example><code>
-    /// await client.Decisions.QueryAsync(new QueryRequest { Slug = "slug" });
+    /// await client.Decisions.QueryAsync(new DecisionsQueryRequest { Slug = "slug" });
     /// </code></example>
     public async Task<DecisionLogResponse> QueryAsync(
-        QueryRequest request,
+        DecisionsQueryRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -50,7 +50,7 @@ public partial class DecisionsClient
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Get,
-                    Path = "api/v1/decisions/query",
+                    Path = "decisions/query",
                     Query = _query,
                     Options = options,
                 },

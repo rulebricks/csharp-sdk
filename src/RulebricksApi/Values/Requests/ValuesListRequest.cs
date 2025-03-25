@@ -3,10 +3,10 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public record ListRequest
+public record ValuesListRequest
 {
     /// <summary>
-    /// Name of a specific dynamic value to retrieve data for
+    /// Query all dynamic values containing a specific name
     /// </summary>
     [JsonIgnore]
     public string? Name { get; set; }
