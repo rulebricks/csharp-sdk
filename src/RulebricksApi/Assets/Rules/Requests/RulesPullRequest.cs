@@ -3,7 +3,7 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi.Assets;
 
-public record RulesExportRequest
+public record RulesPullRequest
 {
     /// <summary>
     /// The ID of the rule to export.

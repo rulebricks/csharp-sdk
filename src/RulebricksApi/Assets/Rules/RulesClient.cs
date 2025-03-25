@@ -84,10 +84,10 @@ public partial class RulesClient
     /// Export a specific rule by its ID.
     /// </summary>
     /// <example><code>
-    /// await client.Assets.Rules.ExportAsync(new RulesExportRequest { Id = "id" });
+    /// await client.Assets.Rules.PullAsync(new RulesPullRequest { Id = "id" });
     /// </code></example>
-    public async Task<object> ExportAsync(
-        RulesExportRequest request,
+    public async Task<object> PullAsync(
+        RulesPullRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -150,11 +150,11 @@ public partial class RulesClient
     /// Import a rule into the user's account.
     /// </summary>
     /// <example><code>
-    /// await client.Assets.Rules.ImportAsync(
+    /// await client.Assets.Rules.PushAsync(
     ///     new ImportRuleRequest { Rule = new Dictionary&lt;string, object&gt;() { { "key", "value" } } }
     /// );
     /// </code></example>
-    public async Task<object> ImportAsync(
+    public async Task<object> PushAsync(
         ImportRuleRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
