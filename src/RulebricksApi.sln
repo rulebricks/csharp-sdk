@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi", "RulebricksApi\RulebricksApi.csproj", "{4B390386-7715-4F9D-B3DB-B831D6E1516A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi", "RulebricksApi\RulebricksApi.csproj", "{498CE0DA-C085-483A-A0E5-6E401127F3AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi.Test", "RulebricksApi.Test\RulebricksApi.Test.csproj", "{C90B65CF-C70D-4079-AB18-FEF4E206A82B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulebricksApi.Test", "RulebricksApi.Test\RulebricksApi.Test.csproj", "{43E7B28B-6520-4E20-B6B6-76AE25E56E67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,13 +16,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4B390386-7715-4F9D-B3DB-B831D6E1516A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B390386-7715-4F9D-B3DB-B831D6E1516A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B390386-7715-4F9D-B3DB-B831D6E1516A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B390386-7715-4F9D-B3DB-B831D6E1516A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C90B65CF-C70D-4079-AB18-FEF4E206A82B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C90B65CF-C70D-4079-AB18-FEF4E206A82B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C90B65CF-C70D-4079-AB18-FEF4E206A82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C90B65CF-C70D-4079-AB18-FEF4E206A82B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{498CE0DA-C085-483A-A0E5-6E401127F3AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{498CE0DA-C085-483A-A0E5-6E401127F3AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{498CE0DA-C085-483A-A0E5-6E401127F3AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{498CE0DA-C085-483A-A0E5-6E401127F3AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43E7B28B-6520-4E20-B6B6-76AE25E56E67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43E7B28B-6520-4E20-B6B6-76AE25E56E67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43E7B28B-6520-4E20-B6B6-76AE25E56E67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43E7B28B-6520-4E20-B6B6-76AE25E56E67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

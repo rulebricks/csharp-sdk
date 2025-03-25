@@ -3,13 +3,13 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public record ListDynamicValuesRequest
+public record DeleteRequest
 {
     /// <summary>
-    /// Name of a specific dynamic value to retrieve data for
+    /// ID of the dynamic value to delete
     /// </summary>
     [JsonIgnore]
-    public string? Name { get; set; }
+    public required string Id { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

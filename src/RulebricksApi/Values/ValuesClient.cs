@@ -18,10 +18,10 @@ public partial class ValuesClient
     /// Retrieve all dynamic values for the authenticated user.
     /// </summary>
     /// <example><code>
-    /// await client.Values.ListDynamicValuesAsync(new ListDynamicValuesRequest());
+    /// await client.Values.ListAsync(new ListRequest());
     /// </code></example>
-    public async Task<IEnumerable<object>> ListDynamicValuesAsync(
-        ListDynamicValuesRequest request,
+    public async Task<IEnumerable<object>> ListAsync(
+        ListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -83,7 +83,7 @@ public partial class ValuesClient
     /// Update existing dynamic values or add new ones for the authenticated user.
     /// </summary>
     /// <example><code>
-    /// await client.Values.UpdateValuesAsync(
+    /// await client.Values.UpdateAsync(
     ///     new UpdateValuesRequest
     ///     {
     ///         Values = new Dictionary&lt;string, OneOf&lt;string, double, bool, IEnumerable&lt;string&gt;&gt;&gt;()
@@ -100,7 +100,7 @@ public partial class ValuesClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<IEnumerable<object>> UpdateValuesAsync(
+    public async Task<IEnumerable<object>> UpdateAsync(
         UpdateValuesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -161,10 +161,10 @@ public partial class ValuesClient
     /// Delete a specific dynamic value for the authenticated user by its ID.
     /// </summary>
     /// <example><code>
-    /// await client.Values.DeleteDynamicValueAsync(new DeleteDynamicValueRequest { Id = "id" });
+    /// await client.Values.DeleteAsync(new DeleteRequest { Id = "id" });
     /// </code></example>
-    public async Task<SuccessMessage> DeleteDynamicValueAsync(
-        DeleteDynamicValueRequest request,
+    public async Task<SuccessMessage> DeleteAsync(
+        DeleteRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )

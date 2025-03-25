@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using OneOf;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -10,7 +11,9 @@ public record ListValue
     /// The list value
     /// </summary>
     [JsonPropertyName("value")]
-    public IEnumerable<string>? Value { get; set; }
+    public IEnumerable<
+        OneOf<string, double, bool, object, IEnumerable<object>>
+    >? Value { get; set; }
 
     /// <summary>
     /// Unique identifier for the dynamic value.

@@ -18,7 +18,7 @@ public partial class FlowsClient
     /// Execute a flow by its slug.
     /// </summary>
     /// <example><code>
-    /// await client.Flows.ExecuteFlowAsync(
+    /// await client.Flows.ExecuteAsync(
     ///     "slug",
     ///     new Dictionary&lt;string, object&gt;()
     ///     {
@@ -28,7 +28,7 @@ public partial class FlowsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<object> ExecuteFlowAsync(
+    public async Task<object> ExecuteAsync(
         string slug,
         object request,
         RequestOptions? options = null,
