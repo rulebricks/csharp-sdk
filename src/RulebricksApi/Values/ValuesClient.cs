@@ -15,12 +15,12 @@ public partial class ValuesClient
     }
 
     /// <summary>
-    /// Retrieve all dynamic values for the authenticated user.
+    /// Retrieve all dynamic values for the authenticated user. Use the 'include' parameter to control whether usage information is returned.
     /// </summary>
     /// <example><code>
-    /// await client.Values.ListAsync(new ValuesListRequest());
+    /// await client.Values.ListAsync(new ValuesListRequest { Include = "usage" });
     /// </code></example>
-    public async Task<IEnumerable<object>> ListAsync(
+    public async Task<IEnumerable<DynamicValue>> ListAsync(
         ValuesListRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -30,6 +30,10 @@ public partial class ValuesClient
         if (request.Name != null)
         {
             _query["name"] = request.Name;
+        }
+        if (request.Include != null)
+        {
+            _query["include"] = request.Include;
         }
         var response = await _client
             .SendRequestAsync(
@@ -49,7 +53,7 @@ public partial class ValuesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<IEnumerable<object>>(responseBody)!;
+                return JsonUtils.Deserialize<IEnumerable<DynamicValue>>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -63,6 +67,8 @@ public partial class ValuesClient
             {
                 switch (response.StatusCode)
                 {
+                    case 404:
+                        throw new NotFoundError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
@@ -80,27 +86,27 @@ public partial class ValuesClient
     }
 
     /// <summary>
-    /// Update existing dynamic values or add new ones for the authenticated user.
+    /// Update existing dynamic values or add new ones for the authenticated user. Supports both flat and nested object structures. Nested objects are automatically flattened using dot notation and keys are converted to readable format (e.g., 'user_name' becomes 'User Name', nested 'user.contact_info.email' becomes 'User.Contact Info.Email').
     /// </summary>
     /// <example><code>
     /// await client.Values.UpdateAsync(
     ///     new UpdateValuesRequest
     ///     {
-    ///         Values = new Dictionary&lt;string, OneOf&lt;string, double, bool, IEnumerable&lt;string&gt;&gt;&gt;()
+    ///         Values = new Dictionary&lt;string, object&gt;()
     ///         {
     ///             { "Favorite Color", "blue" },
     ///             { "Age", 30 },
     ///             { "Is Student", false },
     ///             {
     ///                 "Hobbies",
-    ///                 new List&lt;string&gt;() { "reading", "cycling" }
+    ///                 new List&lt;object?&gt;() { "reading", "cycling" }
     ///             },
     ///         },
     ///         AccessGroups = new List&lt;string&gt;() { "marketing", "developers" },
     ///     }
     /// );
     /// </code></example>
-    public async Task<IEnumerable<object>> UpdateAsync(
+    public async Task<IEnumerable<DynamicValue>> UpdateAsync(
         UpdateValuesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -125,7 +131,7 @@ public partial class ValuesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<IEnumerable<object>>(responseBody)!;
+                return JsonUtils.Deserialize<IEnumerable<DynamicValue>>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -141,6 +147,8 @@ public partial class ValuesClient
                 {
                     case 400:
                         throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
+                    case 403:
+                        throw new ForbiddenError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }

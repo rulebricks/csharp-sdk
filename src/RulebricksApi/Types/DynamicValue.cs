@@ -4,28 +4,31 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public record BooleanValue
+public record DynamicValue
 {
-    /// <summary>
-    /// The boolean value
-    /// </summary>
-    [JsonPropertyName("value")]
-    public bool? Value { get; set; }
-
     /// <summary>
     /// Unique identifier for the dynamic value.
     /// </summary>
     [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    public required string Id { get; set; }
 
     /// <summary>
-    /// Name of the dynamic value.
+    /// Name of the dynamic value (may include dot notation for nested properties).
     /// </summary>
     [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
-    /// Rules that use this dynamic value.
+    /// Type identifier for the value (e.g., 'string', 'number', 'boolean', 'list', 'function', etc.)
+    /// </summary>
+    [JsonPropertyName("type")]
+    public required string Type { get; set; }
+
+    [JsonPropertyName("value")]
+    public object? Value { get; set; }
+
+    /// <summary>
+    /// Rules that use this dynamic value (only included when 'include=usage' parameter is used).
     /// </summary>
     [JsonPropertyName("usages")]
     public IEnumerable<RuleUsage>? Usages { get; set; }

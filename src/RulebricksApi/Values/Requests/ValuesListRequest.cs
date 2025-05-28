@@ -11,6 +11,12 @@ public record ValuesListRequest
     [JsonIgnore]
     public string? Name { get; set; }
 
+    /// <summary>
+    /// Comma-separated list of additional data to include. Use 'usage' to include which rules reference each value.
+    /// </summary>
+    [JsonIgnore]
+    public string? Include { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {

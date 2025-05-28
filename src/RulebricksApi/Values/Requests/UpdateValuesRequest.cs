@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using OneOf;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -7,14 +6,10 @@ namespace RulebricksApi;
 public record UpdateValuesRequest
 {
     /// <summary>
-    /// A flat dictionary of keys and values to update or add.
+    /// A dictionary of keys and values to update or add. Supports both flat key-value pairs and nested objects. Nested objects will be automatically flattened using dot notation with readable key names (e.g., 'user.contact_info.email' becomes 'User.Contact Info.Email').
     /// </summary>
     [JsonPropertyName("values")]
-    public Dictionary<
-        string,
-        OneOf<string, double, bool, IEnumerable<string>>
-    > Values { get; set; } =
-        new Dictionary<string, OneOf<string, double, bool, IEnumerable<string>>>();
+    public object Values { get; set; } = new Dictionary<string, object?>();
 
     /// <summary>
     /// Optional array of access group names or IDs. If omitted and user belongs to access groups, values will be assigned to all user's access groups. Required if values should be restricted to specific access groups.

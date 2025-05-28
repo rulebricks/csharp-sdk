@@ -196,7 +196,7 @@ public partial class RulesClient
                     case 400:
                         throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 403:
-                        throw new ForbiddenError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new ForbiddenError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
