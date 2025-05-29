@@ -7,7 +7,7 @@ namespace RulebricksApi;
 public record DecisionLogResponse
 {
     [JsonPropertyName("data")]
-    public IEnumerable<DecisionLog>? Data { get; set; }
+    public IEnumerable<object>? Data { get; set; }
 
     /// <summary>
     /// Pagination cursor for next page
