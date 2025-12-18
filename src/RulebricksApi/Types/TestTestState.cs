@@ -28,9 +28,7 @@ public record TestTestState : IJsonOnDeserialized
     public Dictionary<string, object?>? Response { get; set; }
 
     [JsonPropertyName("conditions")]
-    public IEnumerable<
-        Dictionary<string, TestTestStateConditionsItemValue>
-    >? Conditions { get; set; }
+    public IEnumerable<Dictionary<string, object?>>? Conditions { get; set; }
 
     /// <summary>
     /// HTTP status code returned
