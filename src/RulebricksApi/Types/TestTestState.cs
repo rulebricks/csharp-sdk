@@ -8,8 +8,13 @@ namespace RulebricksApi;
 /// <summary>
 /// The state of the test after execution.
 /// </summary>
-public record TestTestState
+[Serializable]
+public record TestTestState : IJsonOnDeserialized
 {
+    [JsonExtensionData]
+    private readonly IDictionary<string, JsonElement> _extensionData =
+        new Dictionary<string, JsonElement>();
+
     /// <summary>
     /// Execution time in seconds
     /// </summary>
@@ -20,7 +25,7 @@ public record TestTestState
     /// Actual response returned
     /// </summary>
     [JsonPropertyName("response")]
-    public object? Response { get; set; }
+    public Dictionary<string, object?>? Response { get; set; }
 
     [JsonPropertyName("conditions")]
     public IEnumerable<
@@ -42,12 +47,11 @@ public record TestTestState
     [JsonPropertyName("evaluationError")]
     public OneOf<bool, string>? EvaluationError { get; set; }
 
-    /// <summary>
-    /// Additional properties received from the response, if any.
-    /// </summary>
-    [JsonExtensionData]
-    public IDictionary<string, JsonElement> AdditionalProperties { get; internal set; } =
-        new Dictionary<string, JsonElement>();
+    [JsonIgnore]
+    public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
+
+    void IJsonOnDeserialized.OnDeserialized() =>
+        AdditionalProperties.CopyFromExtensionData(_extensionData);
 
     /// <inheritdoc />
     public override string ToString()

@@ -3,6 +3,7 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
+[Serializable]
 public record UserInviteRequest
 {
     /// <summary>

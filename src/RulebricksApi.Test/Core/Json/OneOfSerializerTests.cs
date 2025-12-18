@@ -4,7 +4,7 @@ using NUnit.Framework;
 using OneOf;
 using RulebricksApi.Core;
 
-namespace RulebricksApi.Test.Core.Json;
+namespace RulebricksApi.Test_.Core.Json;
 
 [TestFixture]
 [Parallelizable(ParallelScope.All)]

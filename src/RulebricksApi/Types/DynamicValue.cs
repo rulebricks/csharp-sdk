@@ -4,8 +4,13 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public record DynamicValue
+[Serializable]
+public record DynamicValue : IJsonOnDeserialized
 {
+    [JsonExtensionData]
+    private readonly IDictionary<string, JsonElement> _extensionData =
+        new Dictionary<string, JsonElement>();
+
     /// <summary>
     /// Unique identifier for the dynamic value.
     /// </summary>
@@ -24,6 +29,9 @@ public record DynamicValue
     [JsonPropertyName("type")]
     public required string Type { get; set; }
 
+    /// <summary>
+    /// The actual value - can be any valid JSON type
+    /// </summary>
     [JsonPropertyName("value")]
     public object? Value { get; set; }
 
@@ -39,12 +47,11 @@ public record DynamicValue
     [JsonPropertyName("accessGroups")]
     public IEnumerable<string>? AccessGroups { get; set; }
 
-    /// <summary>
-    /// Additional properties received from the response, if any.
-    /// </summary>
-    [JsonExtensionData]
-    public IDictionary<string, JsonElement> AdditionalProperties { get; internal set; } =
-        new Dictionary<string, JsonElement>();
+    [JsonIgnore]
+    public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
+
+    void IJsonOnDeserialized.OnDeserialized() =>
+        AdditionalProperties.CopyFromExtensionData(_extensionData);
 
     /// <inheritdoc />
     public override string ToString()

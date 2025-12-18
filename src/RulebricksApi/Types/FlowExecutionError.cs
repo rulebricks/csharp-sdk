@@ -7,8 +7,13 @@ namespace RulebricksApi;
 /// <summary>
 /// Error response when flow execution fails
 /// </summary>
-public record FlowExecutionError
+[Serializable]
+public record FlowExecutionError : IJsonOnDeserialized
 {
+    [JsonExtensionData]
+    private readonly IDictionary<string, JsonElement> _extensionData =
+        new Dictionary<string, JsonElement>();
+
     /// <summary>
     /// Error message describing what went wrong during flow execution
     /// </summary>
@@ -25,14 +30,13 @@ public record FlowExecutionError
     /// Additional error details
     /// </summary>
     [JsonPropertyName("details")]
-    public object? Details { get; set; }
+    public Dictionary<string, object?>? Details { get; set; }
 
-    /// <summary>
-    /// Additional properties received from the response, if any.
-    /// </summary>
-    [JsonExtensionData]
-    public IDictionary<string, JsonElement> AdditionalProperties { get; internal set; } =
-        new Dictionary<string, JsonElement>();
+    [JsonIgnore]
+    public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
+
+    void IJsonOnDeserialized.OnDeserialized() =>
+        AdditionalProperties.CopyFromExtensionData(_extensionData);
 
     /// <inheritdoc />
     public override string ToString()

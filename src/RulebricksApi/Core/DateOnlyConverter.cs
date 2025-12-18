@@ -169,7 +169,6 @@ namespace RulebricksApi.Core
     // ReSharper disable SuggestVarOrType_SimpleTypes
     // ReSharper disable SuggestVarOrType_BuiltInTypes
 
-
     internal static class JsonHelpers
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -611,7 +610,7 @@ namespace RulebricksApi.Core
             };
         }
 
-        private static Exception GetInvalidOperationException(
+        private static global::System.Exception GetInvalidOperationException(
             string message,
             JsonTokenType tokenType
         )

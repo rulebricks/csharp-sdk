@@ -4,8 +4,13 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public record UsageStatistics
+[Serializable]
+public record UsageStatistics : IJsonOnDeserialized
 {
+    [JsonExtensionData]
+    private readonly IDictionary<string, JsonElement> _extensionData =
+        new Dictionary<string, JsonElement>();
+
     /// <summary>
     /// The current plan of the organization.
     /// </summary>
@@ -42,12 +47,11 @@ public record UsageStatistics
     [JsonPropertyName("monthly_executions_remaining")]
     public double? MonthlyExecutionsRemaining { get; set; }
 
-    /// <summary>
-    /// Additional properties received from the response, if any.
-    /// </summary>
-    [JsonExtensionData]
-    public IDictionary<string, JsonElement> AdditionalProperties { get; internal set; } =
-        new Dictionary<string, JsonElement>();
+    [JsonIgnore]
+    public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
+
+    void IJsonOnDeserialized.OnDeserialized() =>
+        AdditionalProperties.CopyFromExtensionData(_extensionData);
 
     /// <inheritdoc />
     public override string ToString()

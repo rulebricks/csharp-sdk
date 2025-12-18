@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/RulebricksApi.Test/RulebricksApi.Test.csproj" />
+  <Project Path="src/RulebricksApi/RulebricksApi.csproj" />
+</Solution>

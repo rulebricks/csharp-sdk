@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using RulebricksApi.Assets;
 using RulebricksApi.Core;
 
@@ -13,14 +11,14 @@ public partial class AssetsClient
     internal AssetsClient(RawClient client)
     {
         _client = client;
-        Rules = new RulesClient(_client);
-        Flows = new FlowsClient(_client);
+        Rules = new RulebricksApi.Assets.RulesClient(_client);
+        Flows = new RulebricksApi.Assets.FlowsClient(_client);
         Folders = new FoldersClient(_client);
     }
 
-    public RulesClient Rules { get; }
+    public RulebricksApi.Assets.RulesClient Rules { get; }
 
-    public FlowsClient Flows { get; }
+    public RulebricksApi.Assets.FlowsClient Flows { get; }
 
     public FoldersClient Folders { get; }
 
@@ -37,7 +35,7 @@ public partial class AssetsClient
     {
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Get,

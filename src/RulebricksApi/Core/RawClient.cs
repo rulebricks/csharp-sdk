@@ -8,9 +8,16 @@ namespace RulebricksApi.Core;
 /// <summary>
 /// Utility class for making raw HTTP requests to the API.
 /// </summary>
-internal class RawClient(ClientOptions clientOptions)
+internal partial class RawClient(ClientOptions clientOptions)
 {
     private const int MaxRetryDelayMs = 60000;
+    private const double JitterFactor = 0.2;
+#if NET6_0_OR_GREATER
+    // Use Random.Shared for thread-safe random number generation on .NET 6+
+#else
+    private static readonly object JitterLock = new();
+    private static readonly Random JitterRandom = new();
+#endif
     internal int BaseRetryDelay { get; set; } = 1000;
 
     /// <summary>
@@ -19,38 +26,38 @@ internal class RawClient(ClientOptions clientOptions)
     internal readonly ClientOptions Options = clientOptions;
 
     [Obsolete("Use SendRequestAsync instead.")]
-    internal Task<ApiResponse> MakeRequestAsync(
-        BaseApiRequest request,
+    internal global::System.Threading.Tasks.Task<global::RulebricksApi.Core.ApiResponse> MakeRequestAsync(
+        global::RulebricksApi.Core.BaseRequest request,
         CancellationToken cancellationToken = default
     )
     {
         return SendRequestAsync(request, cancellationToken);
     }
 
-    internal async Task<ApiResponse> SendRequestAsync(
-        BaseApiRequest request,
+    internal async global::System.Threading.Tasks.Task<global::RulebricksApi.Core.ApiResponse> SendRequestAsync(
+        global::RulebricksApi.Core.BaseRequest request,
         CancellationToken cancellationToken = default
     )
     {
         // Apply the request timeout.
-        var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var timeout = request.Options?.Timeout ?? Options.Timeout;
         cts.CancelAfter(timeout);
 
-        var httpRequest = CreateHttpRequest(request);
+        var httpRequest = await CreateHttpRequestAsync(request).ConfigureAwait(false);
         // Send the request.
         return await SendWithRetriesAsync(httpRequest, request.Options, cts.Token)
             .ConfigureAwait(false);
     }
 
-    internal async Task<ApiResponse> SendRequestAsync(
+    internal async global::System.Threading.Tasks.Task<global::RulebricksApi.Core.ApiResponse> SendRequestAsync(
         HttpRequestMessage request,
         IRequestOptions? options,
         CancellationToken cancellationToken = default
     )
     {
         // Apply the request timeout.
-        var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
         var timeout = options?.Timeout ?? Options.Timeout;
         cts.CancelAfter(timeout);
 
@@ -58,7 +65,9 @@ internal class RawClient(ClientOptions clientOptions)
         return await SendWithRetriesAsync(request, options, cts.Token).ConfigureAwait(false);
     }
 
-    private static async Task<HttpRequestMessage> CloneRequestAsync(HttpRequestMessage request)
+    private static async global::System.Threading.Tasks.Task<HttpRequestMessage> CloneRequestAsync(
+        HttpRequestMessage request
+    )
     {
         var clonedRequest = new HttpRequestMessage(request.Method, request.RequestUri);
         clonedRequest.Version = request.Version;
@@ -86,14 +95,17 @@ internal class RawClient(ClientOptions clientOptions)
                     {
                         newPart.Headers.TryAddWithoutValidation(header.Key, header.Value);
                     }
+
                     newMultipartContent.Add(newPart);
                 }
+
                 clonedRequest.Content = newMultipartContent;
                 break;
             default:
                 clonedRequest.Content = request.Content;
                 break;
         }
+
         foreach (var header in request.Headers)
         {
             clonedRequest.Headers.TryAddWithoutValidation(header.Key, header.Value);
@@ -102,393 +114,11 @@ internal class RawClient(ClientOptions clientOptions)
         return clonedRequest;
     }
 
-    internal abstract record BaseApiRequest
-    {
-        internal required string BaseUrl { get; init; }
-
-        internal required HttpMethod Method { get; init; }
-
-        internal required string Path { get; init; }
-
-        internal string? ContentType { get; init; }
-
-        internal Dictionary<string, object> Query { get; init; } = new();
-
-        internal Headers Headers { get; init; } = new();
-
-        internal IRequestOptions? Options { get; init; }
-
-        internal abstract HttpContent? CreateContent();
-    }
-
-    /// <summary>
-    /// The request object to send without a request body.
-    /// </summary>
-    internal record EmptyApiRequest : BaseApiRequest
-    {
-        internal override HttpContent? CreateContent() => null;
-    }
-
-    /// <summary>
-    /// The request object to be sent for streaming uploads.
-    /// </summary>
-    internal record StreamApiRequest : BaseApiRequest
-    {
-        internal Stream? Body { get; init; }
-
-        internal override HttpContent? CreateContent()
-        {
-            if (Body is null)
-            {
-                return null;
-            }
-
-            var content = new StreamContent(Body)
-            {
-                Headers =
-                {
-                    ContentType = MediaTypeHeaderValue.Parse(
-                        ContentType ?? "application/octet-stream"
-                    ),
-                },
-            };
-            return content;
-        }
-    }
-
-    /// <summary>
-    /// The request object to be sent for multipart form data.
-    /// </summary>
-    internal record MultipartFormRequest : BaseApiRequest
-    {
-        private readonly List<Action<MultipartFormDataContent>> _partAdders = [];
-
-        internal void AddJsonPart(string name, object? value) => AddJsonPart(name, value, null);
-
-        internal void AddJsonPart(string name, object? value, string? contentType)
-        {
-            if (value is null)
-            {
-                return;
-            }
-
-            _partAdders.Add(form =>
-            {
-                var (encoding, charset, mediaType) = ParseContentTypeOrDefault(
-                    contentType,
-                    Encoding.UTF8,
-                    "application/json"
-                );
-                var content = new StringContent(JsonUtils.Serialize(value), encoding, mediaType);
-                if (string.IsNullOrEmpty(charset) && content.Headers.ContentType is not null)
-                {
-                    content.Headers.ContentType.CharSet = "";
-                }
-                form.Add(content, name);
-            });
-        }
-
-        internal void AddJsonParts(string name, IEnumerable<object?>? value) =>
-            AddJsonParts(name, value, null);
-
-        internal void AddJsonParts(string name, IEnumerable<object?>? value, string? contentType)
-        {
-            if (value is null)
-            {
-                return;
-            }
-
-            foreach (var item in value)
-            {
-                AddJsonPart(name, item, contentType);
-            }
-        }
-
-        internal void AddStringPart(string name, object? value) => AddStringPart(name, value, null);
-
-        internal void AddStringPart(string name, object? value, string? contentType)
-        {
-            if (value is null)
-            {
-                return;
-            }
-
-            AddStringPart(name, ValueConvert.ToString(value), contentType);
-        }
-
-        internal void AddStringPart(string name, string? value) => AddStringPart(name, value, null);
-
-        internal void AddStringPart(string name, string? value, string? contentType)
-        {
-            if (value is null)
-            {
-                return;
-            }
-
-            _partAdders.Add(form =>
-            {
-                var (encoding, charset, mediaType) = ParseContentTypeOrDefault(
-                    contentType,
-                    Encoding.UTF8,
-                    "text/plain"
-                );
-                var content = new StringContent(value, encoding, mediaType);
-                if (string.IsNullOrEmpty(charset) && content.Headers.ContentType is not null)
-                {
-                    content.Headers.ContentType.CharSet = "";
-                }
-                form.Add(content, name);
-            });
-        }
-
-        internal void AddStringParts(string name, IEnumerable<object?>? value) =>
-            AddStringParts(name, value, null);
-
-        internal void AddStringParts(string name, IEnumerable<object?>? value, string? contentType)
-        {
-            if (value is null)
-            {
-                return;
-            }
-
-            AddStringPart(name, ValueConvert.ToString(value), contentType);
-        }
-
-        internal void AddStringParts(string name, IEnumerable<string?>? value) =>
-            AddStringParts(name, value, null);
-
-        internal void AddStringParts(string name, IEnumerable<string?>? value, string? contentType)
-        {
-            if (value is null)
-            {
-                return;
-            }
-
-            foreach (var item in value)
-            {
-                AddStringPart(name, item, contentType);
-            }
-        }
-
-        internal void AddStreamPart(string name, Stream? stream, string? fileName) =>
-            AddStreamPart(name, stream, fileName, null);
-
-        internal void AddStreamPart(
-            string name,
-            Stream? stream,
-            string? fileName,
-            string? contentType
-        )
-        {
-            if (stream is null)
-            {
-                return;
-            }
-
-            _partAdders.Add(form =>
-            {
-                var content = new StreamContent(stream)
-                {
-                    Headers =
-                    {
-                        ContentType = MediaTypeHeaderValue.Parse(
-                            contentType ?? "application/octet-stream"
-                        ),
-                    },
-                };
-
-                if (fileName is not null)
-                {
-                    form.Add(content, name, fileName);
-                }
-                else
-                {
-                    form.Add(content, name);
-                }
-            });
-        }
-
-        internal void AddFileParameterPart(string name, FileParameter? file) =>
-            AddFileParameterPart(name, file, null);
-
-        internal void AddFileParameterPart(
-            string name,
-            FileParameter? file,
-            string? fallbackContentType
-        ) =>
-            AddStreamPart(
-                name,
-                file?.Stream,
-                file?.FileName,
-                file?.ContentType ?? fallbackContentType
-            );
-
-        internal void AddFileParameterParts(string name, IEnumerable<FileParameter?>? files) =>
-            AddFileParameterParts(name, files, null);
-
-        internal void AddFileParameterParts(
-            string name,
-            IEnumerable<FileParameter?>? files,
-            string? fallbackContentType
-        )
-        {
-            if (files is null)
-            {
-                return;
-            }
-
-            foreach (var file in files)
-            {
-                AddFileParameterPart(name, file, fallbackContentType);
-            }
-        }
-
-        internal void AddFormEncodedPart(string name, object? value) =>
-            AddFormEncodedPart(name, value, null);
-
-        internal void AddFormEncodedPart(string name, object? value, string? contentType)
-        {
-            if (value is null)
-            {
-                return;
-            }
-
-            _partAdders.Add(form =>
-            {
-                var content = FormUrlEncoder.EncodeAsForm(value);
-                if (!string.IsNullOrEmpty(contentType))
-                {
-                    content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
-                }
-
-                form.Add(content, name);
-            });
-        }
-
-        internal void AddFormEncodedParts(string name, IEnumerable<object?>? value) =>
-            AddFormEncodedParts(name, value, null);
-
-        internal void AddFormEncodedParts(
-            string name,
-            IEnumerable<object?>? value,
-            string? contentType
-        )
-        {
-            if (value is null)
-            {
-                return;
-            }
-
-            foreach (var item in value)
-            {
-                AddFormEncodedPart(name, item, contentType);
-            }
-        }
-
-        internal void AddExplodedFormEncodedPart(string name, object? value) =>
-            AddExplodedFormEncodedPart(name, value, null);
-
-        internal void AddExplodedFormEncodedPart(string name, object? value, string? contentType)
-        {
-            if (value is null)
-            {
-                return;
-            }
-
-            _partAdders.Add(form =>
-            {
-                var content = FormUrlEncoder.EncodeAsExplodedForm(value);
-                if (!string.IsNullOrEmpty(contentType))
-                {
-                    content.Headers.ContentType = MediaTypeHeaderValue.Parse(contentType);
-                }
-
-                form.Add(content, name);
-            });
-        }
-
-        internal void AddExplodedFormEncodedParts(string name, IEnumerable<object?>? value) =>
-            AddExplodedFormEncodedParts(name, value, null);
-
-        internal void AddExplodedFormEncodedParts(
-            string name,
-            IEnumerable<object?>? value,
-            string? contentType
-        )
-        {
-            if (value is null)
-            {
-                return;
-            }
-
-            foreach (var item in value)
-            {
-                AddExplodedFormEncodedPart(name, item, contentType);
-            }
-        }
-
-        internal override HttpContent CreateContent()
-        {
-            var form = new MultipartFormDataContent();
-            foreach (var adder in _partAdders)
-            {
-                adder(form);
-            }
-
-            return form;
-        }
-    }
-
-    /// <summary>
-    /// The request object to be sent for JSON APIs.
-    /// </summary>
-    internal record JsonApiRequest : BaseApiRequest
-    {
-        internal object? Body { get; init; }
-
-        internal override HttpContent? CreateContent()
-        {
-            if (Body is null && Options?.AdditionalBodyProperties is null)
-            {
-                return null;
-            }
-
-            var (encoding, charset, mediaType) = ParseContentTypeOrDefault(
-                ContentType,
-                Encoding.UTF8,
-                "application/json"
-            );
-            var content = new StringContent(
-                JsonUtils.SerializeWithAdditionalProperties(
-                    Body,
-                    Options?.AdditionalBodyProperties
-                ),
-                encoding,
-                mediaType
-            );
-            if (string.IsNullOrEmpty(charset) && content.Headers.ContentType is not null)
-            {
-                content.Headers.ContentType.CharSet = "";
-            }
-            return content;
-        }
-    }
-
-    /// <summary>
-    /// The response object returned from the API.
-    /// </summary>
-    internal record ApiResponse
-    {
-        internal required int StatusCode { get; init; }
-
-        internal required HttpResponseMessage Raw { get; init; }
-    }
-
     /// <summary>
     /// Sends the request with retries, unless the request content is not retryable,
     /// such as stream requests and multipart form data with stream content.
     /// </summary>
-    private async Task<ApiResponse> SendWithRetriesAsync(
+    private async global::System.Threading.Tasks.Task<global::RulebricksApi.Core.ApiResponse> SendWithRetriesAsync(
         HttpRequestMessage request,
         IRequestOptions? options,
         CancellationToken cancellationToken
@@ -496,12 +126,18 @@ internal class RawClient(ClientOptions clientOptions)
     {
         var httpClient = options?.HttpClient ?? Options.HttpClient;
         var maxRetries = options?.MaxRetries ?? Options.MaxRetries;
-        var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        var response = await httpClient
+            .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cancellationToken)
+            .ConfigureAwait(false);
         var isRetryableContent = IsRetryableContent(request);
 
         if (!isRetryableContent)
         {
-            return new ApiResponse { StatusCode = (int)response.StatusCode, Raw = response };
+            return new global::RulebricksApi.Core.ApiResponse
+            {
+                StatusCode = (int)response.StatusCode,
+                Raw = response,
+            };
         }
 
         for (var i = 0; i < maxRetries; i++)
@@ -511,15 +147,23 @@ internal class RawClient(ClientOptions clientOptions)
                 break;
             }
 
-            var delayMs = Math.Min(BaseRetryDelay * (int)Math.Pow(2, i), MaxRetryDelayMs);
+            var delayMs = GetRetryDelayFromHeaders(response, i);
             await SystemTask.Delay(delayMs, cancellationToken).ConfigureAwait(false);
             using var retryRequest = await CloneRequestAsync(request).ConfigureAwait(false);
             response = await httpClient
-                .SendAsync(retryRequest, cancellationToken)
+                .SendAsync(
+                    retryRequest,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken
+                )
                 .ConfigureAwait(false);
         }
 
-        return new ApiResponse { StatusCode = (int)response.StatusCode, Raw = response };
+        return new global::RulebricksApi.Core.ApiResponse
+        {
+            StatusCode = (int)response.StatusCode,
+            Raw = response,
+        };
     }
 
     private static bool ShouldRetry(HttpResponseMessage response)
@@ -528,33 +172,110 @@ internal class RawClient(ClientOptions clientOptions)
         return statusCode is 408 or 429 or >= 500;
     }
 
+    private static int AddPositiveJitter(int delayMs)
+    {
+#if NET6_0_OR_GREATER
+        var random = Random.Shared.NextDouble();
+#else
+        double random;
+        lock (JitterLock)
+        {
+            random = JitterRandom.NextDouble();
+        }
+#endif
+        var jitterMultiplier = 1 + random * JitterFactor;
+        return (int)(delayMs * jitterMultiplier);
+    }
+
+    private static int AddSymmetricJitter(int delayMs)
+    {
+#if NET6_0_OR_GREATER
+        var random = Random.Shared.NextDouble();
+#else
+        double random;
+        lock (JitterLock)
+        {
+            random = JitterRandom.NextDouble();
+        }
+#endif
+        var jitterMultiplier = 1 + (random - 0.5) * JitterFactor;
+        return (int)(delayMs * jitterMultiplier);
+    }
+
+    private int GetRetryDelayFromHeaders(HttpResponseMessage response, int retryAttempt)
+    {
+        if (response.Headers.TryGetValues("Retry-After", out var retryAfterValues))
+        {
+            var retryAfter = retryAfterValues.FirstOrDefault();
+            if (!string.IsNullOrEmpty(retryAfter))
+            {
+                if (int.TryParse(retryAfter, out var retryAfterSeconds) && retryAfterSeconds > 0)
+                {
+                    return Math.Min(retryAfterSeconds * 1000, MaxRetryDelayMs);
+                }
+
+                if (DateTimeOffset.TryParse(retryAfter, out var retryAfterDate))
+                {
+                    var delay = (int)(retryAfterDate - DateTimeOffset.UtcNow).TotalMilliseconds;
+                    if (delay > 0)
+                    {
+                        return Math.Min(delay, MaxRetryDelayMs);
+                    }
+                }
+            }
+        }
+
+        if (response.Headers.TryGetValues("X-RateLimit-Reset", out var rateLimitResetValues))
+        {
+            var rateLimitReset = rateLimitResetValues.FirstOrDefault();
+            if (
+                !string.IsNullOrEmpty(rateLimitReset)
+                && long.TryParse(rateLimitReset, out var resetTime)
+            )
+            {
+                var resetDateTime = DateTimeOffset.FromUnixTimeSeconds(resetTime);
+                var delay = (int)(resetDateTime - DateTimeOffset.UtcNow).TotalMilliseconds;
+                if (delay > 0)
+                {
+                    return AddPositiveJitter(Math.Min(delay, MaxRetryDelayMs));
+                }
+            }
+        }
+
+        var exponentialDelay = Math.Min(BaseRetryDelay * (1 << retryAttempt), MaxRetryDelayMs);
+        return AddSymmetricJitter(exponentialDelay);
+    }
+
     private static bool IsRetryableContent(HttpRequestMessage request)
     {
         return request.Content switch
         {
+            IIsRetryableContent c => c.IsRetryable,
             StreamContent => false,
             MultipartContent content => !content.Any(c => c is StreamContent),
             _ => true,
         };
     }
 
-    internal HttpRequestMessage CreateHttpRequest(BaseApiRequest request)
+    internal async global::System.Threading.Tasks.Task<HttpRequestMessage> CreateHttpRequestAsync(
+        global::RulebricksApi.Core.BaseRequest request
+    )
     {
         var url = BuildUrl(request);
         var httpRequest = new HttpRequestMessage(request.Method, url);
         httpRequest.Content = request.CreateContent();
         var mergedHeaders = new Dictionary<string, List<string>>();
-        MergeHeaders(mergedHeaders, Options.Headers);
+        await MergeHeadersAsync(mergedHeaders, Options.Headers).ConfigureAwait(false);
         MergeAdditionalHeaders(mergedHeaders, Options.AdditionalHeaders);
-        MergeHeaders(mergedHeaders, request.Headers);
-        MergeHeaders(mergedHeaders, request.Options?.Headers);
+        await MergeHeadersAsync(mergedHeaders, request.Headers).ConfigureAwait(false);
+        await MergeHeadersAsync(mergedHeaders, request.Options?.Headers).ConfigureAwait(false);
 
         MergeAdditionalHeaders(mergedHeaders, request.Options?.AdditionalHeaders ?? []);
         SetHeaders(httpRequest, mergedHeaders);
         return httpRequest;
     }
 
-    private static string BuildUrl(BaseApiRequest request)
+    private static string BuildUrl(global::RulebricksApi.Core.BaseRequest request)
     {
         var baseUrl = request.Options?.BaseUrl ?? request.BaseUrl;
         var trimmedBaseUrl = baseUrl.TrimEnd('/');
@@ -578,7 +299,9 @@ internal class RawClient(ClientOptions clientOptions)
                 {
                     var items = collection
                         .Cast<object>()
-                        .Select(value => $"{queryItem.Key}={value}")
+                        .Select(value =>
+                            $"{Uri.EscapeDataString(queryItem.Key)}={Uri.EscapeDataString(value?.ToString() ?? "")}"
+                        )
                         .ToList();
                     if (items.Any())
                     {
@@ -587,7 +310,8 @@ internal class RawClient(ClientOptions clientOptions)
                 }
                 else
                 {
-                    current += $"{queryItem.Key}={queryItem.Value}&";
+                    current +=
+                        $"{Uri.EscapeDataString(queryItem.Key)}={Uri.EscapeDataString(queryItem.Value)}&";
                 }
 
                 return current;
@@ -597,7 +321,9 @@ internal class RawClient(ClientOptions clientOptions)
         return url;
     }
 
-    private static List<KeyValuePair<string, string>> GetQueryParameters(BaseApiRequest request)
+    private static List<KeyValuePair<string, string>> GetQueryParameters(
+        global::RulebricksApi.Core.BaseRequest request
+    )
     {
         var result = TransformToKeyValuePairs(request.Query);
         if (
@@ -607,6 +333,7 @@ internal class RawClient(ClientOptions clientOptions)
         {
             return result;
         }
+
         var additionalKeys = request
             .Options.AdditionalQueryParameters.Select(p => p.Key)
             .Distinct();
@@ -614,6 +341,7 @@ internal class RawClient(ClientOptions clientOptions)
         {
             result.RemoveAll(kv => kv.Key == key);
         }
+
         result.AddRange(request.Options.AdditionalQueryParameters);
         return result;
     }
@@ -636,14 +364,16 @@ internal class RawClient(ClientOptions clientOptions)
                     {
                         result.Add(new KeyValuePair<string, string>(kvp.Key, value));
                     }
+
                     break;
                 }
             }
         }
+
         return result;
     }
 
-    private static void MergeHeaders(
+    private static async SystemTask MergeHeadersAsync(
         Dictionary<string, List<string>> mergedHeaders,
         Headers? headers
     )
@@ -652,10 +382,11 @@ internal class RawClient(ClientOptions clientOptions)
         {
             return;
         }
+
         foreach (var header in headers)
         {
-            var value = header.Value?.Match(str => str, func => func.Invoke());
-            if (value != null)
+            var value = await header.Value.ResolveAsync().ConfigureAwait(false);
+            if (value is not null)
             {
                 mergedHeaders[header.Key] = [value];
             }
@@ -671,6 +402,7 @@ internal class RawClient(ClientOptions clientOptions)
         {
             return;
         }
+
         var usedKeys = new HashSet<string>();
         foreach (var header in headers)
         {
@@ -680,6 +412,7 @@ internal class RawClient(ClientOptions clientOptions)
                 usedKeys.Remove(header.Key);
                 continue;
             }
+
             if (usedKeys.Contains(header.Key))
             {
                 mergedHeaders[header.Key].Add(header.Value);
@@ -705,6 +438,7 @@ internal class RawClient(ClientOptions clientOptions)
                 {
                     continue;
                 }
+
                 httpRequest.Headers.TryAddWithoutValidation(kv.Key, header);
             }
         }
@@ -742,4 +476,28 @@ internal class RawClient(ClientOptions clientOptions)
 
         return (encoding, charset, mediaType);
     }
+
+    /// <inheritdoc />
+    [Obsolete("Use global::RulebricksApi.Core.ApiResponse instead.")]
+    internal record ApiResponse : global::RulebricksApi.Core.ApiResponse;
+
+    /// <inheritdoc />
+    [Obsolete("Use global::RulebricksApi.Core.BaseRequest instead.")]
+    internal abstract record BaseApiRequest : global::RulebricksApi.Core.BaseRequest;
+
+    /// <inheritdoc />
+    [Obsolete("Use global::RulebricksApi.Core.EmptyRequest instead.")]
+    internal abstract record EmptyApiRequest : global::RulebricksApi.Core.EmptyRequest;
+
+    /// <inheritdoc />
+    [Obsolete("Use global::RulebricksApi.Core.JsonRequest instead.")]
+    internal abstract record JsonApiRequest : global::RulebricksApi.Core.JsonRequest;
+
+    /// <inheritdoc />
+    [Obsolete("Use global::RulebricksApi.Core.MultipartFormRequest instead.")]
+    internal abstract record MultipartFormRequest : global::RulebricksApi.Core.MultipartFormRequest;
+
+    /// <inheritdoc />
+    [Obsolete("Use global::RulebricksApi.Core.StreamRequest instead.")]
+    internal abstract record StreamApiRequest : global::RulebricksApi.Core.StreamRequest;
 }

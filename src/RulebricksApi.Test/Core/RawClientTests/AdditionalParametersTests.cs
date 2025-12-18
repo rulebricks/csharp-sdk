@@ -6,7 +6,7 @@ using SystemTask = global::System.Threading.Tasks.Task;
 using WireMockRequest = WireMock.RequestBuilders.Request;
 using WireMockResponse = WireMock.ResponseBuilders.Response;
 
-namespace RulebricksApi.Test.Core.RawClientTests;
+namespace RulebricksApi.Test_.Core.RawClientTests;
 
 [TestFixture]
 [Parallelizable(ParallelScope.Self)]
@@ -33,7 +33,7 @@ public class AdditionalParametersTests
             .Given(WireMockRequest.Create().WithPath("/test").WithParam("foo", "bar").UsingGet())
             .RespondWith(WireMockResponse.Create().WithStatusCode(200).WithBody("Success"));
 
-        var request = new RawClient.JsonApiRequest()
+        var request = new JsonRequest()
         {
             BaseUrl = _baseUrl,
             Method = HttpMethod.Get,
@@ -63,7 +63,7 @@ public class AdditionalParametersTests
             .Given(WireMockRequest.Create().WithPath("/test").WithParam("foo", "null").UsingGet())
             .RespondWith(WireMockResponse.Create().WithStatusCode(200).WithBody("Success"));
 
-        var request = new RawClient.JsonApiRequest()
+        var request = new JsonRequest()
         {
             BaseUrl = _baseUrl,
             Method = HttpMethod.Get,
@@ -88,13 +88,13 @@ public class AdditionalParametersTests
     }
 
     [Test]
-    public async Task SendRequestAsync_AdditionalQueryParameters_Merge()
+    public async SystemTask SendRequestAsync_AdditionalQueryParameters_Merge()
     {
         _server
             .Given(WireMockRequest.Create().WithPath("/test").UsingGet())
             .RespondWith(WireMockResponse.Create().WithStatusCode(200).WithBody("Success"));
 
-        var request = new RawClient.JsonApiRequest()
+        var request = new JsonRequest()
         {
             BaseUrl = _baseUrl,
             Method = HttpMethod.Get,
@@ -138,7 +138,7 @@ public class AdditionalParametersTests
             )
             .RespondWith(WireMockResponse.Create().WithStatusCode(200).WithBody("Success"));
 
-        var request = new RawClient.JsonApiRequest
+        var request = new JsonRequest
         {
             BaseUrl = _baseUrl,
             Method = HttpMethod.Post,
@@ -173,7 +173,7 @@ public class AdditionalParametersTests
             )
             .RespondWith(WireMockResponse.Create().WithStatusCode(200).WithBody("Success"));
 
-        var request = new RawClient.JsonApiRequest
+        var request = new JsonRequest
         {
             BaseUrl = _baseUrl,
             Method = HttpMethod.Post,
@@ -195,7 +195,7 @@ public class AdditionalParametersTests
     }
 
     [Test]
-    public async Task SendRequestAsync_AdditionalBodyProperties_DeepMerge()
+    public async SystemTask SendRequestAsync_AdditionalBodyProperties_DeepMerge()
     {
         const string expectedBody = """
             {
@@ -224,7 +224,7 @@ public class AdditionalParametersTests
             )
             .RespondWith(WireMockResponse.Create().WithStatusCode(200).WithBody("Success"));
 
-        var request = new RawClient.JsonApiRequest
+        var request = new JsonRequest
         {
             BaseUrl = _baseUrl,
             Method = HttpMethod.Post,

@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -18,10 +16,10 @@ public partial class ValuesClient
     /// Retrieve all dynamic values for the authenticated user. Use the 'include' parameter to control whether usage information is returned.
     /// </summary>
     /// <example><code>
-    /// await client.Values.ListAsync(new ValuesListRequest { Include = "usage" });
+    /// await client.Values.ListAsync(new ListValuesRequest { Include = "usage" });
     /// </code></example>
     public async Task<IEnumerable<DynamicValue>> ListAsync(
-        ValuesListRequest request,
+        ListValuesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -37,7 +35,7 @@ public partial class ValuesClient
         }
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Get,
@@ -92,7 +90,7 @@ public partial class ValuesClient
     /// await client.Values.UpdateAsync(
     ///     new UpdateValuesRequest
     ///     {
-    ///         Values = new Dictionary&lt;string, object&gt;()
+    ///         Values = new Dictionary&lt;string, object?&gt;()
     ///         {
     ///             { "Favorite Color", "blue" },
     ///             { "Age", 30 },
@@ -114,7 +112,7 @@ public partial class ValuesClient
     {
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
@@ -169,10 +167,10 @@ public partial class ValuesClient
     /// Delete a specific dynamic value for the authenticated user by its ID.
     /// </summary>
     /// <example><code>
-    /// await client.Values.DeleteAsync(new ValuesDeleteRequest { Id = "id" });
+    /// await client.Values.DeleteAsync(new DeleteValuesRequest { Id = "id" });
     /// </code></example>
     public async Task<SuccessMessage> DeleteAsync(
-        ValuesDeleteRequest request,
+        DeleteValuesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -181,7 +179,7 @@ public partial class ValuesClient
         _query["id"] = request.Id;
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Delete,

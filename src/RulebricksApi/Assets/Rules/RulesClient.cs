@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using RulebricksApi;
 using RulebricksApi.Core;
 
@@ -19,7 +17,9 @@ public partial class RulesClient
     /// Delete a specific rule by its ID.
     /// </summary>
     /// <example><code>
-    /// await client.Assets.Rules.DeleteAsync(new DeleteRuleRequest { Id = "id" });
+    /// await client.Assets.Rules.DeleteAsync(
+    ///     new DeleteRuleRequest { Id = "2855f8da-2654-4df9-8903-8f797cbfe8eb" }
+    /// );
     /// </code></example>
     public async Task<SuccessMessage> DeleteAsync(
         DeleteRuleRequest request,
@@ -29,7 +29,7 @@ public partial class RulesClient
     {
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Delete,
@@ -84,10 +84,12 @@ public partial class RulesClient
     /// Export a specific rule by its ID.
     /// </summary>
     /// <example><code>
-    /// await client.Assets.Rules.PullAsync(new RulesPullRequest { Id = "id" });
+    /// await client.Assets.Rules.PullAsync(
+    ///     new PullRulesRequest { Id = "2855f8da-2654-4df9-8903-8f797cbfe8eb" }
+    /// );
     /// </code></example>
-    public async Task<object> PullAsync(
-        RulesPullRequest request,
+    public async Task<Dictionary<string, object?>> PullAsync(
+        PullRulesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -96,7 +98,7 @@ public partial class RulesClient
         _query["id"] = request.Id;
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Get,
@@ -112,7 +114,7 @@ public partial class RulesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<object>(responseBody)!;
+                return JsonUtils.Deserialize<Dictionary<string, object?>>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -151,10 +153,17 @@ public partial class RulesClient
     /// </summary>
     /// <example><code>
     /// await client.Assets.Rules.PushAsync(
-    ///     new ImportRuleRequest { Rule = new Dictionary&lt;string, object&gt;() { { "key", "value" } } }
+    ///     new ImportRuleRequest
+    ///     {
+    ///         Rule = new Dictionary&lt;string, object?&gt;()
+    ///         {
+    ///             { "name", "Imported Rule" },
+    ///             { "description", "A rule imported via API" },
+    ///         },
+    ///     }
     /// );
     /// </code></example>
-    public async Task<object> PushAsync(
+    public async Task<Dictionary<string, object?>> PushAsync(
         ImportRuleRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -162,7 +171,7 @@ public partial class RulesClient
     {
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
@@ -179,7 +188,7 @@ public partial class RulesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<object>(responseBody)!;
+                return JsonUtils.Deserialize<Dictionary<string, object?>>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -217,10 +226,12 @@ public partial class RulesClient
     /// List all rules in the organization. Optionally filter by folder name or ID.
     /// </summary>
     /// <example><code>
-    /// await client.Assets.Rules.ListAsync(new RulesListRequest());
+    /// await client.Assets.Rules.ListAsync(
+    ///     new RulebricksApi.Assets.ListRulesRequest { Folder = "Marketing Rules" }
+    /// );
     /// </code></example>
     public async Task<IEnumerable<RuleDetail>> ListAsync(
-        RulesListRequest request,
+        ListRulesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -232,7 +243,7 @@ public partial class RulesClient
         }
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Get,

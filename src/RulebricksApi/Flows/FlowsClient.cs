@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -19,30 +17,41 @@ public partial class FlowsClient
     /// </summary>
     /// <example><code>
     /// await client.Flows.ExecuteAsync(
-    ///     "slug",
-    ///     new Dictionary&lt;string, object&gt;()
+    ///     new ExecuteFlowsRequest
     ///     {
-    ///         { "name", "John Doe" },
-    ///         { "age", 30 },
-    ///         { "email", "jdoe@acme.co" },
+    ///         Slug = "slug",
+    ///         Body = new Dictionary&lt;string, object?&gt;()
+    ///         {
+    ///             {
+    ///                 "body",
+    ///                 new Dictionary&lt;object, object?&gt;()
+    ///                 {
+    ///                     { "age", 28 },
+    ///                     { "email", "alice.johnson@example.com" },
+    ///                     { "name", "Alice Johnson" },
+    ///                 }
+    ///             },
+    ///         },
     ///     }
     /// );
     /// </code></example>
-    public async Task<object> ExecuteAsync(
-        string slug,
-        object request,
+    public async Task<Dictionary<string, object?>> ExecuteAsync(
+        ExecuteFlowsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
-                    Path = string.Format("flows/{0}", ValueConvert.ToPathParameterString(slug)),
-                    Body = request,
+                    Path = string.Format(
+                        "flows/{0}",
+                        ValueConvert.ToPathParameterString(request.Slug)
+                    ),
+                    Body = request.Body,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -54,7 +63,7 @@ public partial class FlowsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<object>(responseBody)!;
+                return JsonUtils.Deserialize<Dictionary<string, object?>>(responseBody)!;
             }
             catch (JsonException e)
             {

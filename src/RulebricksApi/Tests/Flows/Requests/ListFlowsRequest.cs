@@ -1,15 +1,16 @@
 using System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
-namespace RulebricksApi.Assets;
+namespace RulebricksApi.Tests;
 
-public record RulesListRequest
+[Serializable]
+public record ListFlowsRequest
 {
     /// <summary>
-    /// Filter rules by folder name or folder ID
+    /// The unique identifier for the resource.
     /// </summary>
     [JsonIgnore]
-    public string? Folder { get; set; }
+    public required string Slug { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

@@ -1,6 +1,7 @@
 namespace RulebricksApi;
 
+[Serializable]
 public class RulebricksApiEnvironment
 {
-    public const string Default = "https://rulebricks.com/api/v1";
+    public const string Default = "https%3A%2F%2Frulebricks.com/api/v1";
 }

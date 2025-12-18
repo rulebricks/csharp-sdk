@@ -3,7 +3,8 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public record ValuesListRequest
+[Serializable]
+public record ListValuesRequest
 {
     /// <summary>
     /// Query all dynamic values containing a specific name

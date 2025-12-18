@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using RulebricksApi.Core;
 
-namespace RulebricksApi.Test.Core.Json;
+namespace RulebricksApi.Test_.Core.Json;
 
 [TestFixture]
 public class DateOnlyJsonTests

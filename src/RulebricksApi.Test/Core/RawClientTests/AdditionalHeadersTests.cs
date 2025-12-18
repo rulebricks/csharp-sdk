@@ -7,7 +7,7 @@ using WireMockResponse = WireMock.ResponseBuilders.Response;
 
 // ReSharper disable NullableWarningSuppressionIsUsed
 
-namespace RulebricksApi.Test.Core.RawClientTests;
+namespace RulebricksApi.Test_.Core.RawClientTests;
 
 [TestFixture]
 [Parallelizable(ParallelScope.Self)]
@@ -60,7 +60,7 @@ public class AdditionalHeadersTests
             .Given(WireMockRequest.Create().WithPath("/test").UsingGet())
             .RespondWith(WireMockResponse.Create().WithStatusCode(200).WithBody("Success"));
 
-        var request = new RawClient.JsonApiRequest
+        var request = new JsonRequest
         {
             BaseUrl = _baseUrl,
             Method = HttpMethod.Get,
@@ -94,8 +94,9 @@ public class AdditionalHeadersTests
             Assert.That(content, Is.EqualTo("Success"));
             Assert.That(_server.LogEntries.Count, Is.EqualTo(1));
             var headers =
-                _server.LogEntries[0].RequestMessage.Headers
-                ?? throw new Exception("Headers are null");
+                _server.LogEntries[0].RequestMessage.Headers ?? throw new global::System.Exception(
+                    "Headers are null"
+                );
 
             Assert.That(headers, Contains.Key("client_multiple"));
             Assert.That(headers!["client_multiple"][0], Does.Contain("client_additional_headers1"));

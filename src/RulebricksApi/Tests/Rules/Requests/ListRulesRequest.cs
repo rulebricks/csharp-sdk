@@ -1,15 +1,16 @@
 using System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
-namespace RulebricksApi.Assets;
+namespace RulebricksApi.Tests;
 
-public record RulesPullRequest
+[Serializable]
+public record ListRulesRequest
 {
     /// <summary>
-    /// The ID of the rule to export.
+    /// The unique identifier for the resource.
     /// </summary>
     [JsonIgnore]
-    public required string Id { get; set; }
+    public required string Slug { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

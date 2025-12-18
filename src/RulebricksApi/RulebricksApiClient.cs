@@ -12,7 +12,7 @@ public partial class RulebricksApiClient
         var defaultHeaders = new Headers(
             new Dictionary<string, string>()
             {
-                { "x-api-key", apiKey },
+                { "x-api-key", apiKey ?? "" },
                 { "X-Fern-Language", "C#" },
                 { "X-Fern-SDK-Name", "RulebricksApi" },
                 { "X-Fern-SDK-Version", Version.Current },
@@ -36,17 +36,17 @@ public partial class RulebricksApiClient
         Tests = new TestsClient(_client);
     }
 
-    public RulesClient Rules { get; init; }
+    public RulesClient Rules { get; }
 
-    public FlowsClient Flows { get; init; }
+    public FlowsClient Flows { get; }
 
-    public DecisionsClient Decisions { get; init; }
+    public DecisionsClient Decisions { get; }
 
-    public UsersClient Users { get; init; }
+    public UsersClient Users { get; }
 
-    public AssetsClient Assets { get; init; }
+    public AssetsClient Assets { get; }
 
-    public ValuesClient Values { get; init; }
+    public ValuesClient Values { get; }
 
-    public TestsClient Tests { get; init; }
+    public TestsClient Tests { get; }
 }

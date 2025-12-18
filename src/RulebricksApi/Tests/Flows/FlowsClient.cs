@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using RulebricksApi;
 using RulebricksApi.Core;
 
@@ -19,23 +17,23 @@ public partial class FlowsClient
     /// Retrieves a list of tests associated with the flow identified by the slug.
     /// </summary>
     /// <example><code>
-    /// await client.Tests.Flows.ListAsync("slug");
+    /// await client.Tests.Flows.ListAsync(new ListFlowsRequest { Slug = "slug" });
     /// </code></example>
-    public async Task<IEnumerable<Test>> ListAsync(
-        string slug,
+    public async Task<IEnumerable<RulebricksApi.Test>> ListAsync(
+        ListFlowsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Get,
                     Path = string.Format(
                         "admin/flows/{0}/tests",
-                        ValueConvert.ToPathParameterString(slug)
+                        ValueConvert.ToPathParameterString(request.Slug)
                     ),
                     Options = options,
                 },
@@ -47,7 +45,7 @@ public partial class FlowsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<IEnumerable<Test>>(responseBody)!;
+                return JsonUtils.Deserialize<IEnumerable<RulebricksApi.Test>>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -84,34 +82,36 @@ public partial class FlowsClient
     /// </summary>
     /// <example><code>
     /// await client.Tests.Flows.CreateAsync(
-    ///     "slug",
-    ///     new CreateTestRequest
+    ///     new CreateFlowsRequest
     ///     {
-    ///         Name = "Test 3",
-    ///         Request = new Dictionary&lt;string, object&gt;() { { "param1", "value1" } },
-    ///         Response = new Dictionary&lt;string, object&gt;() { { "status", "success" } },
-    ///         Critical = true,
+    ///         Slug = "slug",
+    ///         Body = new CreateTestRequest
+    ///         {
+    ///             Name = "Test 3",
+    ///             Request = new Dictionary&lt;string, object?&gt;() { { "param1", "value1" } },
+    ///             Response = new Dictionary&lt;string, object?&gt;() { { "status", "success" } },
+    ///             Critical = true,
+    ///         },
     ///     }
     /// );
     /// </code></example>
-    public async Task<Test> CreateAsync(
-        string slug,
-        CreateTestRequest request,
+    public async Task<RulebricksApi.Test> CreateAsync(
+        CreateFlowsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
                     Path = string.Format(
                         "admin/flows/{0}/tests",
-                        ValueConvert.ToPathParameterString(slug)
+                        ValueConvert.ToPathParameterString(request.Slug)
                     ),
-                    Body = request,
+                    Body = request.Body,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -123,7 +123,7 @@ public partial class FlowsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<Test>(responseBody)!;
+                return JsonUtils.Deserialize<RulebricksApi.Test>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -161,25 +161,24 @@ public partial class FlowsClient
     /// Deletes a test from the test suite of a flow identified by the slug.
     /// </summary>
     /// <example><code>
-    /// await client.Tests.Flows.DeleteAsync("slug", "testId");
+    /// await client.Tests.Flows.DeleteAsync(new DeleteFlowsRequest { Slug = "slug", TestId = "testId" });
     /// </code></example>
-    public async Task<Test> DeleteAsync(
-        string slug,
-        string testId,
+    public async Task<RulebricksApi.Test> DeleteAsync(
+        DeleteFlowsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Delete,
                     Path = string.Format(
                         "admin/flows/{0}/tests/{1}",
-                        ValueConvert.ToPathParameterString(slug),
-                        ValueConvert.ToPathParameterString(testId)
+                        ValueConvert.ToPathParameterString(request.Slug),
+                        ValueConvert.ToPathParameterString(request.TestId)
                     ),
                     Options = options,
                 },
@@ -191,7 +190,7 @@ public partial class FlowsClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<Test>(responseBody)!;
+                return JsonUtils.Deserialize<RulebricksApi.Test>(responseBody)!;
             }
             catch (JsonException e)
             {

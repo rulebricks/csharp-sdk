@@ -3,6 +3,7 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi.Users;
 
+[Serializable]
 public record CreateUserGroupRequest
 {
     /// <summary>

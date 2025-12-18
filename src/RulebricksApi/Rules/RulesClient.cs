@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using OneOf;
 using RulebricksApi.Core;
 
@@ -20,30 +18,41 @@ public partial class RulesClient
     /// </summary>
     /// <example><code>
     /// await client.Rules.SolveAsync(
-    ///     "slug",
-    ///     new Dictionary&lt;string, object&gt;()
+    ///     new SolveRulesRequest
     ///     {
-    ///         { "name", "John Doe" },
-    ///         { "age", 30 },
-    ///         { "email", "jdoe@acme.co" },
+    ///         Slug = "slug",
+    ///         Body = new Dictionary&lt;string, object?&gt;()
+    ///         {
+    ///             {
+    ///                 "body",
+    ///                 new Dictionary&lt;object, object?&gt;()
+    ///                 {
+    ///                     { "age", 28 },
+    ///                     { "email", "alice.johnson@example.com" },
+    ///                     { "name", "Alice Johnson" },
+    ///                 }
+    ///             },
+    ///         },
     ///     }
     /// );
     /// </code></example>
-    public async Task<object> SolveAsync(
-        string slug,
-        object request,
+    public async Task<Dictionary<string, object?>> SolveAsync(
+        SolveRulesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
-                    Path = string.Format("solve/{0}", ValueConvert.ToPathParameterString(slug)),
-                    Body = request,
+                    Path = string.Format(
+                        "solve/{0}",
+                        ValueConvert.ToPathParameterString(request.Slug)
+                    ),
+                    Body = request.Body,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -55,7 +64,7 @@ public partial class RulesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<object>(responseBody)!;
+                return JsonUtils.Deserialize<Dictionary<string, object?>>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -92,42 +101,46 @@ public partial class RulesClient
     /// </summary>
     /// <example><code>
     /// await client.Rules.BulkSolveAsync(
-    ///     "slug",
-    ///     new List&lt;object&gt;()
+    ///     new BulkSolveRulesRequest
     ///     {
-    ///         new Dictionary&lt;string, object&gt;()
+    ///         Slug = "slug",
+    ///         Body = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
     ///         {
-    ///             { "name", "John Doe" },
-    ///             { "age", 30 },
-    ///             { "email", "jdoe@acme.co" },
-    ///         },
-    ///         new Dictionary&lt;string, object&gt;()
-    ///         {
-    ///             { "name", "Jane Doe" },
-    ///             { "age", 28 },
-    ///             { "email", "jane@example.com" },
+    ///             new Dictionary&lt;string, object?&gt;()
+    ///             {
+    ///                 { "name", "John Doe" },
+    ///                 { "age", 30 },
+    ///                 { "email", "jdoe@acme.co" },
+    ///             },
+    ///             new Dictionary&lt;string, object?&gt;()
+    ///             {
+    ///                 { "name", "Jane Doe" },
+    ///                 { "age", 28 },
+    ///                 { "email", "jane@example.com" },
+    ///             },
     ///         },
     ///     }
     /// );
     /// </code></example>
-    public async Task<IEnumerable<OneOf<object, BulkRuleResponseItemError>>> BulkSolveAsync(
-        string slug,
-        IEnumerable<object> request,
+    public async Task<
+        IEnumerable<OneOf<Dictionary<string, object?>, BulkRuleResponseItemError>>
+    > BulkSolveAsync(
+        BulkSolveRulesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
                     Path = string.Format(
                         "bulk-solve/{0}",
-                        ValueConvert.ToPathParameterString(slug)
+                        ValueConvert.ToPathParameterString(request.Slug)
                     ),
-                    Body = request,
+                    Body = request.Body,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -139,9 +152,9 @@ public partial class RulesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<IEnumerable<OneOf<object, BulkRuleResponseItemError>>>(
-                    responseBody
-                )!;
+                return JsonUtils.Deserialize<
+                    IEnumerable<OneOf<Dictionary<string, object?>, BulkRuleResponseItemError>>
+                >(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -180,18 +193,11 @@ public partial class RulesClient
     /// await client.Rules.ParallelSolveAsync(
     ///     new Dictionary&lt;string, ParallelSolveRequestValue&gt;()
     ///     {
-    ///         {
-    ///             "eligibility",
-    ///             new ParallelSolveRequestValue { Rule = "1ef03ms" }
-    ///         },
-    ///         {
-    ///             "offers",
-    ///             new ParallelSolveRequestValue { Flow = "OvmsYwn" }
-    ///         },
+    ///         { "body", new ParallelSolveRequestValue() },
     ///     }
     /// );
     /// </code></example>
-    public async Task<Dictionary<string, object>> ParallelSolveAsync(
+    public async Task<Dictionary<string, Dictionary<string, object?>>> ParallelSolveAsync(
         Dictionary<string, ParallelSolveRequestValue> request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -199,7 +205,7 @@ public partial class RulesClient
     {
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
@@ -216,7 +222,9 @@ public partial class RulesClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<Dictionary<string, object>>(responseBody)!;
+                return JsonUtils.Deserialize<Dictionary<string, Dictionary<string, object?>>>(
+                    responseBody
+                )!;
             }
             catch (JsonException e)
             {

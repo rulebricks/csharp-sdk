@@ -3,6 +3,7 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi.Assets;
 
+[Serializable]
 public record DeleteFolderRequest
 {
     /// <summary>

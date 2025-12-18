@@ -1,12 +1,13 @@
 using System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
-namespace RulebricksApi;
+namespace RulebricksApi.Assets;
 
-public record ValuesDeleteRequest
+[Serializable]
+public record PullRulesRequest
 {
     /// <summary>
-    /// ID of the dynamic value to delete
+    /// The ID of the rule to export.
     /// </summary>
     [JsonIgnore]
     public required string Id { get; set; }

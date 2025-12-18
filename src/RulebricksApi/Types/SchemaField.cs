@@ -5,8 +5,13 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public record SchemaField
+[Serializable]
+public record SchemaField : IJsonOnDeserialized
 {
+    [JsonExtensionData]
+    private readonly IDictionary<string, JsonElement> _extensionData =
+        new Dictionary<string, JsonElement>();
+
     /// <summary>
     /// The unique key for this field.
     /// </summary>
@@ -41,7 +46,13 @@ public record SchemaField
     /// Default value for this field.
     /// </summary>
     [JsonPropertyName("defaultValue")]
-    public OneOf<string, double, bool, object, IEnumerable<object>>? DefaultValue { get; set; }
+    public OneOf<
+        string,
+        double,
+        bool,
+        Dictionary<string, object?>,
+        IEnumerable<object>
+    >? DefaultValue { get; set; }
 
     /// <summary>
     /// Computed default value for this field.
@@ -55,12 +66,11 @@ public record SchemaField
     [JsonPropertyName("transform")]
     public string? Transform { get; set; }
 
-    /// <summary>
-    /// Additional properties received from the response, if any.
-    /// </summary>
-    [JsonExtensionData]
-    public IDictionary<string, JsonElement> AdditionalProperties { get; internal set; } =
-        new Dictionary<string, JsonElement>();
+    [JsonIgnore]
+    public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
+
+    void IJsonOnDeserialized.OnDeserialized() =>
+        AdditionalProperties.CopyFromExtensionData(_extensionData);
 
     /// <inheritdoc />
     public override string ToString()

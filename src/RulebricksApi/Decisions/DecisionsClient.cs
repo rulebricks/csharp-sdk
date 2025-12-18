@@ -1,6 +1,4 @@
-using System.Net.Http;
 using System.Text.Json;
-using System.Threading;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -15,26 +13,44 @@ public partial class DecisionsClient
     }
 
     /// <summary>
-    /// Retrieve logs for a specific user and rule, with optional date range and pagination.
+    /// Query decision logs with support for the decision data query language, rule/status filters, date ranges, and pagination. The query language supports field comparisons (e.g., `alpha=0`, `score&gt;10`), contains/not-contains (e.g., `name:John`, `status!:error`), boolean logic (`AND`, `OR`), and parentheses for grouping.
     /// </summary>
     /// <example><code>
-    /// await client.Decisions.QueryAsync(new DecisionsQueryRequest { Slug = "slug" });
+    /// await client.Decisions.QueryAsync(
+    ///     new QueryDecisionsRequest
+    ///     {
+    ///         Search = "status=200",
+    ///         Rules = "Lead Qualification,Pricing Calculator",
+    ///         Statuses = "200,400,500",
+    ///     }
+    /// );
     /// </code></example>
     public async Task<DecisionLogResponse> QueryAsync(
-        DecisionsQueryRequest request,
+        QueryDecisionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         var _query = new Dictionary<string, object>();
-        _query["slug"] = request.Slug;
-        if (request.From != null)
+        if (request.Search != null)
         {
-            _query["from"] = request.From.Value.ToString(Constants.DateTimeFormat);
+            _query["search"] = request.Search;
         }
-        if (request.To != null)
+        if (request.Rules != null)
         {
-            _query["to"] = request.To.Value.ToString(Constants.DateTimeFormat);
+            _query["rules"] = request.Rules;
+        }
+        if (request.Statuses != null)
+        {
+            _query["statuses"] = request.Statuses;
+        }
+        if (request.Start != null)
+        {
+            _query["start"] = request.Start.Value.ToString(Constants.DateTimeFormat);
+        }
+        if (request.End != null)
+        {
+            _query["end"] = request.End.Value.ToString(Constants.DateTimeFormat);
         }
         if (request.Cursor != null)
         {
@@ -44,9 +60,17 @@ public partial class DecisionsClient
         {
             _query["limit"] = request.Limit.Value.ToString();
         }
+        if (request.Count != null)
+        {
+            _query["count"] = request.Count.Value.Stringify();
+        }
+        if (request.Slug != null)
+        {
+            _query["slug"] = request.Slug;
+        }
         var response = await _client
             .SendRequestAsync(
-                new RawClient.JsonApiRequest
+                new JsonRequest
                 {
                     BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Get,
