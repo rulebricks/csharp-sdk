@@ -38,7 +38,7 @@ var requestData = new Dictionary<string, object>
     { "exampleKey", "exampleValue" } // Replace with actual rule data keys and values
 };
 
-var result = client.Rules.Solve("example-rule-slug", requestData);
+var result = await client.Rules.SolveAsync("example-rule-slug", requestData);
 Console.WriteLine($"Result: {result}");
 ```
 
@@ -52,7 +52,7 @@ var requestData = new Dictionary<string, object>
     { "exampleKey", "exampleValue" } // Replace with actual flow data keys and values
 };
 
-var result = client.Flows.Solve("example-flow-slug", requestData);
+var result = await client.Flows.ExecuteAsync("example-flow-slug", requestData);
 Console.WriteLine($"Result: {result}");
 ```
 
