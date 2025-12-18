@@ -29,8 +29,7 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions:
-      id-token: write # Enables OIDC token generation
-      contents: read # Allows checking out code
+      id-token: write
     if: github.event_name == 'release'
     steps:
       - name: Check out code
@@ -47,10 +46,11 @@ jobs:
         run: dotnet build src/RulebricksApi/RulebricksApi.csproj --configuration Release
       - name: Pack
         run: dotnet pack src/RulebricksApi/RulebricksApi.csproj --configuration Release /p:Version=${VERSION} /p:PackageVersion=${VERSION}
-      - name: NuGet trusted publishing login
+      # Get a short-lived NuGet API key
+      - name: NuGet login (OIDC → temp API key)
         uses: NuGet/login@v1
-        id: nuget_login
+        id: login
         with:
-          user: rulebricks
+          user: ${{ secrets.NUGET_USER }}
       - name: Publish to NuGet
-        run: dotnet nuget push "src/RulebricksApi/bin/Release/RulebricksApi.*.nupkg" --api-key ${{ steps.nuget_login.outputs.token }} --source "https://api.nuget.org/v3/index.json"
+        run: dotnet nuget push "src/RulebricksApi/bin/Release/RulebricksApi.*.nupkg" --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source "https://api.nuget.org/v3/index.json"
