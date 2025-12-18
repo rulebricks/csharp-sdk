@@ -28,6 +28,9 @@ jobs:
   publish:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Enables OIDC token generation
+      contents: read # Allows checking out code
     if: github.event_name == 'release'
     steps:
       - name: Check out code
@@ -35,7 +38,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "8.0.x"
+          dotnet-version: "8.x"
       - name: Set version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
       - name: Restore dependencies
@@ -44,7 +47,10 @@ jobs:
         run: dotnet build src/RulebricksApi/RulebricksApi.csproj --configuration Release
       - name: Pack
         run: dotnet pack src/RulebricksApi/RulebricksApi.csproj --configuration Release /p:Version=${VERSION} /p:PackageVersion=${VERSION}
+      - name: NuGet trusted publishing login
+        uses: NuGet/login@v1
+        id: nuget_login
+        with:
+          user: rulebricks
       - name: Publish to NuGet
-        env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        run: dotnet nuget push "src/RulebricksApi/bin/Release/RulebricksApi.*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source "https://api.nuget.org/v3/index.json"
+        run: dotnet nuget push "src/RulebricksApi/bin/Release/RulebricksApi.*.nupkg" --api-key ${{ steps.nuget_login.outputs.token }} --source "https://api.nuget.org/v3/index.json"
