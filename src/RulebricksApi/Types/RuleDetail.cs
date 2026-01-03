@@ -17,8 +17,20 @@ public record RuleDetail : IJsonOnDeserialized
     [JsonPropertyName("created_at")]
     public DateTime? CreatedAt { get; set; }
 
+    /// <summary>
+    /// The date this rule was last updated.
+    /// </summary>
+    [JsonPropertyName("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
+
     [JsonPropertyName("folder")]
     public Folder? Folder { get; set; }
+
+    /// <summary>
+    /// The context this rule is bound to (if any). Rules bound to a context have their inputs/outputs mapped to context fields.
+    /// </summary>
+    [JsonPropertyName("context")]
+    public RuleDetailContext? Context { get; set; }
 
     /// <summary>
     /// The published request schema for the rule.

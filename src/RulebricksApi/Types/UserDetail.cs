@@ -35,7 +35,7 @@ public record UserDetail : IJsonOnDeserialized
     /// <summary>
     /// API key assigned to the user.
     /// </summary>
-    [JsonPropertyName("apiKey")]
+    [JsonPropertyName("api_key")]
     public string? ApiKey { get; set; }
 
     /// <summary>
@@ -45,15 +45,15 @@ public record UserDetail : IJsonOnDeserialized
     public string? Role { get; set; }
 
     /// <summary>
-    /// List of access group names the user belongs to.
+    /// List of user group names the user belongs to.
     /// </summary>
-    [JsonPropertyName("accessGroups")]
-    public IEnumerable<string>? AccessGroups { get; set; }
+    [JsonPropertyName("user_groups")]
+    public IEnumerable<string>? UserGroups { get; set; }
 
     /// <summary>
     /// Date and time when the user joined the organization.
     /// </summary>
-    [JsonPropertyName("joinedAt")]
+    [JsonPropertyName("joined_at")]
     public DateTime? JoinedAt { get; set; }
 
     [JsonIgnore]

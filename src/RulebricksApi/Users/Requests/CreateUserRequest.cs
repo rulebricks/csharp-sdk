@@ -31,10 +31,10 @@ public record CreateUserRequest
     public string? Role { get; set; }
 
     /// <summary>
-    /// List of access group names or IDs to assign to the user.
+    /// List of user group names or IDs to assign to the user.
     /// </summary>
-    [JsonPropertyName("accessGroups")]
-    public IEnumerable<string>? AccessGroups { get; set; }
+    [JsonPropertyName("user_groups")]
+    public IEnumerable<string>? UserGroups { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

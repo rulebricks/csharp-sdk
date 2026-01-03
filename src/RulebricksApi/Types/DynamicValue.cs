@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using OneOf;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -33,7 +34,13 @@ public record DynamicValue : IJsonOnDeserialized
     /// The actual value - can be any valid JSON type
     /// </summary>
     [JsonPropertyName("value")]
-    public object? Value { get; set; }
+    public OneOf<
+        string,
+        double,
+        bool,
+        IEnumerable<object>,
+        Dictionary<string, object?>
+    >? Value { get; set; }
 
     /// <summary>
     /// Rules that use this dynamic value (only included when 'include=usage' parameter is used).
@@ -42,10 +49,10 @@ public record DynamicValue : IJsonOnDeserialized
     public IEnumerable<RuleUsage>? Usages { get; set; }
 
     /// <summary>
-    /// Access groups assigned to this value.
+    /// User groups assigned to this value.
     /// </summary>
-    [JsonPropertyName("accessGroups")]
-    public IEnumerable<string>? AccessGroups { get; set; }
+    [JsonPropertyName("user_groups")]
+    public IEnumerable<string>? UserGroups { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

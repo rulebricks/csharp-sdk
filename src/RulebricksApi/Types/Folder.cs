@@ -32,7 +32,7 @@ public record Folder : IJsonOnDeserialized
     /// <summary>
     /// Timestamp of when the folder was last updated.
     /// </summary>
-    [JsonPropertyName("updatedAt")]
+    [JsonPropertyName("updated_at")]
     public DateTime? UpdatedAt { get; set; }
 
     [JsonIgnore]

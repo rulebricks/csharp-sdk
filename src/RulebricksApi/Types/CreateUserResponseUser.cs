@@ -36,15 +36,15 @@ public record CreateUserResponseUser : IJsonOnDeserialized
     public string? Role { get; set; }
 
     /// <summary>
-    /// Access groups assigned to the user.
+    /// User groups assigned to the user.
     /// </summary>
-    [JsonPropertyName("accessGroups")]
-    public IEnumerable<string>? AccessGroups { get; set; }
+    [JsonPropertyName("user_groups")]
+    public IEnumerable<string>? UserGroups { get; set; }
 
     /// <summary>
     /// API key generated for the user.
     /// </summary>
-    [JsonPropertyName("apiKey")]
+    [JsonPropertyName("api_key")]
     public string? ApiKey { get; set; }
 
     [JsonIgnore]

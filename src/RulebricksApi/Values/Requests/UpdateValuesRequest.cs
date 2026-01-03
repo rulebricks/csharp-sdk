@@ -15,8 +15,8 @@ public record UpdateValuesRequest
     /// <summary>
     /// Optional array of access group names or IDs. If omitted and user belongs to access groups, values will be assigned to all user's access groups. Required if values should be restricted to specific access groups.
     /// </summary>
-    [JsonPropertyName("accessGroups")]
-    public IEnumerable<string>? AccessGroups { get; set; }
+    [JsonPropertyName("user_groups")]
+    public IEnumerable<string>? UserGroups { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

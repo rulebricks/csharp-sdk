@@ -25,7 +25,7 @@ public partial class UsersClient
     ///     {
     ///         Email = "newuser@example.com",
     ///         Role = UserInviteRequestRole.Developer,
-    ///         AccessGroups = new List&lt;string&gt;() { "group1", "group2" },
+    ///         UserGroups = new List&lt;string&gt;() { "group1", "group2" },
     ///     }
     /// );
     /// </code></example>

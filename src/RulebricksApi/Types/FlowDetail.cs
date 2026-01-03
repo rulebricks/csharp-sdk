@@ -24,6 +24,18 @@ public record FlowDetail : IJsonOnDeserialized
     public DateTime? UpdatedAt { get; set; }
 
     /// <summary>
+    /// The origin rule that this flow starts from. Flows execute starting from this rule's outputs.
+    /// </summary>
+    [JsonPropertyName("origin_rule")]
+    public FlowDetailOriginRule? OriginRule { get; set; }
+
+    /// <summary>
+    /// The context this flow is bound to (via its origin rule). Flows inherit context binding from their origin rule.
+    /// </summary>
+    [JsonPropertyName("context")]
+    public FlowDetailContext? Context { get; set; }
+
+    /// <summary>
     /// The unique identifier for the flow.
     /// </summary>
     [JsonPropertyName("id")]

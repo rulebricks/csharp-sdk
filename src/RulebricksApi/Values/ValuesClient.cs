@@ -100,7 +100,7 @@ public partial class ValuesClient
     ///                 new List&lt;object?&gt;() { "reading", "cycling" }
     ///             },
     ///         },
-    ///         AccessGroups = new List&lt;string&gt;() { "marketing", "developers" },
+    ///         UserGroups = new List&lt;string&gt;() { "marketing", "developers" },
     ///     }
     /// );
     /// </code></example>

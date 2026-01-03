@@ -1,4 +1,5 @@
 using System.Text.Json;
+using OneOf;
 using RulebricksApi.Assets;
 using RulebricksApi.Core;
 
@@ -60,6 +61,179 @@ public partial class AssetsClient
 
         {
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            throw new RulebricksApiApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    /// <summary>
+    /// Import rules, flows, contexts, and values from an RBM manifest file.
+    /// </summary>
+    /// <example><code>
+    /// await client.Assets.ImportAsync(
+    ///     new ImportManifestRequest
+    ///     {
+    ///         Manifest = new ImportManifestRequestManifest
+    ///         {
+    ///             Version = "1.0",
+    ///             Rules = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
+    ///             {
+    ///                 new Dictionary&lt;string, object?&gt;()
+    ///                 {
+    ///                     { "name", "Pricing Rule" },
+    ///                     { "slug", "pricing-rule" },
+    ///                 },
+    ///             },
+    ///             Flows = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
+    ///             {
+    ///                 new Dictionary&lt;string, object?&gt;()
+    ///                 {
+    ///                     { "name", "Onboarding Flow" },
+    ///                     { "slug", "onboarding-flow" },
+    ///                 },
+    ///             },
+    ///             Contexts = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
+    ///             {
+    ///                 new Dictionary&lt;string, object?&gt;()
+    ///                 {
+    ///                     { "name", "Customer" },
+    ///                     { "slug", "customer" },
+    ///                 },
+    ///             },
+    ///             Values = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
+    ///             {
+    ///                 new Dictionary&lt;string, object?&gt;() { { "key", "tax_rate" }, { "value", 0.08 } },
+    ///             },
+    ///         },
+    ///         Overwrite = false,
+    ///     }
+    /// );
+    /// </code></example>
+    public async Task<ImportManifestResponse> ImportAsync(
+        ImportManifestRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.BaseUrl,
+                    Method = HttpMethod.Post,
+                    Path = "admin/import",
+                    Body = request,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                return JsonUtils.Deserialize<ImportManifestResponse>(responseBody)!;
+            }
+            catch (JsonException e)
+            {
+                throw new RulebricksApiException("Failed to deserialize response", e);
+            }
+        }
+
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
+                    case 500:
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new RulebricksApiApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
+    }
+
+    /// <summary>
+    /// Export selected rules, flows, contexts, and values to an RBM manifest file.
+    /// </summary>
+    /// <example><code>
+    /// await client.Assets.ExportAsync(
+    ///     new ExportManifestRequest
+    ///     {
+    ///         Rules = new List&lt;string&gt;() { "pricing-rule", "eligibility-check" },
+    ///         Flows = new List&lt;string&gt;() { "onboarding-flow" },
+    ///         Contexts = new List&lt;string&gt;() { "customer" },
+    ///         Values = new List&lt;string&gt;() { "tax_rate", "discount_threshold" },
+    ///     }
+    /// );
+    /// </code></example>
+    public async Task<OneOf<ExportManifestResponse, ExportManifestPreviewResponse>> ExportAsync(
+        ExportManifestRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    BaseUrl = _client.Options.BaseUrl,
+                    Method = HttpMethod.Post,
+                    Path = "admin/export",
+                    Body = request,
+                    ContentType = "application/json",
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                return JsonUtils.Deserialize<
+                    OneOf<ExportManifestResponse, ExportManifestPreviewResponse>
+                >(responseBody)!;
+            }
+            catch (JsonException e)
+            {
+                throw new RulebricksApiException("Failed to deserialize response", e);
+            }
+        }
+
+        {
+            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
+                    case 500:
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
             throw new RulebricksApiApiException(
                 $"Error with status code {response.StatusCode}",
                 response.StatusCode,

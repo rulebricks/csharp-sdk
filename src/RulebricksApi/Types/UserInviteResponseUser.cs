@@ -24,10 +24,10 @@ public record UserInviteResponseUser : IJsonOnDeserialized
     public string? Role { get; set; }
 
     /// <summary>
-    /// Access groups assigned to the user.
+    /// User groups assigned to the user.
     /// </summary>
-    [JsonPropertyName("accessGroups")]
-    public IEnumerable<string>? AccessGroups { get; set; }
+    [JsonPropertyName("user_groups")]
+    public IEnumerable<string>? UserGroups { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -33,6 +33,7 @@ public partial class RulebricksApiClient
         Users = new UsersClient(_client);
         Assets = new AssetsClient(_client);
         Values = new ValuesClient(_client);
+        Contexts = new ContextsClient(_client);
         Tests = new TestsClient(_client);
     }
 
@@ -47,6 +48,8 @@ public partial class RulebricksApiClient
     public AssetsClient Assets { get; }
 
     public ValuesClient Values { get; }
+
+    public ContextsClient Contexts { get; }
 
     public TestsClient Tests { get; }
 }
