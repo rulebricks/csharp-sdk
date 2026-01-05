@@ -4,7 +4,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 [Serializable]
-public record DeleteInstanceContextsRequest
+public record DeleteContextsRequest
 {
     /// <summary>
     /// The unique slug for the context.

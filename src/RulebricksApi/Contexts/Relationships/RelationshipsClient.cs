@@ -87,9 +87,9 @@ public partial class RelationshipsClient
     ///     new CreateRelationshipRequest
     ///     {
     ///         Id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-    ///         TargetContextId = "b2c3d4e5-f6a7-8901-bcde-f12345678901",
-    ///         Type = CreateRelationshipRequestType.OneToMany,
-    ///         ForeignKey = "customer_id",
+    ///         ToContextId = "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+    ///         RelationType = CreateRelationshipRequestRelationType.HasMany,
+    ///         ForeignKeyFact = "customer_id",
     ///         Name = "Customer Orders",
     ///     }
     /// );

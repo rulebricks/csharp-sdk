@@ -4,7 +4,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi.Contexts;
 
 [Serializable]
-public record GetAdminRequest
+public record GetObjectsRequest
 {
     /// <summary>
     /// The unique identifier for the context.

@@ -1,5 +1,5 @@
-using System.Text.Json;
 using System.Text.Json.Serialization;
+using OneOf;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -8,11 +8,11 @@ namespace RulebricksApi;
 /// Rule/flow execution log entry with request, response, and decision details.
 /// </summary>
 [Serializable]
-public record DecisionLog : IJsonOnDeserialized
+public record DecisionLog : IJsonOnDeserialized, IJsonOnSerializing
 {
     [JsonExtensionData]
-    private readonly IDictionary<string, JsonElement> _extensionData =
-        new Dictionary<string, JsonElement>();
+    private readonly IDictionary<string, object?> _extensionData =
+        new Dictionary<string, object?>();
 
     /// <summary>
     /// When the rule/flow was executed.
@@ -39,16 +39,19 @@ public record DecisionLog : IJsonOnDeserialized
     public int? Status { get; set; }
 
     /// <summary>
-    /// The request payload sent to the rule/flow.
+    /// The request payload sent to the rule/flow. Can be an object for single requests or an array for bulk operations.
     /// </summary>
     [JsonPropertyName("request")]
-    public Dictionary<string, object?>? Request { get; set; }
+    public OneOf<
+        Dictionary<string, object?>,
+        IEnumerable<Dictionary<string, object?>>
+    >? Request { get; set; }
 
     /// <summary>
-    /// The response payload returned by the rule/flow.
+    /// The response payload returned by the rule/flow. Can be an object for single responses or an array for bulk operations.
     /// </summary>
     [JsonPropertyName("response")]
-    public Dictionary<string, object?>? Response { get; set; }
+    public DecisionLogResponse? Response { get; set; }
 
     /// <summary>
     /// Decision details including matched conditions, rows, and evaluation metadata.
@@ -69,10 +72,13 @@ public record DecisionLog : IJsonOnDeserialized
     public bool? Abbreviated { get; set; }
 
     [JsonIgnore]
-    public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
+    public AdditionalProperties AdditionalProperties { get; set; } = new();
 
     void IJsonOnDeserialized.OnDeserialized() =>
         AdditionalProperties.CopyFromExtensionData(_extensionData);
+
+    void IJsonOnSerializing.OnSerializing() =>
+        AdditionalProperties.CopyToExtensionData(_extensionData);
 
     /// <inheritdoc />
     public override string ToString()

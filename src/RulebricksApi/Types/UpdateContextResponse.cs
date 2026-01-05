@@ -4,30 +4,39 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
+/// <summary>
+/// Response after updating a context.
+/// </summary>
 [Serializable]
-public record ExportManifestResponse : IJsonOnDeserialized
+public record UpdateContextResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Whether the export completed successfully.
+    /// The unique identifier of the updated context.
     /// </summary>
-    [JsonPropertyName("success")]
-    public bool? Success { get; set; }
+    [JsonPropertyName("id")]
+    public string? Id { get; set; }
 
     /// <summary>
-    /// The exported manifest data.
+    /// The slug of the updated context.
     /// </summary>
-    [JsonPropertyName("manifest")]
-    public ExportManifestResponseManifest? Manifest { get; set; }
+    [JsonPropertyName("slug")]
+    public string? Slug { get; set; }
 
     /// <summary>
-    /// Error message if export failed.
+    /// The name of the updated context.
     /// </summary>
-    [JsonPropertyName("error")]
-    public string? Error { get; set; }
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// Timestamp of when the context was updated.
+    /// </summary>
+    [JsonPropertyName("updated_at")]
+    public DateTime? UpdatedAt { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

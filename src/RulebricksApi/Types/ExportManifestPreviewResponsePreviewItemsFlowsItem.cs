@@ -1,28 +1,24 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using RulebricksApi;
 using RulebricksApi.Core;
 
-namespace RulebricksApi.Contexts;
+namespace RulebricksApi;
 
 [Serializable]
-public record CreateContextRequestSchemaItem : IJsonOnDeserialized
+public record ExportManifestPreviewResponsePreviewItemsFlowsItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("key")]
-    public string? Key { get; set; }
+    [JsonPropertyName("id")]
+    public string? Id { get; set; }
 
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
-    [JsonPropertyName("type")]
-    public string? Type { get; set; }
-
-    [JsonPropertyName("defaultValue")]
-    public object? DefaultValue { get; set; }
+    [JsonPropertyName("slug")]
+    public string? Slug { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

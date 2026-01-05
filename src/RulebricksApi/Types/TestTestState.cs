@@ -33,16 +33,16 @@ public record TestTestState : IJsonOnDeserialized
     /// <summary>
     /// HTTP status code returned
     /// </summary>
-    [JsonPropertyName("httpStatus")]
+    [JsonPropertyName("http_status")]
     public int? HttpStatus { get; set; }
 
-    [JsonPropertyName("successIdxs")]
+    [JsonPropertyName("success_idxs")]
     public IEnumerable<int>? SuccessIdxs { get; set; }
 
     /// <summary>
     /// Error message or flag indicating if evaluation error occurred
     /// </summary>
-    [JsonPropertyName("evaluationError")]
+    [JsonPropertyName("evaluation_error")]
     public OneOf<bool, string>? EvaluationError { get; set; }
 
     [JsonIgnore]

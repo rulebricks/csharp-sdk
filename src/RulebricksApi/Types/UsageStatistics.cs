@@ -18,13 +18,13 @@ public record UsageStatistics : IJsonOnDeserialized
     public string? Plan { get; set; }
 
     /// <summary>
-    /// The start date of the current monthly period.
+    /// The start date of the current monthly period (MM-DD-YYYY).
     /// </summary>
     [JsonPropertyName("monthly_period_start")]
     public string? MonthlyPeriodStart { get; set; }
 
     /// <summary>
-    /// The end date of the current monthly period.
+    /// The end date of the current monthly period (MM-DD-YYYY).
     /// </summary>
     [JsonPropertyName("monthly_period_end")]
     public string? MonthlyPeriodEnd { get; set; }
@@ -36,16 +36,34 @@ public record UsageStatistics : IJsonOnDeserialized
     public double? MonthlyExecutionsUsage { get; set; }
 
     /// <summary>
-    /// The total number of rule executions allowed this month.
+    /// The total number of rule executions allowed this month. -1 indicates unlimited.
     /// </summary>
     [JsonPropertyName("monthly_executions_limit")]
     public double? MonthlyExecutionsLimit { get; set; }
 
     /// <summary>
-    /// The number of rule executions remaining this month.
+    /// The number of rule executions remaining this month. -1 indicates unlimited.
     /// </summary>
     [JsonPropertyName("monthly_executions_remaining")]
     public double? MonthlyExecutionsRemaining { get; set; }
+
+    /// <summary>
+    /// Whether the plan has unlimited executions (true when monthly_executions_limit is -1).
+    /// </summary>
+    [JsonPropertyName("unlimited_plan")]
+    public bool? UnlimitedPlan { get; set; }
+
+    /// <summary>
+    /// Number of days remaining in the current billing period.
+    /// </summary>
+    [JsonPropertyName("days_remaining_in_period")]
+    public double? DaysRemainingInPeriod { get; set; }
+
+    /// <summary>
+    /// Average number of executions per day in the current period.
+    /// </summary>
+    [JsonPropertyName("daily_average_usage")]
+    public double? DailyAverageUsage { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

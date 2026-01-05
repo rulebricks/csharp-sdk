@@ -26,7 +26,7 @@ public record ContextRelationshipBase : IJsonOnDeserialized
     /// <summary>
     /// The field key used as the foreign key.
     /// </summary>
-    [JsonPropertyName("foreignKey")]
+    [JsonPropertyName("foreign_key")]
     public string? ForeignKey { get; set; }
 
     /// <summary>
@@ -40,6 +40,12 @@ public record ContextRelationshipBase : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; set; }
+
+    /// <summary>
+    /// When the relationship was created.
+    /// </summary>
+    [JsonPropertyName("created_at")]
+    public DateTime? CreatedAt { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

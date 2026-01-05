@@ -70,10 +70,10 @@ public partial class AssetsClient
     }
 
     /// <summary>
-    /// Import rules, flows, contexts, and values from an RBM manifest file.
+    /// Import rules, flows, contexts, and values from an Rulebricks manifest file (*.rbm).
     /// </summary>
     /// <example><code>
-    /// await client.Assets.ImportAsync(
+    /// await client.Assets.ImportRbmAsync(
     ///     new ImportManifestRequest
     ///     {
     ///         Manifest = new ImportManifestRequestManifest
@@ -95,7 +95,7 @@ public partial class AssetsClient
     ///                     { "slug", "onboarding-flow" },
     ///                 },
     ///             },
-    ///             Contexts = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
+    ///             Entities = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
     ///             {
     ///                 new Dictionary&lt;string, object?&gt;()
     ///                 {
@@ -105,14 +105,14 @@ public partial class AssetsClient
     ///             },
     ///             Values = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
     ///             {
-    ///                 new Dictionary&lt;string, object?&gt;() { { "key", "tax_rate" }, { "value", 0.08 } },
+    ///                 new Dictionary&lt;string, object?&gt;() { { "name", "tax_rate" }, { "value", 0.08 } },
     ///             },
     ///         },
-    ///         Overwrite = false,
+    ///         ConflictStrategy = ImportManifestRequestConflictStrategy.Update,
     ///     }
     /// );
     /// </code></example>
-    public async Task<ImportManifestResponse> ImportAsync(
+    public async Task<ImportManifestResponse> ImportRbmAsync(
         ImportManifestRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -170,20 +170,19 @@ public partial class AssetsClient
     }
 
     /// <summary>
-    /// Export selected rules, flows, contexts, and values to an RBM manifest file.
+    /// Export selected rules, flows, contexts, and values to an Rulebricks manifest file (*.rbm).
     /// </summary>
     /// <example><code>
-    /// await client.Assets.ExportAsync(
+    /// await client.Assets.ExportRbmAsync(
     ///     new ExportManifestRequest
     ///     {
-    ///         Rules = new List&lt;string&gt;() { "pricing-rule", "eligibility-check" },
-    ///         Flows = new List&lt;string&gt;() { "onboarding-flow" },
-    ///         Contexts = new List&lt;string&gt;() { "customer" },
-    ///         Values = new List&lt;string&gt;() { "tax_rate", "discount_threshold" },
+    ///         RootType = ExportManifestRequestRootType.Rule,
+    ///         RootIds = new List&lt;string&gt;() { "pricing-rule", "eligibility-check" },
+    ///         IncludeDownstream = false,
     ///     }
     /// );
     /// </code></example>
-    public async Task<OneOf<ExportManifestResponse, ExportManifestPreviewResponse>> ExportAsync(
+    public async Task<OneOf<ExportManifestResponse, ExportManifestPreviewResponse>> ExportRbmAsync(
         ExportManifestRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

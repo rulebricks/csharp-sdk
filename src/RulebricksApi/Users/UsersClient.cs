@@ -17,7 +17,7 @@ public partial class UsersClient
     public GroupsClient Groups { get; }
 
     /// <summary>
-    /// Invite a new user to the organization or update role or access group data for an existing user.
+    /// Invite a new user to the organization or update role or user group data for an existing user.
     /// </summary>
     /// <example><code>
     /// await client.Users.InviteAsync(
@@ -87,7 +87,7 @@ public partial class UsersClient
     }
 
     /// <summary>
-    /// List all users (including the admin and all team members) in the organization with their details including email, name, API key, role, access groups, and join date.
+    /// List all users (including the admin and all team members) in the organization with their details including email, name, API key, role, user groups, and join date.
     /// </summary>
     /// <example><code>
     /// await client.Users.ListAsync();

@@ -13,10 +13,25 @@ public record ImportManifestRequest
     public required ImportManifestRequestManifest Manifest { get; set; }
 
     /// <summary>
-    /// Whether to overwrite existing assets with the same ID/slug.
+    /// How to handle conflicts with existing assets. 'update' overwrites, 'skip' ignores, 'error' fails.
     /// </summary>
-    [JsonPropertyName("overwrite")]
-    public bool? Overwrite { get; set; }
+    [JsonPropertyName("conflict_strategy")]
+    public ImportManifestRequestConflictStrategy? ConflictStrategy { get; set; }
+
+    /// <summary>
+    /// Optional folder name to place imported assets into. Created if it doesn't exist.
+    /// </summary>
+    [JsonPropertyName("target_folder_name")]
+    public string? TargetFolderName { get; set; }
+
+    /// <summary>
+    /// Optional mapping for legacy flow imports to reuse existing rules.
+    /// </summary>
+    [JsonPropertyName("legacy_rule_mapping")]
+    public Dictionary<
+        string,
+        ImportManifestRequestLegacyRuleMappingValue
+    >? LegacyRuleMapping { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

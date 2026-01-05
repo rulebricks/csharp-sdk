@@ -5,17 +5,17 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 [Serializable]
-public record ExportManifestPreviewResponseItemsValuesItem : IJsonOnDeserialized
+public record ImportManifestRequestLegacyRuleMappingValue : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    [JsonPropertyName("action")]
+    public ImportManifestRequestLegacyRuleMappingValueAction? Action { get; set; }
 
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    [JsonPropertyName("rule_id")]
+    public string? RuleId { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

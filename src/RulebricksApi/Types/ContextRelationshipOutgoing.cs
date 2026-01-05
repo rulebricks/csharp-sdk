@@ -11,7 +11,7 @@ public record ContextRelationshipOutgoing : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("targetContext")]
+    [JsonPropertyName("target_context")]
     public ContextRelationshipOutgoingTargetContext? TargetContext { get; set; }
 
     /// <summary>
@@ -29,7 +29,7 @@ public record ContextRelationshipOutgoing : IJsonOnDeserialized
     /// <summary>
     /// The field key used as the foreign key.
     /// </summary>
-    [JsonPropertyName("foreignKey")]
+    [JsonPropertyName("foreign_key")]
     public string? ForeignKey { get; set; }
 
     /// <summary>
@@ -43,6 +43,12 @@ public record ContextRelationshipOutgoing : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; set; }
+
+    /// <summary>
+    /// When the relationship was created.
+    /// </summary>
+    [JsonPropertyName("created_at")]
+    public DateTime? CreatedAt { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -4,7 +4,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 [Serializable]
-public record CascadeContextRequest
+public record CascadeContextsRequest
 {
     /// <summary>
     /// The unique slug for the context.
@@ -18,11 +18,8 @@ public record CascadeContextRequest
     [JsonIgnore]
     public required string Instance { get; set; }
 
-    /// <summary>
-    /// Maximum depth for cascading evaluations.
-    /// </summary>
-    [JsonPropertyName("maxDepth")]
-    public int? MaxDepth { get; set; }
+    [JsonIgnore]
+    public Dictionary<string, object?> Body { get; set; } = new Dictionary<string, object?>();
 
     /// <inheritdoc />
     public override string ToString()

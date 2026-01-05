@@ -17,6 +17,12 @@ public record DeleteRelationshipResponse : IJsonOnDeserialized
     [JsonPropertyName("message")]
     public string? Message { get; set; }
 
+    /// <summary>
+    /// The ID of the deleted relationship.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public string? Id { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

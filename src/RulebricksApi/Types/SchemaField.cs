@@ -45,7 +45,7 @@ public record SchemaField : IJsonOnDeserialized
     /// <summary>
     /// Default value for this field.
     /// </summary>
-    [JsonPropertyName("defaultValue")]
+    [JsonPropertyName("default_value")]
     public OneOf<
         string,
         double,
@@ -57,7 +57,7 @@ public record SchemaField : IJsonOnDeserialized
     /// <summary>
     /// Computed default value for this field.
     /// </summary>
-    [JsonPropertyName("defaultComputedValue")]
+    [JsonPropertyName("default_computed_value")]
     public string? DefaultComputedValue { get; set; }
 
     /// <summary>

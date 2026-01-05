@@ -4,7 +4,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 [Serializable]
-public record SolveContextRuleRequest
+public record ExecuteContextsRequest
 {
     /// <summary>
     /// The unique slug for the context.
@@ -19,22 +19,13 @@ public record SolveContextRuleRequest
     public required string Instance { get; set; }
 
     /// <summary>
-    /// The unique slug for the rule.
+    /// The unique slug for the flow.
     /// </summary>
     [JsonIgnore]
-    public required string RuleSlug { get; set; }
+    public required string FlowSlug { get; set; }
 
-    /// <summary>
-    /// Additional data to merge with instance state for rule evaluation.
-    /// </summary>
-    [JsonPropertyName("additionalData")]
-    public Dictionary<string, object?>? AdditionalData { get; set; }
-
-    /// <summary>
-    /// Whether to persist derived outputs to the instance.
-    /// </summary>
-    [JsonPropertyName("persist")]
-    public bool? Persist { get; set; }
+    [JsonIgnore]
+    public Dictionary<string, object?> Body { get; set; } = new Dictionary<string, object?>();
 
     /// <inheritdoc />
     public override string ToString()

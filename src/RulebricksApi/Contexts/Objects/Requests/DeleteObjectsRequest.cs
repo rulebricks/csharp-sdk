@@ -4,7 +4,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi.Contexts;
 
 [Serializable]
-public record DeleteAdminRequest
+public record DeleteObjectsRequest
 {
     /// <summary>
     /// The unique identifier for the context.

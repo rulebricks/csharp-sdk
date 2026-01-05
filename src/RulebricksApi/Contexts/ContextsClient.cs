@@ -11,11 +11,11 @@ public partial class ContextsClient
     internal ContextsClient(RawClient client)
     {
         _client = client;
-        Admin = new AdminClient(_client);
+        Objects = new ObjectsClient(_client);
         Relationships = new RelationshipsClient(_client);
     }
 
-    public AdminClient Admin { get; }
+    public ObjectsClient Objects { get; }
 
     public RelationshipsClient Relationships { get; }
 
@@ -23,12 +23,12 @@ public partial class ContextsClient
     /// Retrieve the current state of a context instance.
     /// </summary>
     /// <example><code>
-    /// await client.Contexts.GetInstanceAsync(
-    ///     new GetInstanceContextsRequest { Slug = "customer", Instance = "cust-12345" }
+    /// await client.Contexts.GetAsync(
+    ///     new GetContextsRequest { Slug = "customer", Instance = "cust-12345" }
     /// );
     /// </code></example>
-    public async Task<ContextInstanceState> GetInstanceAsync(
-        GetInstanceContextsRequest request,
+    public async Task<ContextInstanceState> GetAsync(
+        GetContextsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -170,12 +170,12 @@ public partial class ContextsClient
     /// Delete a specific context instance and its history.
     /// </summary>
     /// <example><code>
-    /// await client.Contexts.DeleteInstanceAsync(
-    ///     new DeleteInstanceContextsRequest { Slug = "customer", Instance = "cust-12345" }
+    /// await client.Contexts.DeleteAsync(
+    ///     new DeleteContextsRequest { Slug = "customer", Instance = "cust-12345" }
     /// );
     /// </code></example>
-    public async Task<DeleteContextInstanceResponse> DeleteInstanceAsync(
-        DeleteInstanceContextsRequest request,
+    public async Task<DeleteContextInstanceResponse> DeleteAsync(
+        DeleteContextsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -382,16 +382,17 @@ public partial class ContextsClient
     /// </summary>
     /// <example><code>
     /// await client.Contexts.SolveAsync(
-    ///     new SolveContextRuleRequest
+    ///     new SolveContextsRequest
     ///     {
     ///         Slug = "customer",
     ///         Instance = "cust-12345",
     ///         RuleSlug = "eligibility-check",
+    ///         Body = new Dictionary&lt;string, object?&gt;() { },
     ///     }
     /// );
     /// </code></example>
     public async Task<SolveContextRuleResponse> SolveAsync(
-        SolveContextRuleRequest request,
+        SolveContextsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -408,7 +409,7 @@ public partial class ContextsClient
                         ValueConvert.ToPathParameterString(request.Instance),
                         ValueConvert.ToPathParameterString(request.RuleSlug)
                     ),
-                    Body = request,
+                    Body = request.Body,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -459,11 +460,16 @@ public partial class ContextsClient
     /// </summary>
     /// <example><code>
     /// await client.Contexts.CascadeAsync(
-    ///     new CascadeContextRequest { Slug = "customer", Instance = "cust-12345" }
+    ///     new CascadeContextsRequest
+    ///     {
+    ///         Slug = "customer",
+    ///         Instance = "cust-12345",
+    ///         Body = new Dictionary&lt;string, object?&gt;() { },
+    ///     }
     /// );
     /// </code></example>
     public async Task<CascadeContextResponse> CascadeAsync(
-        CascadeContextRequest request,
+        CascadeContextsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -479,7 +485,7 @@ public partial class ContextsClient
                         ValueConvert.ToPathParameterString(request.Slug),
                         ValueConvert.ToPathParameterString(request.Instance)
                     ),
-                    Body = request,
+                    Body = request.Body,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -528,16 +534,17 @@ public partial class ContextsClient
     /// </summary>
     /// <example><code>
     /// await client.Contexts.ExecuteAsync(
-    ///     new SolveContextFlowRequest
+    ///     new ExecuteContextsRequest
     ///     {
     ///         Slug = "customer",
     ///         Instance = "cust-12345",
     ///         FlowSlug = "onboarding-flow",
+    ///         Body = new Dictionary&lt;string, object?&gt;() { },
     ///     }
     /// );
     /// </code></example>
     public async Task<SolveContextFlowResponse> ExecuteAsync(
-        SolveContextFlowRequest request,
+        ExecuteContextsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -554,7 +561,7 @@ public partial class ContextsClient
                         ValueConvert.ToPathParameterString(request.Instance),
                         ValueConvert.ToPathParameterString(request.FlowSlug)
                     ),
-                    Body = request,
+                    Body = request.Body,
                     ContentType = "application/json",
                     Options = options,
                 },

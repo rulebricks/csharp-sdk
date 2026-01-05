@@ -13,7 +13,7 @@ public record UpdateValuesRequest
     public Dictionary<string, object?> Values { get; set; } = new Dictionary<string, object?>();
 
     /// <summary>
-    /// Optional array of access group names or IDs. If omitted and user belongs to access groups, values will be assigned to all user's access groups. Required if values should be restricted to specific access groups.
+    /// Optional array of user group names or IDs. If omitted and user belongs to user groups, values will be assigned to all user's user groups. Required if values should be restricted to specific user groups.
     /// </summary>
     [JsonPropertyName("user_groups")]
     public IEnumerable<string>? UserGroups { get; set; }

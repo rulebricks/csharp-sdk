@@ -5,23 +5,23 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 [Serializable]
-public record ExportManifestPreviewResponseItems : IJsonOnDeserialized
+public record ImportManifestResponseUpdatedItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("rules")]
-    public IEnumerable<ExportManifestPreviewResponseItemsRulesItem>? Rules { get; set; }
+    [JsonPropertyName("type")]
+    public string? Type { get; set; }
 
-    [JsonPropertyName("flows")]
-    public IEnumerable<ExportManifestPreviewResponseItemsFlowsItem>? Flows { get; set; }
+    [JsonPropertyName("stable_id")]
+    public string? StableId { get; set; }
 
-    [JsonPropertyName("contexts")]
-    public IEnumerable<ExportManifestPreviewResponseItemsContextsItem>? Contexts { get; set; }
+    [JsonPropertyName("db_id")]
+    public string? DbId { get; set; }
 
-    [JsonPropertyName("values")]
-    public IEnumerable<ExportManifestPreviewResponseItemsValuesItem>? Values { get; set; }
+    [JsonPropertyName("status")]
+    public string? Status { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

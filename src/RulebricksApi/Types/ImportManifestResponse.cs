@@ -12,28 +12,46 @@ public record ImportManifestResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Success message.
+    /// Whether the import completed successfully.
     /// </summary>
-    [JsonPropertyName("message")]
-    public string? Message { get; set; }
+    [JsonPropertyName("success")]
+    public bool? Success { get; set; }
 
     /// <summary>
-    /// Count of imported assets by type.
+    /// Assets that were created during import.
     /// </summary>
-    [JsonPropertyName("imported")]
-    public ImportManifestResponseImported? Imported { get; set; }
+    [JsonPropertyName("created")]
+    public IEnumerable<ImportManifestResponseCreatedItem>? Created { get; set; }
 
     /// <summary>
-    /// Count of skipped assets by type (already exist and overwrite=false).
+    /// Assets that were updated during import.
+    /// </summary>
+    [JsonPropertyName("updated")]
+    public IEnumerable<ImportManifestResponseUpdatedItem>? Updated { get; set; }
+
+    /// <summary>
+    /// Assets that were skipped during import.
     /// </summary>
     [JsonPropertyName("skipped")]
-    public ImportManifestResponseSkipped? Skipped { get; set; }
+    public IEnumerable<ImportManifestResponseSkippedItem>? Skipped { get; set; }
 
     /// <summary>
     /// Any errors encountered during import.
     /// </summary>
     [JsonPropertyName("errors")]
     public IEnumerable<ImportManifestResponseErrorsItem>? Errors { get; set; }
+
+    /// <summary>
+    /// Non-fatal warnings from import validation.
+    /// </summary>
+    [JsonPropertyName("warnings")]
+    public IEnumerable<string>? Warnings { get; set; }
+
+    /// <summary>
+    /// IDs of any organizational folders created during import.
+    /// </summary>
+    [JsonPropertyName("organization_created")]
+    public ImportManifestResponseOrganizationCreated? OrganizationCreated { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

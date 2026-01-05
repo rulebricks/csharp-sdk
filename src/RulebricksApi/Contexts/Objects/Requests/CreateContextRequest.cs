@@ -25,10 +25,17 @@ public record CreateContextRequest
     public string? Description { get; set; }
 
     /// <summary>
-    /// Initial schema fields for the context.
+    /// Initial schema fields for the context. At least one field must be defined.
     /// </summary>
     [JsonPropertyName("schema")]
-    public IEnumerable<CreateContextRequestSchemaItem>? Schema { get; set; }
+    public IEnumerable<CreateContextRequestSchemaItem> Schema { get; set; } =
+        new List<CreateContextRequestSchemaItem>();
+
+    /// <summary>
+    /// The field key to use as the unique identifier for instances. Must be a key from the schema.
+    /// </summary>
+    [JsonPropertyName("identity_fact")]
+    public required string IdentityFact { get; set; }
 
     /// <summary>
     /// When true (default), bound rules and flows automatically execute when their inputs are satisfied.

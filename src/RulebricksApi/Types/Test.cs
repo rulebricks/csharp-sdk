@@ -42,27 +42,27 @@ public record Test : IJsonOnDeserialized
     public required bool Critical { get; set; }
 
     /// <summary>
-    /// Indicates if the test resulted in an error.
+    /// Indicates if the test resulted in an error. Null if test has not been executed.
     /// </summary>
     [JsonPropertyName("error")]
-    public required bool Error { get; set; }
+    public bool? Error { get; set; }
 
     /// <summary>
-    /// Indicates if the test was successful.
+    /// Indicates if the test was successful. Null if test has not been executed.
     /// </summary>
     [JsonPropertyName("success")]
-    public required bool Success { get; set; }
+    public bool? Success { get; set; }
 
     /// <summary>
     /// The state of the test after execution.
     /// </summary>
-    [JsonPropertyName("testState")]
+    [JsonPropertyName("test_state")]
     public TestTestState? TestState { get; set; }
 
     /// <summary>
     /// The timestamp when the test was last executed.
     /// </summary>
-    [JsonPropertyName("lastExecuted")]
+    [JsonPropertyName("last_executed")]
     public DateTime? LastExecuted { get; set; }
 
     [JsonIgnore]

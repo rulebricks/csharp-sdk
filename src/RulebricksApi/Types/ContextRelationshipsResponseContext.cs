@@ -4,30 +4,24 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
+/// <summary>
+/// The context these relationships belong to.
+/// </summary>
 [Serializable]
-public record ExportManifestResponse : IJsonOnDeserialized
+public record ContextRelationshipsResponseContext : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// Whether the export completed successfully.
-    /// </summary>
-    [JsonPropertyName("success")]
-    public bool? Success { get; set; }
+    [JsonPropertyName("id")]
+    public string? Id { get; set; }
 
-    /// <summary>
-    /// The exported manifest data.
-    /// </summary>
-    [JsonPropertyName("manifest")]
-    public ExportManifestResponseManifest? Manifest { get; set; }
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
 
-    /// <summary>
-    /// Error message if export failed.
-    /// </summary>
-    [JsonPropertyName("error")]
-    public string? Error { get; set; }
+    [JsonPropertyName("slug")]
+    public string? Slug { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

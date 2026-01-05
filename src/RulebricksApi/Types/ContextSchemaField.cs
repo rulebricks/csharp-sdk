@@ -41,7 +41,7 @@ public record ContextSchemaField : IJsonOnDeserialized
     /// <summary>
     /// Default value for this field.
     /// </summary>
-    [JsonPropertyName("defaultValue")]
+    [JsonPropertyName("default_value")]
     public object? DefaultValue { get; set; }
 
     /// <summary>
@@ -53,19 +53,19 @@ public record ContextSchemaField : IJsonOnDeserialized
     /// <summary>
     /// The rule ID that derives this field (if derived).
     /// </summary>
-    [JsonPropertyName("sourceRule")]
+    [JsonPropertyName("source_rule")]
     public string? SourceRule { get; set; }
 
     /// <summary>
     /// The flow ID that derives this field (if derived).
     /// </summary>
-    [JsonPropertyName("sourceFlow")]
+    [JsonPropertyName("source_flow")]
     public string? SourceFlow { get; set; }
 
     /// <summary>
     /// The source field key in the rule/flow output.
     /// </summary>
-    [JsonPropertyName("sourceField")]
+    [JsonPropertyName("source_field")]
     public string? SourceField { get; set; }
 
     [JsonIgnore]

@@ -7,40 +7,40 @@ namespace RulebricksApi;
 public record ExportManifestRequest
 {
     /// <summary>
-    /// Rule IDs or slugs to export.
+    /// The type of root asset to export. All dependencies will be included.
     /// </summary>
-    [JsonPropertyName("rules")]
-    public IEnumerable<string>? Rules { get; set; }
+    [JsonPropertyName("root_type")]
+    public required ExportManifestRequestRootType RootType { get; set; }
 
     /// <summary>
-    /// Flow IDs or slugs to export.
+    /// Array of IDs for the root assets to export. Dependencies are automatically resolved.
     /// </summary>
-    [JsonPropertyName("flows")]
-    public IEnumerable<string>? Flows { get; set; }
+    [JsonPropertyName("root_ids")]
+    public IEnumerable<string> RootIds { get; set; } = new List<string>();
 
     /// <summary>
-    /// Context IDs or slugs to export.
+    /// For context exports, whether to include rules and flows bound to the context.
     /// </summary>
-    [JsonPropertyName("contexts")]
-    public IEnumerable<string>? Contexts { get; set; }
+    [JsonPropertyName("include_downstream")]
+    public bool? IncludeDownstream { get; set; }
 
     /// <summary>
-    /// Value IDs or names to export.
+    /// Optional name for the exported manifest.
     /// </summary>
-    [JsonPropertyName("values")]
-    public IEnumerable<string>? Values { get; set; }
+    [JsonPropertyName("manifest_name")]
+    public string? ManifestName { get; set; }
 
     /// <summary>
-    /// Export all assets of specified types.
+    /// Optional description for the exported manifest.
     /// </summary>
-    [JsonPropertyName("includeAll")]
-    public bool? IncludeAll { get; set; }
+    [JsonPropertyName("manifest_description")]
+    public string? ManifestDescription { get; set; }
 
     /// <summary>
-    /// Return a preview of what would be exported without the full data.
+    /// If true, returns a preview of what would be exported without the full data.
     /// </summary>
-    [JsonPropertyName("preview")]
-    public bool? Preview { get; set; }
+    [JsonPropertyName("preview_only")]
+    public bool? PreviewOnly { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

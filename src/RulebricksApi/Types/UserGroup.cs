@@ -35,6 +35,12 @@ public record UserGroup : IJsonOnDeserialized
     [JsonPropertyName("members")]
     public IEnumerable<string>? Members { get; set; }
 
+    /// <summary>
+    /// When the user group was created.
+    /// </summary>
+    [JsonPropertyName("created_at")]
+    public DateTime? CreatedAt { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

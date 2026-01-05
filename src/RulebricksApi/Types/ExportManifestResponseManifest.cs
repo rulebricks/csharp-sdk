@@ -5,10 +5,10 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 /// <summary>
-/// The RBM manifest object containing assets to import.
+/// The exported manifest data.
 /// </summary>
 [Serializable]
-public record ImportManifestRequestManifest : IJsonOnDeserialized
+public record ExportManifestResponseManifest : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
@@ -21,28 +21,43 @@ public record ImportManifestRequestManifest : IJsonOnDeserialized
     public string? Version { get; set; }
 
     /// <summary>
-    /// Rules to import.
+    /// Manifest name.
+    /// </summary>
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// Manifest description.
+    /// </summary>
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    [JsonPropertyName("exported_at")]
+    public DateTime? ExportedAt { get; set; }
+
+    /// <summary>
+    /// Exported contexts.
+    /// </summary>
+    [JsonPropertyName("contexts")]
+    public IEnumerable<Dictionary<string, object?>>? Contexts { get; set; }
+
+    /// <summary>
+    /// Exported dynamic values.
+    /// </summary>
+    [JsonPropertyName("values")]
+    public IEnumerable<Dictionary<string, object?>>? Values { get; set; }
+
+    /// <summary>
+    /// Exported rules.
     /// </summary>
     [JsonPropertyName("rules")]
     public IEnumerable<Dictionary<string, object?>>? Rules { get; set; }
 
     /// <summary>
-    /// Flows to import.
+    /// Exported flows.
     /// </summary>
     [JsonPropertyName("flows")]
     public IEnumerable<Dictionary<string, object?>>? Flows { get; set; }
-
-    /// <summary>
-    /// Contexts to import.
-    /// </summary>
-    [JsonPropertyName("entities")]
-    public IEnumerable<Dictionary<string, object?>>? Entities { get; set; }
-
-    /// <summary>
-    /// Dynamic values to import.
-    /// </summary>
-    [JsonPropertyName("values")]
-    public IEnumerable<Dictionary<string, object?>>? Values { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -4,27 +4,21 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-/// <summary>
-/// Count of skipped assets by type (already exist and overwrite=false).
-/// </summary>
 [Serializable]
-public record ImportManifestResponseSkipped : IJsonOnDeserialized
+public record ExportManifestPreviewResponsePreviewItemsContextsItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("rules")]
-    public int? Rules { get; set; }
+    [JsonPropertyName("id")]
+    public string? Id { get; set; }
 
-    [JsonPropertyName("flows")]
-    public int? Flows { get; set; }
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
 
-    [JsonPropertyName("contexts")]
-    public int? Contexts { get; set; }
-
-    [JsonPropertyName("values")]
-    public int? Values { get; set; }
+    [JsonPropertyName("slug")]
+    public string? Slug { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

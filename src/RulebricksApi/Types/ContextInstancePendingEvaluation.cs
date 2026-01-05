@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using OneOf;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -45,10 +46,12 @@ public record ContextInstancePendingEvaluation : IJsonOnDeserialized
     public string? FlowId { get; set; }
 
     /// <summary>
-    /// List of field keys this evaluation is waiting for.
+    /// List of field keys or dependency objects this evaluation is waiting for. Can contain simple strings for direct fields or objects for relationship dependencies.
     /// </summary>
     [JsonPropertyName("waiting_on")]
-    public IEnumerable<string>? WaitingOn { get; set; }
+    public IEnumerable<
+        OneOf<string, ContextInstancePendingEvaluationWaitingOnItemField>
+    >? WaitingOn { get; set; }
 
     /// <summary>
     /// When this pending evaluation was registered.

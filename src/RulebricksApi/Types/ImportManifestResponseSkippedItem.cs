@@ -5,29 +5,23 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 [Serializable]
-public record ExportManifestResponse : IJsonOnDeserialized
+public record ImportManifestResponseSkippedItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// Whether the export completed successfully.
-    /// </summary>
-    [JsonPropertyName("success")]
-    public bool? Success { get; set; }
+    [JsonPropertyName("type")]
+    public string? Type { get; set; }
 
-    /// <summary>
-    /// The exported manifest data.
-    /// </summary>
-    [JsonPropertyName("manifest")]
-    public ExportManifestResponseManifest? Manifest { get; set; }
+    [JsonPropertyName("stable_id")]
+    public string? StableId { get; set; }
 
-    /// <summary>
-    /// Error message if export failed.
-    /// </summary>
-    [JsonPropertyName("error")]
-    public string? Error { get; set; }
+    [JsonPropertyName("status")]
+    public string? Status { get; set; }
+
+    [JsonPropertyName("reason")]
+    public string? Reason { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

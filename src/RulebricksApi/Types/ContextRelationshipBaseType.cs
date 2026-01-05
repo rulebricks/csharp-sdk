@@ -7,11 +7,11 @@ namespace RulebricksApi;
 [Serializable]
 public readonly record struct ContextRelationshipBaseType : IStringEnum
 {
-    public static readonly ContextRelationshipBaseType OneToOne = new(Values.OneToOne);
+    public static readonly ContextRelationshipBaseType HasMany = new(Values.HasMany);
 
-    public static readonly ContextRelationshipBaseType OneToMany = new(Values.OneToMany);
+    public static readonly ContextRelationshipBaseType HasOne = new(Values.HasOne);
 
-    public static readonly ContextRelationshipBaseType ManyToOne = new(Values.ManyToOne);
+    public static readonly ContextRelationshipBaseType BelongsTo = new(Values.BelongsTo);
 
     public ContextRelationshipBaseType(string value)
     {
@@ -60,10 +60,10 @@ public readonly record struct ContextRelationshipBaseType : IStringEnum
     [Serializable]
     public static class Values
     {
-        public const string OneToOne = "one-to-one";
+        public const string HasMany = "has_many";
 
-        public const string OneToMany = "one-to-many";
+        public const string HasOne = "has_one";
 
-        public const string ManyToOne = "many-to-one";
+        public const string BelongsTo = "belongs_to";
     }
 }

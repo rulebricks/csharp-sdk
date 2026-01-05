@@ -5,29 +5,29 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 [Serializable]
-public record ExportManifestResponse : IJsonOnDeserialized
+public record ContextInstancePendingEvaluationWaitingOnItemField : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Whether the export completed successfully.
+    /// Field key this evaluation is waiting for.
     /// </summary>
-    [JsonPropertyName("success")]
-    public bool? Success { get; set; }
+    [JsonPropertyName("field")]
+    public string? Field { get; set; }
 
     /// <summary>
-    /// The exported manifest data.
+    /// Related context name if waiting on a relationship.
     /// </summary>
-    [JsonPropertyName("manifest")]
-    public ExportManifestResponseManifest? Manifest { get; set; }
+    [JsonPropertyName("relation")]
+    public string? Relation { get; set; }
 
     /// <summary>
-    /// Error message if export failed.
+    /// Instance ID of the related context (if applicable).
     /// </summary>
-    [JsonPropertyName("error")]
-    public string? Error { get; set; }
+    [JsonPropertyName("instance")]
+    public string? Instance { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

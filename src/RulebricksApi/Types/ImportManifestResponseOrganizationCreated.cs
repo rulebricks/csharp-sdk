@@ -4,30 +4,24 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
+/// <summary>
+/// IDs of any organizational folders created during import.
+/// </summary>
 [Serializable]
-public record ExportManifestResponse : IJsonOnDeserialized
+public record ImportManifestResponseOrganizationCreated : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// Whether the export completed successfully.
-    /// </summary>
-    [JsonPropertyName("success")]
-    public bool? Success { get; set; }
+    [JsonPropertyName("entity_set_id")]
+    public string? EntitySetId { get; set; }
 
-    /// <summary>
-    /// The exported manifest data.
-    /// </summary>
-    [JsonPropertyName("manifest")]
-    public ExportManifestResponseManifest? Manifest { get; set; }
+    [JsonPropertyName("rule_tag_id")]
+    public string? RuleTagId { get; set; }
 
-    /// <summary>
-    /// Error message if export failed.
-    /// </summary>
-    [JsonPropertyName("error")]
-    public string? Error { get; set; }
+    [JsonPropertyName("flow_tag_id")]
+    public string? FlowTagId { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

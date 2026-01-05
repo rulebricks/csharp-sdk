@@ -15,20 +15,20 @@ public record CreateRelationshipRequest
     /// <summary>
     /// The ID of the target context.
     /// </summary>
-    [JsonPropertyName("targetContextId")]
-    public required string TargetContextId { get; set; }
+    [JsonPropertyName("to_context_id")]
+    public required string ToContextId { get; set; }
 
     /// <summary>
     /// The type of relationship.
     /// </summary>
-    [JsonPropertyName("type")]
-    public required CreateRelationshipRequestType Type { get; set; }
+    [JsonPropertyName("relation_type")]
+    public required CreateRelationshipRequestRelationType RelationType { get; set; }
 
     /// <summary>
     /// The field key to use as the foreign key.
     /// </summary>
-    [JsonPropertyName("foreignKey")]
-    public required string ForeignKey { get; set; }
+    [JsonPropertyName("foreign_key_fact")]
+    public required string ForeignKeyFact { get; set; }
 
     /// <summary>
     /// Display name for the relationship.

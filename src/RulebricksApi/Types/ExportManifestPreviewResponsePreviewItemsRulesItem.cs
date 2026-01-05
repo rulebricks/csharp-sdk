@@ -5,7 +5,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 [Serializable]
-public record ExportManifestPreviewResponseItemsContextsItem : IJsonOnDeserialized
+public record ExportManifestPreviewResponsePreviewItemsRulesItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =

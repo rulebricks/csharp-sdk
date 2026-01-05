@@ -4,22 +4,22 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi.Contexts;
 
-public partial class AdminClient
+public partial class ObjectsClient
 {
     private RawClient _client;
 
-    internal AdminClient(RawClient client)
+    internal ObjectsClient(RawClient client)
     {
         _client = client;
     }
 
     /// <summary>
-    /// Retrieve all contexts (entities) for the authenticated user.
+    /// Retrieve all contexts for the authenticated user.
     /// </summary>
     /// <example><code>
-    /// await client.Contexts.Admin.ListAsync();
+    /// await client.Contexts.Objects.ListAsync();
     /// </code></example>
-    public async Task<IEnumerable<ContextDetail>> ListAsync(
+    public async Task<IEnumerable<ContextListItem>> ListAsync(
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -41,7 +41,7 @@ public partial class AdminClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<IEnumerable<ContextDetail>>(responseBody)!;
+                return JsonUtils.Deserialize<IEnumerable<ContextListItem>>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -72,10 +72,10 @@ public partial class AdminClient
     }
 
     /// <summary>
-    /// Create a new context (entity) for the authenticated user.
+    /// Create a new context for the authenticated user.
     /// </summary>
     /// <example><code>
-    /// await client.Contexts.Admin.CreateAsync(
+    /// await client.Contexts.Objects.CreateAsync(
     ///     new CreateContextRequest
     ///     {
     ///         Name = "Customer",
@@ -95,6 +95,7 @@ public partial class AdminClient
     ///                 Type = "number",
     ///             },
     ///         },
+    ///         IdentityFact = "email",
     ///     }
     /// );
     /// </code></example>
@@ -159,12 +160,12 @@ public partial class AdminClient
     /// Retrieve a specific context by its ID.
     /// </summary>
     /// <example><code>
-    /// await client.Contexts.Admin.GetAsync(
-    ///     new GetAdminRequest { Id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }
+    /// await client.Contexts.Objects.GetAsync(
+    ///     new GetObjectsRequest { Id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }
     /// );
     /// </code></example>
     public async Task<ContextDetail> GetAsync(
-        GetAdminRequest request,
+        GetObjectsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -225,7 +226,7 @@ public partial class AdminClient
     /// Update an existing context's properties and schema.
     /// </summary>
     /// <example><code>
-    /// await client.Contexts.Admin.UpdateAsync(
+    /// await client.Contexts.Objects.UpdateAsync(
     ///     new UpdateContextRequest
     ///     {
     ///         Id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
@@ -234,7 +235,7 @@ public partial class AdminClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<ContextDetail> UpdateAsync(
+    public async Task<UpdateContextResponse> UpdateAsync(
         UpdateContextRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -262,7 +263,7 @@ public partial class AdminClient
             var responseBody = await response.Raw.Content.ReadAsStringAsync();
             try
             {
-                return JsonUtils.Deserialize<ContextDetail>(responseBody)!;
+                return JsonUtils.Deserialize<UpdateContextResponse>(responseBody)!;
             }
             catch (JsonException e)
             {
@@ -300,12 +301,12 @@ public partial class AdminClient
     /// Delete a specific context and all its instances.
     /// </summary>
     /// <example><code>
-    /// await client.Contexts.Admin.DeleteAsync(
-    ///     new DeleteAdminRequest { Id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }
+    /// await client.Contexts.Objects.DeleteAsync(
+    ///     new DeleteObjectsRequest { Id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }
     /// );
     /// </code></example>
     public async Task<DeleteContextResponse> DeleteAsync(
-        DeleteAdminRequest request,
+        DeleteObjectsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )

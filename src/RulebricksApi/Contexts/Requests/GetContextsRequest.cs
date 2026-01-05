@@ -4,7 +4,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 [Serializable]
-public record GetInstanceContextsRequest
+public record GetContextsRequest
 {
     /// <summary>
     /// The unique slug for the context.

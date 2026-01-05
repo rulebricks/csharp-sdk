@@ -11,6 +11,12 @@ public record ContextRelationshipsResponse : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
+    /// <summary>
+    /// The context these relationships belong to.
+    /// </summary>
+    [JsonPropertyName("context")]
+    public ContextRelationshipsResponseContext? Context { get; set; }
+
     [JsonPropertyName("outgoing")]
     public IEnumerable<ContextRelationshipOutgoing>? Outgoing { get; set; }
 

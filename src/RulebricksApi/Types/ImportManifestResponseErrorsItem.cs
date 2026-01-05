@@ -14,11 +14,14 @@ public record ImportManifestResponseErrorsItem : IJsonOnDeserialized
     [JsonPropertyName("type")]
     public string? Type { get; set; }
 
-    [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    [JsonPropertyName("stable_id")]
+    public string? StableId { get; set; }
 
-    [JsonPropertyName("error")]
-    public string? Error { get; set; }
+    [JsonPropertyName("status")]
+    public string? Status { get; set; }
+
+    [JsonPropertyName("reason")]
+    public string? Reason { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

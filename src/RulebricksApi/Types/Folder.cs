@@ -30,10 +30,22 @@ public record Folder : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
+    /// Timestamp of when the folder was created.
+    /// </summary>
+    [JsonPropertyName("created_at")]
+    public DateTime? CreatedAt { get; set; }
+
+    /// <summary>
     /// Timestamp of when the folder was last updated.
     /// </summary>
     [JsonPropertyName("updated_at")]
     public DateTime? UpdatedAt { get; set; }
+
+    /// <summary>
+    /// User groups that can view this folder.
+    /// </summary>
+    [JsonPropertyName("user_groups")]
+    public IEnumerable<string>? UserGroups { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

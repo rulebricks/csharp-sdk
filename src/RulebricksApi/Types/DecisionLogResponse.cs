@@ -5,7 +5,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 /// <summary>
-/// Response containing decision logs or a count.
+/// Response containing decision logs or a count. Returns either {data, cursor} for log queries OR {count} for count queries - these are mutually exclusive based on the count parameter.
 /// </summary>
 [Serializable]
 public record DecisionLogResponse : IJsonOnDeserialized
@@ -15,19 +15,19 @@ public record DecisionLogResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Array of decision log entries (omitted when count=true).
+    /// Array of decision log entries. Only present when count parameter is not 'true'.
     /// </summary>
     [JsonPropertyName("data")]
     public IEnumerable<DecisionLog>? Data { get; set; }
 
     /// <summary>
-    /// Pagination cursor for fetching the next page. Null if no more results.
+    /// Pagination cursor for fetching the next page. Null if no more results. Only present when count parameter is not 'true'.
     /// </summary>
     [JsonPropertyName("cursor")]
     public string? Cursor { get; set; }
 
     /// <summary>
-    /// Total count of matching logs (only present when count=true parameter is used).
+    /// Total count of matching logs. Only present when count parameter is 'true'. When this is returned, data and cursor are not included.
     /// </summary>
     [JsonPropertyName("count")]
     public int? Count { get; set; }

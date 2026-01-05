@@ -11,11 +11,23 @@ public record ExportManifestPreviewResponse : IJsonOnDeserialized
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("counts")]
-    public ExportManifestPreviewResponseCounts? Counts { get; set; }
+    /// <summary>
+    /// Whether the preview completed successfully.
+    /// </summary>
+    [JsonPropertyName("success")]
+    public bool? Success { get; set; }
 
-    [JsonPropertyName("items")]
-    public ExportManifestPreviewResponseItems? Items { get; set; }
+    /// <summary>
+    /// Preview of assets that would be exported.
+    /// </summary>
+    [JsonPropertyName("preview")]
+    public ExportManifestPreviewResponsePreview? Preview { get; set; }
+
+    /// <summary>
+    /// Error message if preview failed.
+    /// </summary>
+    [JsonPropertyName("error")]
+    public string? Error { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
