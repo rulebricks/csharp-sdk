@@ -1,4 +1,5 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json.Serialization;
+using RulebricksApi;
 using RulebricksApi.Core;
 
 namespace RulebricksApi.Assets;
@@ -6,11 +7,8 @@ namespace RulebricksApi.Assets;
 [Serializable]
 public record ImportRuleRequest
 {
-    /// <summary>
-    /// The rule data to import.
-    /// </summary>
     [JsonPropertyName("rule")]
-    public Dictionary<string, object?> Rule { get; set; } = new Dictionary<string, object?>();
+    public required RuleImportPayload Rule { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

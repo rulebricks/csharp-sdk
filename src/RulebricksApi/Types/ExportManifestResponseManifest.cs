@@ -1,11 +1,11 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
 /// <summary>
-/// The exported manifest data.
+/// The exported manifest data. The wrapper uses snake_case, while asset objects inside `contexts`, `values`, `rules`, and `flows` intentionally preserve `.rbm`/database casing for round-trip compatibility.
 /// </summary>
 [Serializable]
 public record ExportManifestResponseManifest : IJsonOnDeserialized

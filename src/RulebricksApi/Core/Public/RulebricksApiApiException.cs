@@ -3,8 +3,12 @@ namespace RulebricksApi;
 /// <summary>
 /// This exception type will be thrown for any non-2XX API responses.
 /// </summary>
-public class RulebricksApiApiException(string message, int statusCode, object body)
-    : RulebricksApiException(message)
+public class RulebricksApiApiException(
+    string message,
+    int statusCode,
+    object body,
+    Exception? innerException = null
+) : RulebricksApiException(message, innerException)
 {
     /// <summary>
     /// The error code of the response that triggered the exception.

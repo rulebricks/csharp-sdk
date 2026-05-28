@@ -1,0 +1,76 @@
+using NUnit.Framework;
+using RulebricksApi;
+using RulebricksApi.Test_.Unit.MockServer;
+using RulebricksApi.Test_.Utils;
+using RulebricksApi.Tests;
+
+namespace RulebricksApi.Test_.Unit.MockServer.Tests.Flows;
+
+[TestFixture]
+[Parallelizable(ParallelScope.Self)]
+public class CreateTest : BaseMockServerTest
+{
+    [NUnit.Framework.Test]
+    public async Task MockServerTest()
+    {
+        const string requestJson = """
+            {
+              "name": "Test 3",
+              "request": {
+                "param1": "value1"
+              },
+              "response": {
+                "status": "success"
+              },
+              "critical": true
+            }
+            """;
+
+        const string mockResponse = """
+            {
+              "id": "c1a2b3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+              "name": "Test 3",
+              "request": {
+                "param1": "value1"
+              },
+              "response": {
+                "status": "success"
+              },
+              "critical": true,
+              "error": false,
+              "success": false
+            }
+            """;
+
+        Server
+            .Given(
+                WireMock
+                    .RequestBuilders.Request.Create()
+                    .WithPath("/admin/flows/slug/tests")
+                    .WithHeader("Content-Type", "application/json")
+                    .UsingPost()
+                    .WithBodyAsJson(requestJson)
+            )
+            .RespondWith(
+                WireMock
+                    .ResponseBuilders.Response.Create()
+                    .WithStatusCode(200)
+                    .WithBody(mockResponse)
+            );
+
+        var response = await Client.Tests.Flows.CreateAsync(
+            new CreateFlowsRequest
+            {
+                Slug = "slug",
+                Body = new CreateTestRequest
+                {
+                    Name = "Test 3",
+                    Request = new Dictionary<string, object?>() { { "param1", "value1" } },
+                    Response = new Dictionary<string, object?>() { { "status", "success" } },
+                    Critical = true,
+                },
+            }
+        );
+        JsonAssert.AreEqual(response, mockResponse);
+    }
+}

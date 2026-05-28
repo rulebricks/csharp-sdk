@@ -1,5 +1,5 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -18,7 +18,7 @@ public record ExportManifestPreviewResponse : IJsonOnDeserialized
     public bool? Success { get; set; }
 
     /// <summary>
-    /// Preview of assets that would be exported.
+    /// Preview of assets that would be exported. The preview wrapper uses snake_case, while asset items intentionally preserve `.rbm`/database casing (for example, `valueType` and `updatedAt`) because the same items feed manifest preview/import UI.
     /// </summary>
     [JsonPropertyName("preview")]
     public ExportManifestPreviewResponsePreview? Preview { get; set; }

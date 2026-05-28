@@ -1,9 +1,12 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi.Contexts;
 
-[JsonConverter(typeof(StringEnumSerializer<CreateRelationshipRequestRelationType>))]
+[JsonConverter(
+    typeof(CreateRelationshipRequestRelationType.CreateRelationshipRequestRelationTypeSerializer)
+)]
 [Serializable]
 public readonly record struct CreateRelationshipRequestRelationType : IStringEnum
 {
@@ -55,6 +58,56 @@ public readonly record struct CreateRelationshipRequestRelationType : IStringEnu
 
     public static explicit operator CreateRelationshipRequestRelationType(string value) =>
         new(value);
+
+    internal class CreateRelationshipRequestRelationTypeSerializer
+        : JsonConverter<CreateRelationshipRequestRelationType>
+    {
+        public override CreateRelationshipRequestRelationType Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new CreateRelationshipRequestRelationType(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            CreateRelationshipRequestRelationType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override CreateRelationshipRequestRelationType ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new CreateRelationshipRequestRelationType(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            CreateRelationshipRequestRelationType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

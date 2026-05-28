@@ -1,9 +1,10 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-[JsonConverter(typeof(StringEnumSerializer<ExportManifestRequestRootType>))]
+[JsonConverter(typeof(ExportManifestRequestRootType.ExportManifestRequestRootTypeSerializer))]
 [Serializable]
 public readonly record struct ExportManifestRequestRootType : IStringEnum
 {
@@ -60,6 +61,56 @@ public readonly record struct ExportManifestRequestRootType : IStringEnum
     public static explicit operator string(ExportManifestRequestRootType value) => value.Value_;
 
     public static explicit operator ExportManifestRequestRootType(string value) => new(value);
+
+    internal class ExportManifestRequestRootTypeSerializer
+        : JsonConverter<ExportManifestRequestRootType>
+    {
+        public override ExportManifestRequestRootType Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new ExportManifestRequestRootType(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            ExportManifestRequestRootType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value_);
+        }
+
+        public override ExportManifestRequestRootType ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new ExportManifestRequestRootType(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            ExportManifestRequestRootType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value_);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

@@ -1,15 +1,107 @@
-using System.Text.Json;
+using global::System.Text.Json;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public partial class DecisionsClient
+public partial class DecisionsClient : IDecisionsClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal DecisionsClient(RawClient client)
     {
         _client = client;
+    }
+
+    private async Task<WithRawResponse<DecisionLogResponse>> QueryAsyncCore(
+        QueryDecisionsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 9)
+            .Add("search", request.Search)
+            .Add("rules", request.Rules)
+            .Add("statuses", request.Statuses)
+            .Add("start", request.Start)
+            .Add("end", request.End)
+            .Add("cursor", request.Cursor)
+            .Add("limit", request.Limit)
+            .Add("count", request.Count)
+            .Add("slug", request.Slug)
+            .MergeAdditional(options?.AdditionalQueryParameters)
+            .Build();
+        var _headers = await new RulebricksApi.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
+        var response = await _client
+            .SendRequestAsync(
+                new JsonRequest
+                {
+                    Method = HttpMethod.Get,
+                    Path = "decisions/query",
+                    QueryString = _queryString,
+                    Headers = _headers,
+                    Options = options,
+                },
+                cancellationToken
+            )
+            .ConfigureAwait(false);
+        if (response.StatusCode is >= 200 and < 400)
+        {
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
+            {
+                var responseData = JsonUtils.Deserialize<DecisionLogResponse>(responseBody)!;
+                return new WithRawResponse<DecisionLogResponse>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
+            }
+            catch (JsonException e)
+            {
+                throw new RulebricksApiApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
+            }
+        }
+        {
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+            try
+            {
+                switch (response.StatusCode)
+                {
+                    case 400:
+                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 500:
+                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                }
+            }
+            catch (JsonException)
+            {
+                // unable to map error response, throwing generic error
+            }
+            throw new RulebricksApiApiException(
+                $"Error with status code {response.StatusCode}",
+                response.StatusCode,
+                responseBody
+            );
+        }
     }
 
     /// <summary>
@@ -25,96 +117,14 @@ public partial class DecisionsClient
     ///     }
     /// );
     /// </code></example>
-    public async Task<DecisionLogResponse> QueryAsync(
+    public WithRawResponseTask<DecisionLogResponse> QueryAsync(
         QueryDecisionsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var _query = new Dictionary<string, object>();
-        if (request.Search != null)
-        {
-            _query["search"] = request.Search;
-        }
-        if (request.Rules != null)
-        {
-            _query["rules"] = request.Rules;
-        }
-        if (request.Statuses != null)
-        {
-            _query["statuses"] = request.Statuses;
-        }
-        if (request.Start != null)
-        {
-            _query["start"] = request.Start.Value.ToString(Constants.DateTimeFormat);
-        }
-        if (request.End != null)
-        {
-            _query["end"] = request.End.Value.ToString(Constants.DateTimeFormat);
-        }
-        if (request.Cursor != null)
-        {
-            _query["cursor"] = request.Cursor;
-        }
-        if (request.Limit != null)
-        {
-            _query["limit"] = request.Limit.Value.ToString();
-        }
-        if (request.Count != null)
-        {
-            _query["count"] = request.Count.Value.Stringify();
-        }
-        if (request.Slug != null)
-        {
-            _query["slug"] = request.Slug;
-        }
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    BaseUrl = _client.Options.BaseUrl,
-                    Method = HttpMethod.Get,
-                    Path = "decisions/query",
-                    Query = _query,
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                return JsonUtils.Deserialize<DecisionLogResponse>(responseBody)!;
-            }
-            catch (JsonException e)
-            {
-                throw new RulebricksApiException("Failed to deserialize response", e);
-            }
-        }
-
-        {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
-                    case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new RulebricksApiApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
+        return new WithRawResponseTask<DecisionLogResponse>(
+            QueryAsyncCore(request, options, cancellationToken)
+        );
     }
 }

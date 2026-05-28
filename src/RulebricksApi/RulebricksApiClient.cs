@@ -3,30 +3,37 @@ using RulebricksApi.Tests;
 
 namespace RulebricksApi;
 
-public partial class RulebricksApiClient
+public partial class RulebricksApiClient : IRulebricksApiClient
 {
     private readonly RawClient _client;
 
     public RulebricksApiClient(string? apiKey = null, ClientOptions? clientOptions = null)
     {
-        var defaultHeaders = new Headers(
+        clientOptions ??= new ClientOptions();
+        var platformHeaders = new Headers(
             new Dictionary<string, string>()
             {
-                { "x-api-key", apiKey ?? "" },
                 { "X-Fern-Language", "C#" },
                 { "X-Fern-SDK-Name", "RulebricksApi" },
                 { "X-Fern-SDK-Version", Version.Current },
             }
         );
-        clientOptions ??= new ClientOptions();
-        foreach (var header in defaultHeaders)
+        foreach (var header in platformHeaders)
         {
             if (!clientOptions.Headers.ContainsKey(header.Key))
             {
                 clientOptions.Headers[header.Key] = header.Value;
             }
         }
-        _client = new RawClient(clientOptions);
+        var clientOptionsWithAuth = clientOptions.Clone();
+        var authHeaders = new Headers(
+            new Dictionary<string, string>() { { "x-api-key", apiKey ?? "" } }
+        );
+        foreach (var header in authHeaders)
+        {
+            clientOptionsWithAuth.Headers[header.Key] = header.Value;
+        }
+        _client = new RawClient(clientOptionsWithAuth);
         Rules = new RulesClient(_client);
         Flows = new FlowsClient(_client);
         Decisions = new DecisionsClient(_client);
@@ -37,19 +44,19 @@ public partial class RulebricksApiClient
         Tests = new TestsClient(_client);
     }
 
-    public RulesClient Rules { get; }
+    public IRulesClient Rules { get; }
 
-    public FlowsClient Flows { get; }
+    public IFlowsClient Flows { get; }
 
-    public DecisionsClient Decisions { get; }
+    public IDecisionsClient Decisions { get; }
 
-    public UsersClient Users { get; }
+    public IUsersClient Users { get; }
 
-    public AssetsClient Assets { get; }
+    public IAssetsClient Assets { get; }
 
-    public ValuesClient Values { get; }
+    public IValuesClient Values { get; }
 
-    public ContextsClient Contexts { get; }
+    public IContextsClient Contexts { get; }
 
-    public TestsClient Tests { get; }
+    public ITestsClient Tests { get; }
 }

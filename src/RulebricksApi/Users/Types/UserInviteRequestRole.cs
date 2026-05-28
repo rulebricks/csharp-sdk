@@ -1,9 +1,10 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-[JsonConverter(typeof(StringEnumSerializer<UserInviteRequestRole>))]
+[JsonConverter(typeof(UserInviteRequestRole.UserInviteRequestRoleSerializer))]
 [Serializable]
 public readonly record struct UserInviteRequestRole : IStringEnum
 {
@@ -55,6 +56,55 @@ public readonly record struct UserInviteRequestRole : IStringEnum
     public static explicit operator string(UserInviteRequestRole value) => value.Value;
 
     public static explicit operator UserInviteRequestRole(string value) => new(value);
+
+    internal class UserInviteRequestRoleSerializer : JsonConverter<UserInviteRequestRole>
+    {
+        public override UserInviteRequestRole Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new UserInviteRequestRole(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            UserInviteRequestRole value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override UserInviteRequestRole ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new UserInviteRequestRole(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            UserInviteRequestRole value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

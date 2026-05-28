@@ -1,9 +1,12 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-[JsonConverter(typeof(StringEnumSerializer<ImportManifestRequestConflictStrategy>))]
+[JsonConverter(
+    typeof(ImportManifestRequestConflictStrategy.ImportManifestRequestConflictStrategySerializer)
+)]
 [Serializable]
 public readonly record struct ImportManifestRequestConflictStrategy : IStringEnum
 {
@@ -55,6 +58,56 @@ public readonly record struct ImportManifestRequestConflictStrategy : IStringEnu
 
     public static explicit operator ImportManifestRequestConflictStrategy(string value) =>
         new(value);
+
+    internal class ImportManifestRequestConflictStrategySerializer
+        : JsonConverter<ImportManifestRequestConflictStrategy>
+    {
+        public override ImportManifestRequestConflictStrategy Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new ImportManifestRequestConflictStrategy(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            ImportManifestRequestConflictStrategy value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override ImportManifestRequestConflictStrategy ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new ImportManifestRequestConflictStrategy(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            ImportManifestRequestConflictStrategy value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

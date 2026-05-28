@@ -1,57 +1,40 @@
-using System.Text.Json;
+using global::System.Text.Json;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-public partial class FlowsClient
+public partial class FlowsClient : IFlowsClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal FlowsClient(RawClient client)
     {
         _client = client;
     }
 
-    /// <summary>
-    /// Execute a flow by its slug.
-    /// </summary>
-    /// <example><code>
-    /// await client.Flows.ExecuteAsync(
-    ///     new ExecuteFlowsRequest
-    ///     {
-    ///         Slug = "slug",
-    ///         Body = new Dictionary&lt;string, object?&gt;()
-    ///         {
-    ///             {
-    ///                 "body",
-    ///                 new Dictionary&lt;object, object?&gt;()
-    ///                 {
-    ///                     { "age", 28 },
-    ///                     { "email", "alice.johnson@example.com" },
-    ///                     { "name", "Alice Johnson" },
-    ///                 }
-    ///             },
-    ///         },
-    ///     }
-    /// );
-    /// </code></example>
-    public async Task<Dictionary<string, object?>> ExecuteAsync(
+    private async Task<WithRawResponse<Dictionary<string, object?>>> ExecuteAsyncCore(
         ExecuteFlowsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
+        var _headers = await new RulebricksApi.Core.HeadersBuilder.Builder()
+            .Add(_client.Options.Headers)
+            .Add(_client.Options.AdditionalHeaders)
+            .Add(options?.AdditionalHeaders)
+            .BuildAsync()
+            .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
                 new JsonRequest
                 {
-                    BaseUrl = _client.Options.BaseUrl,
                     Method = HttpMethod.Post,
                     Path = string.Format(
                         "flows/{0}",
                         ValueConvert.ToPathParameterString(request.Slug)
                     ),
                     Body = request.Body,
+                    Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
                 },
@@ -60,27 +43,47 @@ public partial class FlowsClient
             .ConfigureAwait(false);
         if (response.StatusCode is >= 200 and < 400)
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
-                return JsonUtils.Deserialize<Dictionary<string, object?>>(responseBody)!;
+                var responseData = JsonUtils.Deserialize<Dictionary<string, object?>>(
+                    responseBody
+                )!;
+                return new WithRawResponse<Dictionary<string, object?>>()
+                {
+                    Data = responseData,
+                    RawResponse = new RawResponse()
+                    {
+                        StatusCode = response.Raw.StatusCode,
+                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
+                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
+                    },
+                };
             }
             catch (JsonException e)
             {
-                throw new RulebricksApiException("Failed to deserialize response", e);
+                throw new RulebricksApiApiException(
+                    "Failed to deserialize response",
+                    response.StatusCode,
+                    responseBody,
+                    e
+                );
             }
         }
-
         {
-            var responseBody = await response.Raw.Content.ReadAsStringAsync();
+            var responseBody = await response
+                .Raw.Content.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
             try
             {
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
                 }
             }
             catch (JsonException)
@@ -93,5 +96,33 @@ public partial class FlowsClient
                 responseBody
             );
         }
+    }
+
+    /// <summary>
+    /// Execute a flow by its slug.
+    /// </summary>
+    /// <example><code>
+    /// await client.Flows.ExecuteAsync(
+    ///     new ExecuteFlowsRequest
+    ///     {
+    ///         Slug = "slug",
+    ///         Body = new Dictionary&lt;string, object?&gt;()
+    ///         {
+    ///             { "name", "John Doe" },
+    ///             { "age", 30 },
+    ///             { "email", "jdoe@acme.co" },
+    ///         },
+    ///     }
+    /// );
+    /// </code></example>
+    public WithRawResponseTask<Dictionary<string, object?>> ExecuteAsync(
+        ExecuteFlowsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    )
+    {
+        return new WithRawResponseTask<Dictionary<string, object?>>(
+            ExecuteAsyncCore(request, options, cancellationToken)
+        );
     }
 }

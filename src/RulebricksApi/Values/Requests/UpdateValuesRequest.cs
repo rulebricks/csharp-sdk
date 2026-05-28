@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -17,6 +17,12 @@ public record UpdateValuesRequest
     /// </summary>
     [JsonPropertyName("user_groups")]
     public IEnumerable<string>? UserGroups { get; set; }
+
+    /// <summary>
+    /// Optional metadata keyed by dynamic value name. This is the canonical snake_case field; legacy clients may still send `metadataByName`.
+    /// </summary>
+    [JsonPropertyName("metadata_by_name")]
+    public Dictionary<string, Dictionary<string, object?>>? MetadataByName { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

@@ -2,9 +2,9 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi.Tests;
 
-public partial class TestsClient
+public partial class TestsClient : ITestsClient
 {
-    private RawClient _client;
+    private readonly RawClient _client;
 
     internal TestsClient(RawClient client)
     {
@@ -13,7 +13,7 @@ public partial class TestsClient
         Flows = new FlowsClient(_client);
     }
 
-    public RulesClient Rules { get; }
+    public IRulesClient Rules { get; }
 
-    public FlowsClient Flows { get; }
+    public IFlowsClient Flows { get; }
 }

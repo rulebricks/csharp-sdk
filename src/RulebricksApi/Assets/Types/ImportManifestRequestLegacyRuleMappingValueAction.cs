@@ -1,9 +1,12 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-[JsonConverter(typeof(StringEnumSerializer<ImportManifestRequestLegacyRuleMappingValueAction>))]
+[JsonConverter(
+    typeof(ImportManifestRequestLegacyRuleMappingValueAction.ImportManifestRequestLegacyRuleMappingValueActionSerializer)
+)]
 [Serializable]
 public readonly record struct ImportManifestRequestLegacyRuleMappingValueAction : IStringEnum
 {
@@ -63,6 +66,56 @@ public readonly record struct ImportManifestRequestLegacyRuleMappingValueAction 
     public static explicit operator ImportManifestRequestLegacyRuleMappingValueAction(
         string value
     ) => new(value);
+
+    internal class ImportManifestRequestLegacyRuleMappingValueActionSerializer
+        : JsonConverter<ImportManifestRequestLegacyRuleMappingValueAction>
+    {
+        public override ImportManifestRequestLegacyRuleMappingValueAction Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new ImportManifestRequestLegacyRuleMappingValueAction(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            ImportManifestRequestLegacyRuleMappingValueAction value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override ImportManifestRequestLegacyRuleMappingValueAction ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new ImportManifestRequestLegacyRuleMappingValueAction(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            ImportManifestRequestLegacyRuleMappingValueAction value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

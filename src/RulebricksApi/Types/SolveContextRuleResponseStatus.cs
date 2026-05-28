@@ -1,9 +1,10 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-[JsonConverter(typeof(StringEnumSerializer<SolveContextRuleResponseStatus>))]
+[JsonConverter(typeof(SolveContextRuleResponseStatus.SolveContextRuleResponseStatusSerializer))]
 [Serializable]
 public readonly record struct SolveContextRuleResponseStatus : IStringEnum
 {
@@ -51,6 +52,56 @@ public readonly record struct SolveContextRuleResponseStatus : IStringEnum
     public static explicit operator string(SolveContextRuleResponseStatus value) => value.Value;
 
     public static explicit operator SolveContextRuleResponseStatus(string value) => new(value);
+
+    internal class SolveContextRuleResponseStatusSerializer
+        : JsonConverter<SolveContextRuleResponseStatus>
+    {
+        public override SolveContextRuleResponseStatus Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new SolveContextRuleResponseStatus(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            SolveContextRuleResponseStatus value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override SolveContextRuleResponseStatus ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new SolveContextRuleResponseStatus(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            SolveContextRuleResponseStatus value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

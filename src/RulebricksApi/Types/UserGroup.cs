@@ -1,5 +1,5 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -28,12 +28,6 @@ public record UserGroup : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("description")]
     public string? Description { get; set; }
-
-    /// <summary>
-    /// List of member emails in the user group.
-    /// </summary>
-    [JsonPropertyName("members")]
-    public IEnumerable<string>? Members { get; set; }
 
     /// <summary>
     /// When the user group was created.

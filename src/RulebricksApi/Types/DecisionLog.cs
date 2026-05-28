@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json.Serialization;
 using OneOf;
 using RulebricksApi.Core;
 
@@ -54,7 +54,7 @@ public record DecisionLog : IJsonOnDeserialized, IJsonOnSerializing
     public DecisionLogResponse? Response { get; set; }
 
     /// <summary>
-    /// Decision details including matched conditions, rows, and evaluation metadata.
+    /// Decision details including matched conditions, rows, and evaluation metadata. API-owned metadata keys are normalized to snake_case where known, such as `rule_id`, `rule_slug`, `rule_version`, `success_idxs`, `total_usage`, and `entity_count`; user-defined request/response schema keys are preserved.
     /// </summary>
     [JsonPropertyName("decision")]
     public Dictionary<string, object?>? Decision { get; set; }

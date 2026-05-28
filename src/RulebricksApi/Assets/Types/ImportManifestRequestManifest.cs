@@ -1,11 +1,11 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
 /// <summary>
-/// The RBM manifest object containing assets to import.
+/// The RBM manifest object containing assets to import. Asset objects inside the manifest intentionally preserve `.rbm`/database casing so exported manifests can be imported without rewriting asset payloads.
 /// </summary>
 [Serializable]
 public record ImportManifestRequestManifest : IJsonOnDeserialized

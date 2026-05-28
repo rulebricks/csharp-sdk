@@ -1,5 +1,5 @@
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -13,12 +13,6 @@ public record CreateUserResponse : IJsonOnDeserialized
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
-
-    /// <summary>
-    /// Status of the operation.
-    /// </summary>
-    [JsonPropertyName("status")]
-    public string? Status { get; set; }
 
     /// <summary>
     /// Success message.

@@ -1,9 +1,10 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-[JsonConverter(typeof(StringEnumSerializer<SchemaFieldType>))]
+[JsonConverter(typeof(SchemaFieldType.SchemaFieldTypeSerializer))]
 [Serializable]
 public readonly record struct SchemaFieldType : IStringEnum
 {
@@ -57,6 +58,55 @@ public readonly record struct SchemaFieldType : IStringEnum
     public static explicit operator string(SchemaFieldType value) => value.Value;
 
     public static explicit operator SchemaFieldType(string value) => new(value);
+
+    internal class SchemaFieldTypeSerializer : JsonConverter<SchemaFieldType>
+    {
+        public override SchemaFieldType Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new SchemaFieldType(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            SchemaFieldType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override SchemaFieldType ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new SchemaFieldType(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            SchemaFieldType value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values

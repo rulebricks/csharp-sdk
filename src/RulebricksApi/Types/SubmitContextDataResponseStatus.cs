@@ -1,9 +1,10 @@
-using System.Text.Json.Serialization;
+using global::System.Text.Json;
+using global::System.Text.Json.Serialization;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-[JsonConverter(typeof(StringEnumSerializer<SubmitContextDataResponseStatus>))]
+[JsonConverter(typeof(SubmitContextDataResponseStatus.SubmitContextDataResponseStatusSerializer))]
 [Serializable]
 public readonly record struct SubmitContextDataResponseStatus : IStringEnum
 {
@@ -51,6 +52,56 @@ public readonly record struct SubmitContextDataResponseStatus : IStringEnum
     public static explicit operator string(SubmitContextDataResponseStatus value) => value.Value;
 
     public static explicit operator SubmitContextDataResponseStatus(string value) => new(value);
+
+    internal class SubmitContextDataResponseStatusSerializer
+        : JsonConverter<SubmitContextDataResponseStatus>
+    {
+        public override SubmitContextDataResponseStatus Read(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON value could not be read as a string."
+                );
+            return new SubmitContextDataResponseStatus(stringValue);
+        }
+
+        public override void Write(
+            Utf8JsonWriter writer,
+            SubmitContextDataResponseStatus value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WriteStringValue(value.Value);
+        }
+
+        public override SubmitContextDataResponseStatus ReadAsPropertyName(
+            ref Utf8JsonReader reader,
+            Type typeToConvert,
+            JsonSerializerOptions options
+        )
+        {
+            var stringValue =
+                reader.GetString()
+                ?? throw new global::System.Exception(
+                    "The JSON property name could not be read as a string."
+                );
+            return new SubmitContextDataResponseStatus(stringValue);
+        }
+
+        public override void WriteAsPropertyName(
+            Utf8JsonWriter writer,
+            SubmitContextDataResponseStatus value,
+            JsonSerializerOptions options
+        )
+        {
+            writer.WritePropertyName(value.Value);
+        }
+    }
 
     /// <summary>
     /// Constant strings for enum values
