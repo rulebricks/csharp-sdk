@@ -4,17 +4,19 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-[JsonConverter(typeof(ContextRelationshipBaseType.ContextRelationshipBaseTypeSerializer))]
+[JsonConverter(typeof(RulebricksFlowNodeOperation.RulebricksFlowNodeOperationSerializer))]
 [Serializable]
-public readonly record struct ContextRelationshipBaseType : IStringEnum
+public readonly record struct RulebricksFlowNodeOperation : IStringEnum
 {
-    public static readonly ContextRelationshipBaseType HasMany = new(Values.HasMany);
+    public static readonly RulebricksFlowNodeOperation Read = new(Values.Read);
 
-    public static readonly ContextRelationshipBaseType HasOne = new(Values.HasOne);
+    public static readonly RulebricksFlowNodeOperation Update = new(Values.Update);
 
-    public static readonly ContextRelationshipBaseType BelongsTo = new(Values.BelongsTo);
+    public static readonly RulebricksFlowNodeOperation Delete = new(Values.Delete);
 
-    public ContextRelationshipBaseType(string value)
+    public static readonly RulebricksFlowNodeOperation BatchUpdate = new(Values.BatchUpdate);
+
+    public RulebricksFlowNodeOperation(string value)
     {
         Value = value;
     }
@@ -27,9 +29,9 @@ public readonly record struct ContextRelationshipBaseType : IStringEnum
     /// <summary>
     /// Create a string enum with the given value.
     /// </summary>
-    public static ContextRelationshipBaseType FromCustom(string value)
+    public static RulebricksFlowNodeOperation FromCustom(string value)
     {
-        return new ContextRelationshipBaseType(value);
+        return new RulebricksFlowNodeOperation(value);
     }
 
     public bool Equals(string? other)
@@ -45,20 +47,20 @@ public readonly record struct ContextRelationshipBaseType : IStringEnum
         return Value;
     }
 
-    public static bool operator ==(ContextRelationshipBaseType value1, string value2) =>
+    public static bool operator ==(RulebricksFlowNodeOperation value1, string value2) =>
         value1.Value.Equals(value2);
 
-    public static bool operator !=(ContextRelationshipBaseType value1, string value2) =>
+    public static bool operator !=(RulebricksFlowNodeOperation value1, string value2) =>
         !value1.Value.Equals(value2);
 
-    public static explicit operator string(ContextRelationshipBaseType value) => value.Value;
+    public static explicit operator string(RulebricksFlowNodeOperation value) => value.Value;
 
-    public static explicit operator ContextRelationshipBaseType(string value) => new(value);
+    public static explicit operator RulebricksFlowNodeOperation(string value) => new(value);
 
-    internal class ContextRelationshipBaseTypeSerializer
-        : JsonConverter<ContextRelationshipBaseType>
+    internal class RulebricksFlowNodeOperationSerializer
+        : JsonConverter<RulebricksFlowNodeOperation>
     {
-        public override ContextRelationshipBaseType Read(
+        public override RulebricksFlowNodeOperation Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -69,19 +71,19 @@ public readonly record struct ContextRelationshipBaseType : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON value could not be read as a string."
                 );
-            return new ContextRelationshipBaseType(stringValue);
+            return new RulebricksFlowNodeOperation(stringValue);
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            ContextRelationshipBaseType value,
+            RulebricksFlowNodeOperation value,
             JsonSerializerOptions options
         )
         {
             writer.WriteStringValue(value.Value);
         }
 
-        public override ContextRelationshipBaseType ReadAsPropertyName(
+        public override RulebricksFlowNodeOperation ReadAsPropertyName(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -92,12 +94,12 @@ public readonly record struct ContextRelationshipBaseType : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON property name could not be read as a string."
                 );
-            return new ContextRelationshipBaseType(stringValue);
+            return new RulebricksFlowNodeOperation(stringValue);
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            ContextRelationshipBaseType value,
+            RulebricksFlowNodeOperation value,
             JsonSerializerOptions options
         )
         {
@@ -111,10 +113,12 @@ public readonly record struct ContextRelationshipBaseType : IStringEnum
     [Serializable]
     public static class Values
     {
-        public const string HasMany = "has_many";
+        public const string Read = "read";
 
-        public const string HasOne = "has_one";
+        public const string Update = "update";
 
-        public const string BelongsTo = "belongs_to";
+        public const string Delete = "delete";
+
+        public const string BatchUpdate = "batch_update";
     }
 }

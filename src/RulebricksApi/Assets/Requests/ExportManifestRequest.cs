@@ -42,6 +42,12 @@ public record ExportManifestRequest
     [JsonPropertyName("preview_only")]
     public bool? PreviewOnly { get; set; }
 
+    /// <summary>
+    /// If true, the manifest in the response is returned in compressed form: the JSON array produced by the compress-json library instead of a plain object. Compressed manifests are substantially smaller, can be saved directly as a .rbm file, and are accepted by the import endpoint as-is. Intended for raw HTTP usage and file tooling; typed SDK clients should omit this flag, since the generated response type models the manifest as an object.
+    /// </summary>
+    [JsonPropertyName("compress")]
+    public bool? Compress { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {

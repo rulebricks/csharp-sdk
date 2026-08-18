@@ -31,8 +31,9 @@ public partial class RulesClient : IRulesClient
                 {
                     Method = HttpMethod.Post,
                     Path = string.Format(
-                        "solve/{0}",
-                        ValueConvert.ToPathParameterString(request.Slug)
+                        "solve/{0}/{1}",
+                        ValueConvert.ToPathParameterString(request.Slug),
+                        ValueConvert.ToPathParameterString(request.Version)
                     ),
                     Body = request.Body,
                     Headers = _headers,
@@ -119,8 +120,9 @@ public partial class RulesClient : IRulesClient
                 {
                     Method = HttpMethod.Post,
                     Path = string.Format(
-                        "bulk-solve/{0}",
-                        ValueConvert.ToPathParameterString(request.Slug)
+                        "bulk-solve/{0}/{1}",
+                        ValueConvert.ToPathParameterString(request.Slug),
+                        ValueConvert.ToPathParameterString(request.Version)
                     ),
                     Body = request.Body,
                     Headers = _headers,
@@ -274,13 +276,14 @@ public partial class RulesClient : IRulesClient
     }
 
     /// <summary>
-    /// Executes a single rule identified by a unique slug. The request and response formats are dynamic, dependent on the rule configuration.
+    /// Executes a single rule identified by a unique slug. The request and response formats are dynamic, dependent on the rule configuration. Optionally target a specific published version (e.g. `3`) or a release environment (e.g. `production`) via the `version` path segment; `latest` (the default) executes the current published version.
     /// </summary>
     /// <example><code>
     /// await client.Rules.SolveAsync(
     ///     new SolveRulesRequest
     ///     {
     ///         Slug = "slug",
+    ///         Version = "version",
     ///         Body = new Dictionary&lt;string, object?&gt;()
     ///         {
     ///             { "name", "John Doe" },
@@ -302,13 +305,14 @@ public partial class RulesClient : IRulesClient
     }
 
     /// <summary>
-    /// Executes a particular rule against multiple request data payloads provided in a list.
+    /// Executes a particular rule against multiple request data payloads provided in a list. Optionally target a specific published version (e.g. `3`) or a release environment (e.g. `production`) via the `version` path segment; `latest` (the default) executes the current published version.
     /// </summary>
     /// <example><code>
     /// await client.Rules.BulkSolveAsync(
     ///     new BulkSolveRulesRequest
     ///     {
     ///         Slug = "slug",
+    ///         Version = "version",
     ///         Body = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
     ///         {
     ///             new Dictionary&lt;string, object?&gt;()

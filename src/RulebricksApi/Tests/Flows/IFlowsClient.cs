@@ -30,4 +30,13 @@ public partial interface IFlowsClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    /// Executes every test in the flow's test suite (or only the critical tests when `critical_only` is true) against the flow's current graph and returns a summary of which passed, which failed, and whether any CRITICAL test failed. Tests always run against the latest draft of the flow; version targeting does not apply.
+    /// </summary>
+    WithRawResponseTask<RunTestsResponse> RunAsync(
+        RunFlowsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
 }

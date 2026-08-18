@@ -31,7 +31,7 @@ public class ExecuteTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/flows/slug")
+                    .WithPath("/flows/slug/version")
                     .WithHeader("Content-Type", "application/json")
                     .UsingPost()
                     .WithBodyAsJson(requestJson)
@@ -47,6 +47,7 @@ public class ExecuteTest : BaseMockServerTest
             new ExecuteFlowsRequest
             {
                 Slug = "slug",
+                Version = "version",
                 Body = new Dictionary<string, object?>()
                 {
                     { "name", "John Doe" },

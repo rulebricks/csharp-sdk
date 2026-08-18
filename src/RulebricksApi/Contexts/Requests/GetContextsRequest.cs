@@ -18,6 +18,12 @@ public record GetContextsRequest
     [JsonIgnore]
     public required string Instance { get; set; }
 
+    /// <summary>
+    /// Comma-separated relationship names to include in the response under a 'relations' key (has_many relations return a list of related instance states; has_one/belongs_to return a single state or null). Use '*' for all relationships. Omitted by default - related instances are never fetched into the payload unrequested.
+    /// </summary>
+    [JsonIgnore]
+    public string? IncludeRelations { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {

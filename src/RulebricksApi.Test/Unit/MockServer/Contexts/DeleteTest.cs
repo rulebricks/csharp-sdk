@@ -14,7 +14,7 @@ public class DeleteTest : BaseMockServerTest
     {
         const string mockResponse = """
             {
-              "message": "Instance deleted successfully."
+              "message": "Instance deleted"
             }
             """;
 

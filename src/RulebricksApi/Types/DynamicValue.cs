@@ -13,13 +13,13 @@ public record DynamicValue : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Unique identifier for the dynamic value.
+    /// Unique identifier for the vocabulary value.
     /// </summary>
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 
     /// <summary>
-    /// Name of the dynamic value (may include dot notation for nested properties).
+    /// Name of the vocabulary value (may include dot notation for nested properties).
     /// </summary>
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -31,7 +31,7 @@ public record DynamicValue : IJsonOnDeserialized
     public required string Type { get; set; }
 
     /// <summary>
-    /// The actual value - can be any valid JSON type
+    /// The actual value - can be any valid JSON type. Materialized by default when the payload contains value-to-value references; with resolve=false the stored payload is returned as-is, with ValueReference markers intact.
     /// </summary>
     [JsonPropertyName("value")]
     public OneOf<
@@ -43,7 +43,7 @@ public record DynamicValue : IJsonOnDeserialized
     >? Value { get; set; }
 
     /// <summary>
-    /// Rules that use this dynamic value (only included when 'include=usage' parameter is used).
+    /// Rules that use this vocabulary value (only included when 'include=usage' parameter is used).
     /// </summary>
     [JsonPropertyName("usages")]
     public IEnumerable<RuleUsage>? Usages { get; set; }
@@ -53,6 +53,12 @@ public record DynamicValue : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("user_groups")]
     public IEnumerable<string>? UserGroups { get; set; }
+
+    /// <summary>
+    /// Arbitrary metadata attached to this value (set via metadata_by_name on writes). System-managed values carry provenance here (e.g. the object that generated them).
+    /// </summary>
+    [JsonPropertyName("metadata")]
+    public Dictionary<string, object?>? Metadata { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

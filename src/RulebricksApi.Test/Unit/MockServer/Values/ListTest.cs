@@ -24,7 +24,10 @@ public class ListTest : BaseMockServerTest
                 ],
                 "user_groups": [
                   "marketing"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "def456",
@@ -36,7 +39,10 @@ public class ListTest : BaseMockServerTest
                 ],
                 "user_groups": [
                   "marketing"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "ghi789",
@@ -48,7 +54,10 @@ public class ListTest : BaseMockServerTest
                 ],
                 "user_groups": [
                   "marketing"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "jkl012",
@@ -63,7 +72,10 @@ public class ListTest : BaseMockServerTest
                 ],
                 "user_groups": [
                   "marketing"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               }
             ]
             """;
@@ -102,7 +114,10 @@ public class ListTest : BaseMockServerTest
                 ],
                 "user_groups": [
                   "marketing"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "def456",
@@ -114,7 +129,10 @@ public class ListTest : BaseMockServerTest
                 ],
                 "user_groups": [
                   "marketing"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "ghi789",
@@ -133,7 +151,10 @@ public class ListTest : BaseMockServerTest
                 ],
                 "user_groups": [
                   "marketing"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "jkl012",
@@ -155,7 +176,10 @@ public class ListTest : BaseMockServerTest
                 ],
                 "user_groups": [
                   "marketing"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               }
             ]
             """;

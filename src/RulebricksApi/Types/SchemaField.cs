@@ -13,7 +13,7 @@ public record SchemaField : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// The unique key for this field.
+    /// The unique key for this field. Nested facts use dot-separated identifiers.
     /// </summary>
     [JsonPropertyName("key")]
     public string? Key { get; set; }

@@ -84,7 +84,7 @@ public record ContextDetail : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// When true, bound rules and flows automatically execute when their inputs are satisfied. When false, users must manually call /solve or /flows endpoints.
+    /// When true, bound rules and flows automatically execute when their inputs are satisfied. When false, callers must execute them explicitly via /contexts/{slug}/{instance}/solve/{ruleSlug} or /contexts/{slug}/{instance}/flows/{flowSlug}.
     /// </summary>
     [JsonPropertyName("auto_execute_decisions")]
     public bool? AutoExecuteDecisions { get; set; }
@@ -102,22 +102,10 @@ public record ContextDetail : IJsonOnDeserialized
     public int? HistoryLimit { get; set; }
 
     /// <summary>
-    /// How to handle fields that don't match the schema: 'ignore' filters them out, 'reject' returns an error.
+    /// How to handle submitted fields that don't match the schema: `ignore` drops them, `reject` fails the request (or batch item), and `store` persists them alongside declared facts.
     /// </summary>
     [JsonPropertyName("on_schema_mismatch")]
     public ContextBaseOnSchemaMismatch? OnSchemaMismatch { get; set; }
-
-    /// <summary>
-    /// Webhook URL called when a rule or flow successfully solves for a live context.
-    /// </summary>
-    [JsonPropertyName("webhook_on_solve")]
-    public string? WebhookOnSolve { get; set; }
-
-    /// <summary>
-    /// Webhook URL called when a live context expires due to TTL.
-    /// </summary>
-    [JsonPropertyName("webhook_on_expire")]
-    public string? WebhookOnExpire { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -33,7 +33,7 @@ public record ContextSchemaField : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
-    /// Data type of this field. 'function' type fields compute values dynamically.
+    /// Data type of this field. `object` fields are parent nodes for dotted child facts; `function` fields are output-only.
     /// </summary>
     [JsonPropertyName("type")]
     public ContextSchemaFieldType? Type { get; set; }
@@ -45,28 +45,40 @@ public record ContextSchemaField : IJsonOnDeserialized
     public object? DefaultValue { get; set; }
 
     /// <summary>
-    /// Whether this field is derived from rule/flow outputs.
+    /// Whether this base fact is required for overall context completeness.
     /// </summary>
-    [JsonPropertyName("derived")]
-    public bool? Derived { get; set; }
+    [JsonPropertyName("required")]
+    public bool? Required { get; set; }
 
     /// <summary>
-    /// The rule ID that derives this field (if derived).
+    /// Whether external submissions are rejected for this base fact. Rule writebacks may still set it.
     /// </summary>
-    [JsonPropertyName("source_rule")]
-    public string? SourceRule { get; set; }
+    [JsonPropertyName("output_only")]
+    public bool? OutputOnly { get; set; }
 
     /// <summary>
-    /// The flow ID that derives this field (if derived).
+    /// Whether changed values for this base fact are retained for history expressions and the history endpoint.
     /// </summary>
-    [JsonPropertyName("source_flow")]
-    public string? SourceFlow { get; set; }
+    [JsonPropertyName("track_history")]
+    public bool? TrackHistory { get; set; }
 
     /// <summary>
-    /// The source field key in the rule/flow output.
+    /// Whether values must come from the configured vocabulary collection.
     /// </summary>
-    [JsonPropertyName("source_field")]
-    public string? SourceField { get; set; }
+    [JsonPropertyName("values_only")]
+    public bool? ValuesOnly { get; set; }
+
+    /// <summary>
+    /// Vocabulary collection identifier, when configured.
+    /// </summary>
+    [JsonPropertyName("values_collection")]
+    public string? ValuesCollection { get; set; }
+
+    /// <summary>
+    /// Required for derived facts: the expression evaluated from base, history, and relation values.
+    /// </summary>
+    [JsonPropertyName("expression")]
+    public string? Expression { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

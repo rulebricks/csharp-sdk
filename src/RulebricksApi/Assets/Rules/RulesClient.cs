@@ -253,6 +253,14 @@ public partial class RulesClient : IRulesClient
                         throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
                     case 403:
                         throw new ForbiddenError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 404:
+                        throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 409:
+                        throw new ConflictError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 422:
+                        throw new UnprocessableEntityError(
+                            JsonUtils.Deserialize<Error>(responseBody)
+                        );
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
                 }
@@ -275,9 +283,10 @@ public partial class RulesClient : IRulesClient
         CancellationToken cancellationToken = default
     )
     {
-        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 2)
+        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 3)
             .Add("folder", request.Folder)
             .Add("user_group", request.UserGroup)
+            .Add("name", request.Name)
             .MergeAdditional(options?.AdditionalQueryParameters)
             .Build();
         var _headers = await new RulebricksApi.Core.HeadersBuilder.Builder()
@@ -526,7 +535,7 @@ public partial class RulesClient : IRulesClient
     ///                     {
     ///                         Enabled = true,
     ///                         GroupId = null,
-    ///                         Priority = 1,
+    ///                         Priority = 0,
     ///                         Schedule = new List&lt;Dictionary&lt;string, object?&gt;&gt;() { },
     ///                     },
     ///                 },
@@ -548,7 +557,7 @@ public partial class RulesClient : IRulesClient
     ///                     {
     ///                         Enabled = true,
     ///                         GroupId = null,
-    ///                         Priority = 2,
+    ///                         Priority = 0,
     ///                         Schedule = new List&lt;Dictionary&lt;string, object?&gt;&gt;() { },
     ///                     },
     ///                 },
@@ -570,7 +579,7 @@ public partial class RulesClient : IRulesClient
     }
 
     /// <summary>
-    /// List all rules in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, or by user group name or ID when the API key has access to that group.
+    /// List all rules in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, by user group name or ID when the API key has access to that group, or by name.
     /// </summary>
     /// <example><code>
     /// await client.Assets.Rules.ListAsync(

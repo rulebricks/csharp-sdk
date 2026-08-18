@@ -23,17 +23,17 @@ public record ContextRelationshipOutgoing : IJsonOnDeserialized
     /// <summary>
     /// The type of relationship.
     /// </summary>
-    [JsonPropertyName("type")]
-    public ContextRelationshipBaseType? Type { get; set; }
+    [JsonPropertyName("relation_type")]
+    public ContextRelationshipBaseRelationType? RelationType { get; set; }
 
     /// <summary>
     /// The field key used as the foreign key.
     /// </summary>
-    [JsonPropertyName("foreign_key")]
-    public string? ForeignKey { get; set; }
+    [JsonPropertyName("foreign_key_fact")]
+    public string? ForeignKeyFact { get; set; }
 
     /// <summary>
-    /// Display name for the relationship.
+    /// Runtime relationship key used by derived expressions. It is normalized to lowercase snake_case.
     /// </summary>
     [JsonPropertyName("name")]
     public string? Name { get; set; }

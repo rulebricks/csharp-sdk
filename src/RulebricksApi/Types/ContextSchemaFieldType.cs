@@ -18,6 +18,8 @@ public readonly record struct ContextSchemaFieldType : IStringEnum
 
     public static readonly ContextSchemaFieldType List = new(Values.List);
 
+    public static readonly ContextSchemaFieldType Object = new(Values.Object);
+
     public static readonly ContextSchemaFieldType Function = new(Values.Function);
 
     public ContextSchemaFieldType(string value)
@@ -125,6 +127,8 @@ public readonly record struct ContextSchemaFieldType : IStringEnum
         public const string Date = "date";
 
         public const string List = "list";
+
+        public const string Object = "object";
 
         public const string Function = "function";
     }

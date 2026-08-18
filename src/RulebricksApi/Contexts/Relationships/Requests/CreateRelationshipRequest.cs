@@ -31,7 +31,7 @@ public record CreateRelationshipRequest
     public required string ForeignKeyFact { get; set; }
 
     /// <summary>
-    /// Display name for the relationship.
+    /// Optional runtime relationship key. It is normalized to lowercase snake_case; the target context slug is used when omitted.
     /// </summary>
     [JsonPropertyName("name")]
     public string? Name { get; set; }

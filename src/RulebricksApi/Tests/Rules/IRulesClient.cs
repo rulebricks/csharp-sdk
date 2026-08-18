@@ -30,4 +30,13 @@ public partial interface IRulesClient
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
+
+    /// <summary>
+    /// Executes every test in the rule's test suite (or only the critical tests when `critical_only` is true) and returns a summary of which passed, which failed, and whether any CRITICAL test failed. Use the `critical_failure` flag as the signal for whether a release should be blocked. Tests always run against the latest draft of the rule; version targeting does not apply.
+    /// </summary>
+    WithRawResponseTask<RunTestsResponse> RunAsync(
+        RunRulesRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
 }

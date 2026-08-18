@@ -14,10 +14,16 @@ public partial class FoldersClient : IFoldersClient
     }
 
     private async Task<WithRawResponse<IEnumerable<Folder>>> ListAsyncCore(
+        ListFoldersRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
+        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 2)
+            .Add("user_group", request.UserGroup)
+            .Add("name", request.Name)
+            .MergeAdditional(options?.AdditionalQueryParameters)
+            .Build();
         var _headers = await new RulebricksApi.Core.HeadersBuilder.Builder()
             .Add(_client.Options.Headers)
             .Add(_client.Options.AdditionalHeaders)
@@ -30,6 +36,7 @@ public partial class FoldersClient : IFoldersClient
                 {
                     Method = HttpMethod.Get,
                     Path = "admin/folders",
+                    QueryString = _queryString,
                     Headers = _headers,
                     Options = options,
                 },
@@ -257,20 +264,21 @@ public partial class FoldersClient : IFoldersClient
     /// Retrieve all rule folders for the authenticated user.
     /// </summary>
     /// <example><code>
-    /// await client.Assets.Folders.ListAsync();
+    /// await client.Assets.Folders.ListAsync(new ListFoldersRequest());
     /// </code></example>
     public WithRawResponseTask<IEnumerable<Folder>> ListAsync(
+        ListFoldersRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<IEnumerable<Folder>>(
-            ListAsyncCore(options, cancellationToken)
+            ListAsyncCore(request, options, cancellationToken)
         );
     }
 
     /// <summary>
-    /// Create a new rule folder or update an existing one for the authenticated user.
+    /// Create a new folder or update an existing one for the authenticated user. Folders are typed to organize rules (the default), flows, or contexts.
     /// </summary>
     /// <example><code>
     /// await client.Assets.Folders.UpsertAsync(

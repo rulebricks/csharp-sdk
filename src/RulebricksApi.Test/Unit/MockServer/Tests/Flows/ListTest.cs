@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using RulebricksApi.Test_.Unit.MockServer;
 using RulebricksApi.Test_.Utils;
-using RulebricksApi.Tests;
 
 namespace RulebricksApi.Test_.Unit.MockServer.Tests.Flows;
 
@@ -93,7 +92,9 @@ public class ListTest : BaseMockServerTest
                     .WithBody(mockResponse)
             );
 
-        var response = await Client.Tests.Flows.ListAsync(new ListFlowsRequest { Slug = "slug" });
+        var response = await Client.Tests.Flows.ListAsync(
+            new RulebricksApi.Tests.ListFlowsRequest { Slug = "slug" }
+        );
         JsonAssert.AreEqual(response, mockResponse);
     }
 }

@@ -7,7 +7,7 @@ namespace RulebricksApi;
 public record ImportManifestRequest
 {
     /// <summary>
-    /// The RBM manifest object containing assets to import. Asset objects inside the manifest intentionally preserve `.rbm`/database casing so exported manifests can be imported without rewriting asset payloads.
+    /// The RBM manifest object containing assets to import. Asset objects inside the manifest intentionally preserve `.rbm`/database casing so exported manifests can be imported without rewriting asset payloads. A compressed manifest is also accepted: the JSON array produced by the compress-json library (for example, the contents of a compressed .rbm file exported with `compress: true`); it is detected and decompressed automatically.
     /// </summary>
     [JsonPropertyName("manifest")]
     public required ImportManifestRequestManifest Manifest { get; set; }

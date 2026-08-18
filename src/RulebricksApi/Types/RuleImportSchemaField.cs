@@ -56,7 +56,7 @@ public record RuleImportSchemaField : IJsonOnDeserialized, IJsonOnSerializing
     public bool? ValuesOnly { get; set; }
 
     /// <summary>
-    /// Prefix used to scope available dynamic values for this field.
+    /// Prefix used to scope available vocabulary values for this field.
     /// </summary>
     [JsonPropertyName("valuesPrefix")]
     public string? ValuesPrefix { get; set; }

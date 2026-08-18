@@ -5,7 +5,7 @@ namespace RulebricksApi;
 public partial interface IRulesClient
 {
     /// <summary>
-    /// Executes a single rule identified by a unique slug. The request and response formats are dynamic, dependent on the rule configuration.
+    /// Executes a single rule identified by a unique slug. The request and response formats are dynamic, dependent on the rule configuration. Optionally target a specific published version (e.g. `3`) or a release environment (e.g. `production`) via the `version` path segment; `latest` (the default) executes the current published version.
     /// </summary>
     WithRawResponseTask<Dictionary<string, object?>> SolveAsync(
         SolveRulesRequest request,
@@ -14,7 +14,7 @@ public partial interface IRulesClient
     );
 
     /// <summary>
-    /// Executes a particular rule against multiple request data payloads provided in a list.
+    /// Executes a particular rule against multiple request data payloads provided in a list. Optionally target a specific published version (e.g. `3`) or a release environment (e.g. `production`) via the `version` path segment; `latest` (the default) executes the current published version.
     /// </summary>
     WithRawResponseTask<
         IEnumerable<OneOf<Dictionary<string, object?>, BulkRuleResponseItemError>>

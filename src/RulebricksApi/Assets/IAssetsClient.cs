@@ -18,7 +18,7 @@ public partial interface IAssetsClient
     );
 
     /// <summary>
-    /// Import rules, flows, contexts, and values from an Rulebricks manifest file (*.rbm).
+    /// Import rules, flows, contexts, and values from an Rulebricks manifest file (*.rbm). Both plain manifests and compressed ones (the compress-json array form produced by exporting with `compress: true`) are accepted and detected automatically. Run Flow (subflow) references between flows in the manifest are resolved to the slugs, IDs, and published versions the flows receive in this workspace.
     /// </summary>
     WithRawResponseTask<ImportManifestResponse> ImportRbmAsync(
         ImportManifestRequest request,
@@ -27,7 +27,7 @@ public partial interface IAssetsClient
     );
 
     /// <summary>
-    /// Export selected rules, flows, contexts, and values to an Rulebricks manifest file (*.rbm).
+    /// Export selected rules, flows, contexts, and values to an Rulebricks manifest file (*.rbm). Dependencies are resolved automatically: exporting a flow includes its rules, contexts, vocabulary values, and any flows referenced by Run Flow nodes (recursively). Set `compress: true` to receive the manifest in compressed form (a compress-json array), which is much smaller and can be saved directly as a .rbm file; the import endpoint accepts both forms.
     /// </summary>
     WithRawResponseTask<
         OneOf<ExportManifestResponse, ExportManifestPreviewResponse>

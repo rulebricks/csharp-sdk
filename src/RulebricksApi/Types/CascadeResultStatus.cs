@@ -12,6 +12,10 @@ public readonly record struct CascadeResultStatus : IStringEnum
 
     public static readonly CascadeResultStatus Error = new(Values.Error);
 
+    public static readonly CascadeResultStatus Pending = new(Values.Pending);
+
+    public static readonly CascadeResultStatus SkippedAlreadyRun = new(Values.SkippedAlreadyRun);
+
     public CascadeResultStatus(string value)
     {
         Value = value;
@@ -111,5 +115,9 @@ public readonly record struct CascadeResultStatus : IStringEnum
         public const string Solved = "solved";
 
         public const string Error = "error";
+
+        public const string Pending = "pending";
+
+        public const string SkippedAlreadyRun = "skipped_already_run";
     }
 }

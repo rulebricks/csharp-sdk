@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using RulebricksApi.Assets;
 using RulebricksApi.Test_.Unit.MockServer;
 using RulebricksApi.Test_.Utils;
 
@@ -17,6 +18,7 @@ public class ListTest : BaseMockServerTest
                 "id": "abc123",
                 "name": "Marketing Rules",
                 "description": "Rules for marketing automation workflows",
+                "type": "rule",
                 "created_at": "2024-04-20T10:00:00.000Z",
                 "updated_at": "2024-04-23T23:55:38.000Z",
                 "user_groups": [
@@ -27,6 +29,7 @@ public class ListTest : BaseMockServerTest
                 "id": "def456",
                 "name": "Sales Qualification",
                 "description": "Rules for qualifying sales leads",
+                "type": "rule",
                 "created_at": "2024-04-18T14:30:00.000Z",
                 "updated_at": "2024-04-22T18:30:00.000Z",
                 "user_groups": [
@@ -45,7 +48,7 @@ public class ListTest : BaseMockServerTest
                     .WithBody(mockResponse)
             );
 
-        var response = await Client.Assets.Folders.ListAsync();
+        var response = await Client.Assets.Folders.ListAsync(new ListFoldersRequest());
         JsonAssert.AreEqual(response, mockResponse);
     }
 }

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using RulebricksApi;
 using RulebricksApi.Contexts;
 using RulebricksApi.Test_.Unit.MockServer;
 using RulebricksApi.Test_.Utils;
@@ -16,18 +17,22 @@ public class CreateTest : BaseMockServerTest
             {
               "name": "Customer",
               "description": "Represents a customer in the system",
-              "schema": [
-                {
-                  "key": "email",
-                  "name": "Email",
-                  "type": "string"
-                },
-                {
-                  "key": "age",
-                  "name": "Age",
-                  "type": "number"
-                }
-              ],
+              "schema": {
+                "base": [
+                  {
+                    "key": "email",
+                    "name": "Email",
+                    "type": "string",
+                    "required": true
+                  },
+                  {
+                    "key": "age",
+                    "name": "Age",
+                    "type": "number"
+                  }
+                ],
+                "derived": []
+              },
               "identity_fact": "email"
             }
             """;
@@ -62,20 +67,25 @@ public class CreateTest : BaseMockServerTest
             {
                 Name = "Customer",
                 Description = "Represents a customer in the system",
-                Schema = new List<CreateContextRequestSchemaItem>()
+                Schema = new ContextSchema
                 {
-                    new CreateContextRequestSchemaItem
+                    Base = new List<ContextSchemaField>()
                     {
-                        Key = "email",
-                        Name = "Email",
-                        Type = "string",
+                        new ContextSchemaField
+                        {
+                            Key = "email",
+                            Name = "Email",
+                            Type = ContextSchemaFieldType.String,
+                            Required = true,
+                        },
+                        new ContextSchemaField
+                        {
+                            Key = "age",
+                            Name = "Age",
+                            Type = ContextSchemaFieldType.Number,
+                        },
                     },
-                    new CreateContextRequestSchemaItem
-                    {
-                        Key = "age",
-                        Name = "Age",
-                        Type = "number",
-                    },
+                    Derived = new List<ContextSchemaField>() { },
                 },
                 IdentityFact = "email",
             }

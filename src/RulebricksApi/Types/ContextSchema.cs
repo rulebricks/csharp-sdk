@@ -21,7 +21,7 @@ public record ContextSchema : IJsonOnDeserialized
     public IEnumerable<ContextSchemaField>? Base { get; set; }
 
     /// <summary>
-    /// Fields derived from bound rule/flow outputs.
+    /// Expression-computed fields. Each entry supplies an `expression` evaluated from base facts, tracked history, and configured relationships.
     /// </summary>
     [JsonPropertyName("derived")]
     public IEnumerable<ContextSchemaField>? Derived { get; set; }

@@ -23,6 +23,7 @@ public class DeleteTest : BaseMockServerTest
               "id": "abc123",
               "name": "Marketing Rules",
               "description": "Rules for marketing automation workflows",
+              "type": "rule",
               "created_at": "2024-04-20T10:00:00.000Z",
               "updated_at": "2024-04-23T23:55:38.000Z",
               "user_groups": [

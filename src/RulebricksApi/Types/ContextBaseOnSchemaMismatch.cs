@@ -12,6 +12,8 @@ public readonly record struct ContextBaseOnSchemaMismatch : IStringEnum
 
     public static readonly ContextBaseOnSchemaMismatch Reject = new(Values.Reject);
 
+    public static readonly ContextBaseOnSchemaMismatch Store = new(Values.Store);
+
     public ContextBaseOnSchemaMismatch(string value)
     {
         Value = value;
@@ -112,5 +114,7 @@ public readonly record struct ContextBaseOnSchemaMismatch : IStringEnum
         public const string Ignore = "ignore";
 
         public const string Reject = "reject";
+
+        public const string Store = "store";
     }
 }

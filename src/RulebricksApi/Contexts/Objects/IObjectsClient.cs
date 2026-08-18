@@ -5,9 +5,10 @@ namespace RulebricksApi.Contexts;
 public partial interface IObjectsClient
 {
     /// <summary>
-    /// Retrieve all contexts for the authenticated user.
+    /// Retrieve all contexts for the authenticated user. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, by user group name or ID when the API key has access to that group, or by name.
     /// </summary>
     WithRawResponseTask<IEnumerable<ContextListItem>> ListAsync(
+        ListObjectsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
@@ -15,7 +16,7 @@ public partial interface IObjectsClient
     /// <summary>
     /// Create a new context for the authenticated user.
     /// </summary>
-    WithRawResponseTask<ContextDetail> CreateAsync(
+    WithRawResponseTask<CreateContextResponse> CreateAsync(
         CreateContextRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

@@ -23,6 +23,12 @@ public record ContextDetailBoundFlowsItem : IJsonOnDeserialized
     [JsonPropertyName("published")]
     public bool? Published { get; set; }
 
+    /// <summary>
+    /// Version target for this binding: `null` or `latest` follows the current published version, a version number (e.g. `3`) pins that published version, and any other value is a release environment slug resolved at execution time.
+    /// </summary>
+    [JsonPropertyName("context_version")]
+    public string? ContextVersion { get; set; }
+
     [JsonPropertyName("origin_rule")]
     public ContextDetailBoundFlowsItemOriginRule? OriginRule { get; set; }
 

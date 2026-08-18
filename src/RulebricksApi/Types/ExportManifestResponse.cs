@@ -18,7 +18,7 @@ public record ExportManifestResponse : IJsonOnDeserialized
     public bool? Success { get; set; }
 
     /// <summary>
-    /// The exported manifest data. The wrapper uses snake_case, while asset objects inside `contexts`, `values`, `rules`, and `flows` intentionally preserve `.rbm`/database casing for round-trip compatibility.
+    /// The exported manifest data. The wrapper uses snake_case, while asset objects inside `contexts`, `values`, `rules`, and `flows` intentionally preserve `.rbm`/database casing for round-trip compatibility. When the request sets `compress: true`, this field is instead the compress-json array encoding of the same manifest (a JSON array, not the object described below).
     /// </summary>
     [JsonPropertyName("manifest")]
     public ExportManifestResponseManifest? Manifest { get; set; }

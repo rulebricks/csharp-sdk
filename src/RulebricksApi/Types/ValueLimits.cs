@@ -5,7 +5,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 /// <summary>
-/// System limits for dynamic values
+/// System limits for vocabulary values
 /// </summary>
 [Serializable]
 public record ValueLimits : IJsonOnDeserialized
@@ -15,25 +15,19 @@ public record ValueLimits : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Maximum number of value keys per user
+    /// Maximum number of vocabulary values per workspace (a guardrail against runaway imports; the system is designed to operate at this scale)
     /// </summary>
     [JsonPropertyName("MAX_KEYS")]
     public int? MaxKeys { get; set; }
 
     /// <summary>
-    /// Maximum length of a single value in characters
+    /// Maximum serialized length of a single value payload in characters
     /// </summary>
     [JsonPropertyName("MAX_VALUE_LENGTH")]
     public int? MaxValueLength { get; set; }
 
     /// <summary>
-    /// Maximum total size of all values in bytes
-    /// </summary>
-    [JsonPropertyName("MAX_TOTAL_SIZE")]
-    public int? MaxTotalSize { get; set; }
-
-    /// <summary>
-    /// Maximum length of a key name
+    /// Maximum length of a value name in characters, including collection prefixes
     /// </summary>
     [JsonPropertyName("MAX_KEY_LENGTH")]
     public int? MaxKeyLength { get; set; }

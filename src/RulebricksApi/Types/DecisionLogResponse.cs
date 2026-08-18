@@ -21,7 +21,7 @@ public record DecisionLogResponse : IJsonOnDeserialized
     public IEnumerable<DecisionLog>? Data { get; set; }
 
     /// <summary>
-    /// Pagination cursor for fetching the next page. Null if no more results. Only present when count parameter is not 'true'.
+    /// Opaque pagination token for fetching the next page - pass it back verbatim via the cursor parameter. Null if no more results. Only present when count parameter is not 'true'.
     /// </summary>
     [JsonPropertyName("cursor")]
     public string? Cursor { get; set; }

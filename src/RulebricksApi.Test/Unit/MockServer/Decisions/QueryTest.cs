@@ -29,13 +29,20 @@ public class QueryTest : BaseMockServerTest
                   "decision": {
                     "key": "value"
                   },
+                  "trace_id": "trace_id",
+                  "path_trace": {
+                    "key": "value"
+                  },
+                  "matched_items": [
+                    1
+                  ],
                   "abbreviated": false,
                   "error": {
                     "key": "value"
                   }
                 }
               ],
-              "cursor": "100",
+              "cursor": "eyJ0IjoiMTc1MzY1MDAwMDEyMyIsInMiOjB9",
               "count": 1
             }
             """;
@@ -47,7 +54,11 @@ public class QueryTest : BaseMockServerTest
                     .WithPath("/decisions/query")
                     .WithParam("search", "status=200")
                     .WithParam("rules", "Lead Qualification", "Pricing Calculator")
+                    .WithParam("flows", "Loan Approval Flow")
+                    .WithParam("contexts", "loans")
+                    .WithParam("trace", "7db50259-31a0-42c1-aa3c-36409ad3c756")
                     .WithParam("statuses", "200", "400", "500")
+                    .WithParam("item_filter", "customer.id=cst_8f3a12")
                     .UsingGet()
             )
             .RespondWith(
@@ -62,7 +73,11 @@ public class QueryTest : BaseMockServerTest
             {
                 Search = "status=200",
                 Rules = "Lead Qualification,Pricing Calculator",
+                Flows = "Loan Approval Flow",
+                Contexts = "loans",
+                Trace = "7db50259-31a0-42c1-aa3c-36409ad3c756",
                 Statuses = "200,400,500",
+                ItemFilter = "customer.id=cst_8f3a12",
             }
         );
         JsonAssert.AreEqual(response, mockResponse);
@@ -88,6 +103,13 @@ public class QueryTest : BaseMockServerTest
                   "decision": {
                     "key": "value"
                   },
+                  "trace_id": "trace_id",
+                  "path_trace": {
+                    "key": "value"
+                  },
+                  "matched_items": [
+                    1
+                  ],
                   "error": "error",
                   "abbreviated": true
                 }
@@ -104,7 +126,11 @@ public class QueryTest : BaseMockServerTest
                     .WithPath("/decisions/query")
                     .WithParam("search", "status=200")
                     .WithParam("rules", "Lead Qualification", "Pricing Calculator")
+                    .WithParam("flows", "Loan Approval Flow")
+                    .WithParam("contexts", "loans")
+                    .WithParam("trace", "7db50259-31a0-42c1-aa3c-36409ad3c756")
                     .WithParam("statuses", "200", "400", "500")
+                    .WithParam("item_filter", "customer.id=cst_8f3a12")
                     .UsingGet()
             )
             .RespondWith(
@@ -119,7 +145,11 @@ public class QueryTest : BaseMockServerTest
             {
                 Search = "status=200",
                 Rules = "Lead Qualification,Pricing Calculator",
+                Flows = "Loan Approval Flow",
+                Contexts = "loans",
+                Trace = "7db50259-31a0-42c1-aa3c-36409ad3c756",
                 Statuses = "200,400,500",
+                ItemFilter = "customer.id=cst_8f3a12",
             }
         );
         JsonAssert.AreEqual(response, mockResponse);

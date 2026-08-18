@@ -5,7 +5,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 /// <summary>
-/// The RBM manifest object containing assets to import. Asset objects inside the manifest intentionally preserve `.rbm`/database casing so exported manifests can be imported without rewriting asset payloads.
+/// The RBM manifest object containing assets to import. Asset objects inside the manifest intentionally preserve `.rbm`/database casing so exported manifests can be imported without rewriting asset payloads. A compressed manifest is also accepted: the JSON array produced by the compress-json library (for example, the contents of a compressed .rbm file exported with `compress: true`); it is detected and decompressed automatically.
 /// </summary>
 [Serializable]
 public record ImportManifestRequestManifest : IJsonOnDeserialized
@@ -39,7 +39,13 @@ public record ImportManifestRequestManifest : IJsonOnDeserialized
     public IEnumerable<Dictionary<string, object?>>? Entities { get; set; }
 
     /// <summary>
-    /// Dynamic values to import.
+    /// Alias for `entities`, accepted so manifests produced by the export endpoint (which names this array `contexts`) can be imported without modification. Ignored when `entities` is present and non-empty.
+    /// </summary>
+    [JsonPropertyName("contexts")]
+    public IEnumerable<Dictionary<string, object?>>? Contexts { get; set; }
+
+    /// <summary>
+    /// Vocabulary values to import.
     /// </summary>
     [JsonPropertyName("values")]
     public IEnumerable<Dictionary<string, object?>>? Values { get; set; }

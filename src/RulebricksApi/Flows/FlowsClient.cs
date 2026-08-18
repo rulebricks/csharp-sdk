@@ -30,8 +30,9 @@ public partial class FlowsClient : IFlowsClient
                 {
                     Method = HttpMethod.Post,
                     Path = string.Format(
-                        "flows/{0}",
-                        ValueConvert.ToPathParameterString(request.Slug)
+                        "flows/{0}/{1}",
+                        ValueConvert.ToPathParameterString(request.Slug),
+                        ValueConvert.ToPathParameterString(request.Version)
                     ),
                     Body = request.Body,
                     Headers = _headers,
@@ -99,13 +100,14 @@ public partial class FlowsClient : IFlowsClient
     }
 
     /// <summary>
-    /// Execute a flow by its slug.
+    /// Execute a flow by its slug. Optionally target a specific published version (e.g. `3`) or a release environment (e.g. `production`) via the `version` path segment; `latest` (the default) executes the current published version.
     /// </summary>
     /// <example><code>
     /// await client.Flows.ExecuteAsync(
     ///     new ExecuteFlowsRequest
     ///     {
     ///         Slug = "slug",
+    ///         Version = "version",
     ///         Body = new Dictionary&lt;string, object?&gt;()
     ///         {
     ///             { "name", "John Doe" },

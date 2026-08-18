@@ -1,0 +1,26 @@
+using global::System.Text.Json.Serialization;
+using RulebricksApi.Core;
+
+namespace RulebricksApi.Assets;
+
+[Serializable]
+public record ListFoldersRequest
+{
+    /// <summary>
+    /// Filter results by user group name or ID. The value is validated against workspace groups. Admin/unrestricted API keys can request any group-specific view; restricted API keys may only filter to one of their assigned groups and receive a 403 when filtering outside those groups.
+    /// </summary>
+    [JsonIgnore]
+    public string? UserGroup { get; set; }
+
+    /// <summary>
+    /// Filter results by name using a case-insensitive substring match.
+    /// </summary>
+    [JsonIgnore]
+    public string? Name { get; set; }
+
+    /// <inheritdoc />
+    public override string ToString()
+    {
+        return JsonUtils.Serialize(this);
+    }
+}

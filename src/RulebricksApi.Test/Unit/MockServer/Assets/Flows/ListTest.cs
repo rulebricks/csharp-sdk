@@ -29,6 +29,20 @@ public class ListTest : BaseMockServerTest
                   "id": "ctx-abcd-efgh-ijkl",
                   "name": "Customer",
                   "slug": "customer"
+                },
+                "user_groups": [
+                  "user_groups"
+                ],
+                "folder": {
+                  "id": "id",
+                  "name": "name",
+                  "description": "description",
+                  "type": "rule",
+                  "created_at": "2024-01-15T09:30:00.000Z",
+                  "updated_at": "2024-01-15T09:30:00.000Z",
+                  "user_groups": [
+                    "user_groups"
+                  ]
                 }
               },
               {
@@ -37,7 +51,21 @@ public class ListTest : BaseMockServerTest
                 "description": "Streamline order processing and fulfillment.",
                 "slug": "uKPCd8hdsZ",
                 "published": false,
-                "updated_at": "2024-04-18T14:45:33.000Z"
+                "updated_at": "2024-04-18T14:45:33.000Z",
+                "user_groups": [
+                  "user_groups"
+                ],
+                "folder": {
+                  "id": "id",
+                  "name": "name",
+                  "description": "description",
+                  "type": "rule",
+                  "created_at": "2024-01-15T09:30:00.000Z",
+                  "updated_at": "2024-01-15T09:30:00.000Z",
+                  "user_groups": [
+                    "user_groups"
+                  ]
+                }
               }
             ]
             """;
@@ -53,7 +81,9 @@ public class ListTest : BaseMockServerTest
                     .WithBody(mockResponse)
             );
 
-        var response = await Client.Assets.Flows.ListAsync();
+        var response = await Client.Assets.Flows.ListAsync(
+            new RulebricksApi.Assets.ListFlowsRequest()
+        );
         JsonAssert.AreEqual(response, mockResponse);
     }
 }

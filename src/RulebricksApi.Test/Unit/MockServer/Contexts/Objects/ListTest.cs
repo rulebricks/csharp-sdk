@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using RulebricksApi.Contexts;
 using RulebricksApi.Test_.Unit.MockServer;
 using RulebricksApi.Test_.Utils;
 
@@ -24,7 +25,7 @@ public class ListTest : BaseMockServerTest
                     .WithBody(mockResponse)
             );
 
-        var response = await Client.Contexts.Objects.ListAsync();
+        var response = await Client.Contexts.Objects.ListAsync(new ListObjectsRequest());
         JsonAssert.AreEqual(response, mockResponse);
     }
 }

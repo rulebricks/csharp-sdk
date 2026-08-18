@@ -167,8 +167,12 @@ public partial class RelationshipsClient : IRelationshipsClient
                 {
                     case 400:
                         throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 403:
+                        throw new ForbiddenError(JsonUtils.Deserialize<Error>(responseBody));
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 409:
+                        throw new ConflictError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
                 }
@@ -250,6 +254,8 @@ public partial class RelationshipsClient : IRelationshipsClient
             {
                 switch (response.StatusCode)
                 {
+                    case 403:
+                        throw new ForbiddenError(JsonUtils.Deserialize<Error>(responseBody));
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
@@ -298,7 +304,7 @@ public partial class RelationshipsClient : IRelationshipsClient
     ///         ToContextId = "b2c3d4e5-f6a7-8901-bcde-f12345678901",
     ///         RelationType = CreateRelationshipRequestRelationType.HasMany,
     ///         ForeignKeyFact = "customer_id",
-    ///         Name = "Customer Orders",
+    ///         Name = "customer_orders",
     ///     }
     /// );
     /// </code></example>

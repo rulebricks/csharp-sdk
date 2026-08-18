@@ -5,7 +5,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 /// <summary>
-/// The exported manifest data. The wrapper uses snake_case, while asset objects inside `contexts`, `values`, `rules`, and `flows` intentionally preserve `.rbm`/database casing for round-trip compatibility.
+/// The exported manifest data. The wrapper uses snake_case, while asset objects inside `contexts`, `values`, `rules`, and `flows` intentionally preserve `.rbm`/database casing for round-trip compatibility. When the request sets `compress: true`, this field is instead the compress-json array encoding of the same manifest (a JSON array, not the object described below).
 /// </summary>
 [Serializable]
 public record ExportManifestResponseManifest : IJsonOnDeserialized
@@ -42,7 +42,7 @@ public record ExportManifestResponseManifest : IJsonOnDeserialized
     public IEnumerable<Dictionary<string, object?>>? Contexts { get; set; }
 
     /// <summary>
-    /// Exported dynamic values.
+    /// Exported vocabulary values.
     /// </summary>
     [JsonPropertyName("values")]
     public IEnumerable<Dictionary<string, object?>>? Values { get; set; }

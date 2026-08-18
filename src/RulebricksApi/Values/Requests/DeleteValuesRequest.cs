@@ -7,7 +7,7 @@ namespace RulebricksApi;
 public record DeleteValuesRequest
 {
     /// <summary>
-    /// ID of the dynamic value to delete
+    /// ID of the vocabulary value to delete
     /// </summary>
     [JsonIgnore]
     public required string Id { get; set; }

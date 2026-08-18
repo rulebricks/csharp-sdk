@@ -30,6 +30,12 @@ public record Folder : IJsonOnDeserialized
     public string? Description { get; set; }
 
     /// <summary>
+    /// The type of assets the folder organizes.
+    /// </summary>
+    [JsonPropertyName("type")]
+    public FolderType? Type { get; set; }
+
+    /// <summary>
     /// Timestamp of when the folder was created.
     /// </summary>
     [JsonPropertyName("created_at")]

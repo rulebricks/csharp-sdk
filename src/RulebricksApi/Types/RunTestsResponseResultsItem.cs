@@ -1,28 +1,30 @@
 using global::System.Text.Json;
 using global::System.Text.Json.Serialization;
-using RulebricksApi;
 using RulebricksApi.Core;
 
-namespace RulebricksApi.Contexts;
+namespace RulebricksApi;
 
 [Serializable]
-public record UpdateContextRequestSchemaItem : IJsonOnDeserialized
+public record RunTestsResponseResultsItem : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    [JsonPropertyName("key")]
-    public string? Key { get; set; }
+    [JsonPropertyName("id")]
+    public required string Id { get; set; }
 
     [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public required string Name { get; set; }
 
-    [JsonPropertyName("type")]
-    public string? Type { get; set; }
+    [JsonPropertyName("critical")]
+    public required bool Critical { get; set; }
 
-    [JsonPropertyName("default_value")]
-    public object? DefaultValue { get; set; }
+    [JsonPropertyName("success")]
+    public required bool Success { get; set; }
+
+    [JsonPropertyName("error")]
+    public required bool Error { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

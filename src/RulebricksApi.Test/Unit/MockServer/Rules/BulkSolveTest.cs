@@ -44,7 +44,7 @@ public class BulkSolveTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/bulk-solve/slug")
+                    .WithPath("/bulk-solve/slug/version")
                     .WithHeader("Content-Type", "application/json")
                     .UsingPost()
                     .WithBodyAsJson(requestJson)
@@ -60,6 +60,7 @@ public class BulkSolveTest : BaseMockServerTest
             new BulkSolveRulesRequest
             {
                 Slug = "slug",
+                Version = "version",
                 Body = new List<Dictionary<string, object?>>()
                 {
                     new Dictionary<string, object?>()

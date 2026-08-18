@@ -17,16 +17,16 @@ public class CreateTest : BaseMockServerTest
               "to_context_id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
               "relation_type": "has_many",
               "foreign_key_fact": "customer_id",
-              "name": "Customer Orders"
+              "name": "customer_orders"
             }
             """;
 
         const string mockResponse = """
             {
               "id": "rel-1234-5678-90ab-cdef12345678",
-              "type": "has_many",
-              "foreign_key": "customer_id",
-              "name": "Customer Orders",
+              "relation_type": "has_many",
+              "foreign_key_fact": "customer_id",
+              "name": "customer_orders",
               "target_context": {
                 "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
                 "name": "Order",
@@ -58,7 +58,7 @@ public class CreateTest : BaseMockServerTest
                 ToContextId = "b2c3d4e5-f6a7-8901-bcde-f12345678901",
                 RelationType = CreateRelationshipRequestRelationType.HasMany,
                 ForeignKeyFact = "customer_id",
-                Name = "Customer Orders",
+                Name = "customer_orders",
             }
         );
         JsonAssert.AreEqual(response, mockResponse);

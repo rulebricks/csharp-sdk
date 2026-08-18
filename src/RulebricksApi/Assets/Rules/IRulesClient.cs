@@ -32,7 +32,7 @@ public partial interface IRulesClient
     );
 
     /// <summary>
-    /// List all rules in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, or by user group name or ID when the API key has access to that group.
+    /// List all rules in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, by user group name or ID when the API key has access to that group, or by name.
     /// </summary>
     WithRawResponseTask<IEnumerable<RuleDetail>> ListAsync(
         ListRulesRequest request,

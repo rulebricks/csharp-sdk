@@ -36,6 +36,18 @@ public record FlowDetail : IJsonOnDeserialized
     public FlowDetailContext? Context { get; set; }
 
     /// <summary>
+    /// The user groups this flow is assigned to.
+    /// </summary>
+    [JsonPropertyName("user_groups")]
+    public IEnumerable<string>? UserGroups { get; set; }
+
+    /// <summary>
+    /// The folder this flow belongs to, if any.
+    /// </summary>
+    [JsonPropertyName("folder")]
+    public Folder? Folder { get; set; }
+
+    /// <summary>
     /// The unique identifier for the flow.
     /// </summary>
     [JsonPropertyName("id")]

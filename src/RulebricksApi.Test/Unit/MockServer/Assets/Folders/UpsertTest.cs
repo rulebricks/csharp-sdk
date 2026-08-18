@@ -24,6 +24,7 @@ public class UpsertTest : BaseMockServerTest
               "id": "abc123",
               "name": "Marketing Rules",
               "description": "Rules for marketing automation workflows",
+              "type": "rule",
               "created_at": "2024-01-15T09:30:00.000Z",
               "updated_at": "2024-04-23T23:55:38.000Z",
               "user_groups": [

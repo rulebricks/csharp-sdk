@@ -21,13 +21,13 @@ public record ContextInstanceState : IJsonOnDeserialized
     public string? Context { get; set; }
 
     /// <summary>
-    /// The current base field values for this instance.
+    /// The current base fact values for this instance (derived facts are reported separately under `derived`; note that POST responses combine both under `state`).
     /// </summary>
     [JsonPropertyName("state")]
     public Dictionary<string, object?>? State { get; set; }
 
     /// <summary>
-    /// Computed/derived field values from bound rules.
+    /// Expression-computed derived fact values (recomputed on read from base facts, relations, and history).
     /// </summary>
     [JsonPropertyName("derived")]
     public Dictionary<string, object?>? Derived { get; set; }
@@ -49,6 +49,18 @@ public record ContextInstanceState : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("need")]
     public IEnumerable<string>? Need { get; set; }
+
+    /// <summary>
+    /// Related instance data, present only when include_relations was requested. Keys are relationship names; has_many relations map to a list of related instance states, has_one/belongs_to to a single state or null.
+    /// </summary>
+    [JsonPropertyName("relations")]
+    public Dictionary<string, object?>? Relations { get; set; }
+
+    /// <summary>
+    /// Per-asset execution metadata, present after a bound rule or flow has run for this instance.
+    /// </summary>
+    [JsonPropertyName("executions")]
+    public Dictionary<string, object?>? Executions { get; set; }
 
     /// <summary>
     /// When the instance was first created.

@@ -1,5 +1,6 @@
 using global::System.Text.Json;
 using global::System.Text.Json.Serialization;
+using OneOf;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -21,7 +22,7 @@ public record SubmitContextDataResponse : IJsonOnDeserialized
     public string? Context { get; set; }
 
     /// <summary>
-    /// The merged state after submitting data and any auto-executed rules/flows.
+    /// The merged state after submitting data and any auto-executed rules/flows. Includes derived facts inline (unlike GET, which reports them separately under `derived`).
     /// </summary>
     [JsonPropertyName("state")]
     public Dictionary<string, object?>? State { get; set; }
@@ -57,10 +58,10 @@ public record SubmitContextDataResponse : IJsonOnDeserialized
     public DateTime? ExpiresAt { get; set; }
 
     /// <summary>
-    /// Results from auto-executed rules/flows and pending evaluation cascades.
+    /// Results from auto-executed rules/flows and pending evaluation cascades, plus summaries when a relationship change re-evaluated dependent contexts.
     /// </summary>
     [JsonPropertyName("cascaded")]
-    public IEnumerable<CascadeResult>? Cascaded { get; set; }
+    public IEnumerable<OneOf<CascadeResult, ContextCascadeSummary>>? Cascaded { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

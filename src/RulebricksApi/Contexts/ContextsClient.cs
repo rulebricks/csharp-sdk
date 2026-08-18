@@ -11,11 +11,11 @@ public partial class ContextsClient : IContextsClient
     internal ContextsClient(RawClient client)
     {
         _client = client;
-        Objects = new ObjectsClient(_client);
+        Objects = new RulebricksApi.Contexts.ObjectsClient(_client);
         Relationships = new RelationshipsClient(_client);
     }
 
-    public IObjectsClient Objects { get; }
+    public RulebricksApi.Contexts.IObjectsClient Objects { get; }
 
     public IRelationshipsClient Relationships { get; }
 
@@ -25,6 +25,10 @@ public partial class ContextsClient : IContextsClient
         CancellationToken cancellationToken = default
     )
     {
+        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 1)
+            .Add("include_relations", request.IncludeRelations)
+            .MergeAdditional(options?.AdditionalQueryParameters)
+            .Build();
         var _headers = await new RulebricksApi.Core.HeadersBuilder.Builder()
             .Add(_client.Options.Headers)
             .Add(_client.Options.AdditionalHeaders)
@@ -41,6 +45,7 @@ public partial class ContextsClient : IContextsClient
                         ValueConvert.ToPathParameterString(request.Slug),
                         ValueConvert.ToPathParameterString(request.Instance)
                     ),
+                    QueryString = _queryString,
                     Headers = _headers,
                     Options = options,
                 },
@@ -448,94 +453,6 @@ public partial class ContextsClient : IContextsClient
         }
     }
 
-    private async Task<WithRawResponse<SolveContextRuleResponse>> SolveAsyncCore(
-        SolveContextsRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        var _headers = await new RulebricksApi.Core.HeadersBuilder.Builder()
-            .Add(_client.Options.Headers)
-            .Add(_client.Options.AdditionalHeaders)
-            .Add(options?.AdditionalHeaders)
-            .BuildAsync()
-            .ConfigureAwait(false);
-        var response = await _client
-            .SendRequestAsync(
-                new JsonRequest
-                {
-                    Method = HttpMethod.Post,
-                    Path = string.Format(
-                        "contexts/{0}/{1}/solve/{2}",
-                        ValueConvert.ToPathParameterString(request.Slug),
-                        ValueConvert.ToPathParameterString(request.Instance),
-                        ValueConvert.ToPathParameterString(request.RuleSlug)
-                    ),
-                    Body = request.Body,
-                    Headers = _headers,
-                    ContentType = "application/json",
-                    Options = options,
-                },
-                cancellationToken
-            )
-            .ConfigureAwait(false);
-        if (response.StatusCode is >= 200 and < 400)
-        {
-            var responseBody = await response
-                .Raw.Content.ReadAsStringAsync(cancellationToken)
-                .ConfigureAwait(false);
-            try
-            {
-                var responseData = JsonUtils.Deserialize<SolveContextRuleResponse>(responseBody)!;
-                return new WithRawResponse<SolveContextRuleResponse>()
-                {
-                    Data = responseData,
-                    RawResponse = new RawResponse()
-                    {
-                        StatusCode = response.Raw.StatusCode,
-                        Url = response.Raw.RequestMessage?.RequestUri ?? new Uri("about:blank"),
-                        Headers = ResponseHeaders.FromHttpResponseMessage(response.Raw),
-                    },
-                };
-            }
-            catch (JsonException e)
-            {
-                throw new RulebricksApiApiException(
-                    "Failed to deserialize response",
-                    response.StatusCode,
-                    responseBody,
-                    e
-                );
-            }
-        }
-        {
-            var responseBody = await response
-                .Raw.Content.ReadAsStringAsync(cancellationToken)
-                .ConfigureAwait(false);
-            try
-            {
-                switch (response.StatusCode)
-                {
-                    case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
-                    case 404:
-                        throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
-                    case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
-                }
-            }
-            catch (JsonException)
-            {
-                // unable to map error response, throwing generic error
-            }
-            throw new RulebricksApiApiException(
-                $"Error with status code {response.StatusCode}",
-                response.StatusCode,
-                responseBody
-            );
-        }
-    }
-
     private async Task<WithRawResponse<CascadeContextResponse>> CascadeAsyncCore(
         CascadeContextsRequest request,
         RequestOptions? options = null,
@@ -621,12 +538,16 @@ public partial class ContextsClient : IContextsClient
         }
     }
 
-    private async Task<WithRawResponse<SolveContextFlowResponse>> ExecuteAsyncCore(
-        ExecuteContextsRequest request,
+    private async Task<WithRawResponse<ContextBatchResponse>> BulkIngestAsyncCore(
+        BulkIngestContextsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
+        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 1)
+            .Add("include", request.Include)
+            .MergeAdditional(options?.AdditionalQueryParameters)
+            .Build();
         var _headers = await new RulebricksApi.Core.HeadersBuilder.Builder()
             .Add(_client.Options.Headers)
             .Add(_client.Options.AdditionalHeaders)
@@ -639,12 +560,11 @@ public partial class ContextsClient : IContextsClient
                 {
                     Method = HttpMethod.Post,
                     Path = string.Format(
-                        "contexts/{0}/{1}/flows/{2}",
-                        ValueConvert.ToPathParameterString(request.Slug),
-                        ValueConvert.ToPathParameterString(request.Instance),
-                        ValueConvert.ToPathParameterString(request.FlowSlug)
+                        "contexts/batch/{0}",
+                        ValueConvert.ToPathParameterString(request.Slug)
                     ),
                     Body = request.Body,
+                    QueryString = _queryString,
                     Headers = _headers,
                     ContentType = "application/json",
                     Options = options,
@@ -659,8 +579,8 @@ public partial class ContextsClient : IContextsClient
                 .ConfigureAwait(false);
             try
             {
-                var responseData = JsonUtils.Deserialize<SolveContextFlowResponse>(responseBody)!;
-                return new WithRawResponse<SolveContextFlowResponse>()
+                var responseData = JsonUtils.Deserialize<ContextBatchResponse>(responseBody)!;
+                return new WithRawResponse<ContextBatchResponse>()
                 {
                     Data = responseData,
                     RawResponse = new RawResponse()
@@ -691,8 +611,12 @@ public partial class ContextsClient : IContextsClient
                 {
                     case 400:
                         throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 402:
+                        throw new PaymentRequiredError(JsonUtils.Deserialize<Error>(responseBody));
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 413:
+                        throw new ContentTooLargeError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
                 }
@@ -814,32 +738,7 @@ public partial class ContextsClient : IContextsClient
     }
 
     /// <summary>
-    /// Execute a specific rule using the context instance's state as input.
-    /// </summary>
-    /// <example><code>
-    /// await client.Contexts.SolveAsync(
-    ///     new SolveContextsRequest
-    ///     {
-    ///         Slug = "customer",
-    ///         Instance = "cust-12345",
-    ///         RuleSlug = "eligibility-check",
-    ///         Body = new Dictionary&lt;string, object?&gt;() { },
-    ///     }
-    /// );
-    /// </code></example>
-    public WithRawResponseTask<SolveContextRuleResponse> SolveAsync(
-        SolveContextsRequest request,
-        RequestOptions? options = null,
-        CancellationToken cancellationToken = default
-    )
-    {
-        return new WithRawResponseTask<SolveContextRuleResponse>(
-            SolveAsyncCore(request, options, cancellationToken)
-        );
-    }
-
-    /// <summary>
-    /// Trigger re-evaluation of all bound rules and flows for the instance.
+    /// Re-evaluate registered pending rule and flow executions for this instance after their fact or relationship dependencies may have become available. This does not run every bound asset.
     /// </summary>
     /// <example><code>
     /// await client.Contexts.CascadeAsync(
@@ -863,27 +762,29 @@ public partial class ContextsClient : IContextsClient
     }
 
     /// <summary>
-    /// Execute a specific flow using the context instance's state as input.
+    /// Submit an array of records to any context in one synchronous call. Records merge into their context instances (matched by the context's identity fact), bound rules and flows whose inputs became satisfied execute, and the response returns the resolved state of every touched instance. Retries are always safe: merges are idempotent and executions are deduplicated by input hash. Fact history is recorded for tracked facts exactly as on individual writes. Clients chunk large datasets across requests. On the cloud platform, a batch may not exceed the plan's remaining monthly rule executions (402 above it) or a 4.5MB request body, and executed rules count toward plan usage. Private (self-hosted) deployments run batches through the high-performance server with no plan gating, a 10,000-records-per-request default cap (CONTEXT_BATCH_MAX_ITEMS), and NDJSON support (Content-Type: application/x-ndjson).
     /// </summary>
     /// <example><code>
-    /// await client.Contexts.ExecuteAsync(
-    ///     new ExecuteContextsRequest
+    /// await client.Contexts.BulkIngestAsync(
+    ///     new BulkIngestContextsRequest
     ///     {
-    ///         Slug = "customer",
-    ///         Instance = "cust-12345",
-    ///         FlowSlug = "onboarding-flow",
-    ///         Body = new Dictionary&lt;string, object?&gt;() { },
+    ///         Slug = "loan-application",
+    ///         Body = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
+    ///         {
+    ///             new Dictionary&lt;string, object?&gt;() { { "loan_id", "APP-1" }, { "amount", 12000 } },
+    ///             new Dictionary&lt;string, object?&gt;() { { "loan_id", "APP-2" }, { "amount", 7300 } },
+    ///         },
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<SolveContextFlowResponse> ExecuteAsync(
-        ExecuteContextsRequest request,
+    public WithRawResponseTask<ContextBatchResponse> BulkIngestAsync(
+        BulkIngestContextsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<SolveContextFlowResponse>(
-            ExecuteAsyncCore(request, options, cancellationToken)
+        return new WithRawResponseTask<ContextBatchResponse>(
+            BulkIngestAsyncCore(request, options, cancellationToken)
         );
     }
 }

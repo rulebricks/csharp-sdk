@@ -35,16 +35,20 @@ public partial class RulebricksApiClient : IRulebricksApiClient
         }
         _client = new RawClient(clientOptionsWithAuth);
         Rules = new RulesClient(_client);
+        Infra = new InfraClient(_client);
         Flows = new FlowsClient(_client);
         Decisions = new DecisionsClient(_client);
         Users = new UsersClient(_client);
         Assets = new AssetsClient(_client);
         Values = new ValuesClient(_client);
+        Objects = new ObjectsClient(_client);
         Contexts = new ContextsClient(_client);
         Tests = new TestsClient(_client);
     }
 
     public IRulesClient Rules { get; }
+
+    public IInfraClient Infra { get; }
 
     public IFlowsClient Flows { get; }
 
@@ -55,6 +59,8 @@ public partial class RulebricksApiClient : IRulebricksApiClient
     public IAssetsClient Assets { get; }
 
     public IValuesClient Values { get; }
+
+    public IObjectsClient Objects { get; }
 
     public IContextsClient Contexts { get; }
 

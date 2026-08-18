@@ -24,6 +24,12 @@ public record UpsertFolderRequest
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
+    /// <summary>
+    /// The type of assets the folder organizes. Applies on creation; ignored when updating an existing folder.
+    /// </summary>
+    [JsonPropertyName("type")]
+    public UpsertFolderRequestType? Type { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {

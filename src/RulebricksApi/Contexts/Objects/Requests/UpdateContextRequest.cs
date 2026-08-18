@@ -1,4 +1,5 @@
 using global::System.Text.Json.Serialization;
+using RulebricksApi;
 using RulebricksApi.Core;
 
 namespace RulebricksApi.Contexts;
@@ -13,16 +14,10 @@ public record UpdateContextRequest
     public required string Id { get; set; }
 
     /// <summary>
-    /// The name of the context.
+    /// The name of the context. Changing it regenerates the context's slug.
     /// </summary>
     [JsonPropertyName("name")]
     public string? Name { get; set; }
-
-    /// <summary>
-    /// The slug of the context.
-    /// </summary>
-    [JsonPropertyName("slug")]
-    public string? Slug { get; set; }
 
     /// <summary>
     /// The description of the context.
@@ -31,10 +26,16 @@ public record UpdateContextRequest
     public string? Description { get; set; }
 
     /// <summary>
-    /// Updated schema fields for the context.
+    /// Updated schema for the context: an object with `base` and optional `derived` field arrays.
     /// </summary>
     [JsonPropertyName("schema")]
-    public IEnumerable<UpdateContextRequestSchemaItem>? Schema { get; set; }
+    public ContextSchema? Schema { get; set; }
+
+    /// <summary>
+    /// The fact key to use as the unique identifier for instances. Must be a key from schema.base. Caution: changing this on a context with live instances changes how future writes resolve instances.
+    /// </summary>
+    [JsonPropertyName("identity_fact")]
+    public string? IdentityFact { get; set; }
 
     /// <summary>
     /// When true, bound rules and flows automatically execute when their inputs are satisfied.
@@ -43,7 +44,7 @@ public record UpdateContextRequest
     public bool? AutoExecuteDecisions { get; set; }
 
     /// <summary>
-    /// Time-to-live in seconds for live context instances. Instances expire after this duration.
+    /// Time-to-live in seconds for live context instances (60 seconds to 30 days). Instances expire after this duration.
     /// </summary>
     [JsonPropertyName("ttl_seconds")]
     public int? TtlSeconds { get; set; }
@@ -55,22 +56,10 @@ public record UpdateContextRequest
     public int? HistoryLimit { get; set; }
 
     /// <summary>
-    /// How to handle fields that don't match the schema.
+    /// How to handle submitted fields that don't match the schema: `ignore` drops them, `reject` fails the request (or the batch item), `store` persists them alongside declared facts.
     /// </summary>
     [JsonPropertyName("on_schema_mismatch")]
     public UpdateContextRequestOnSchemaMismatch? OnSchemaMismatch { get; set; }
-
-    /// <summary>
-    /// Webhook URL called when a rule or flow successfully solves.
-    /// </summary>
-    [JsonPropertyName("webhook_on_solve")]
-    public string? WebhookOnSolve { get; set; }
-
-    /// <summary>
-    /// Webhook URL called when a live context expires due to TTL.
-    /// </summary>
-    [JsonPropertyName("webhook_on_expire")]
-    public string? WebhookOnExpire { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

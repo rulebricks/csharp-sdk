@@ -33,7 +33,7 @@ public record CascadeResult : IJsonOnDeserialized
     public string? Flow { get; set; }
 
     /// <summary>
-    /// Whether the evaluation succeeded.
+    /// Whether the evaluation succeeded, failed, remains pending, or was skipped because the same inputs already completed successfully.
     /// </summary>
     [JsonPropertyName("status")]
     public CascadeResultStatus? Status { get; set; }
@@ -45,7 +45,7 @@ public record CascadeResult : IJsonOnDeserialized
     public Dictionary<string, object?>? Result { get; set; }
 
     /// <summary>
-    /// Whether this was auto-executed (true) or from a registered pending evaluation (false).
+    /// True for context auto-execution. Omitted for registered pending evaluations.
     /// </summary>
     [JsonPropertyName("auto_executed")]
     public bool? AutoExecuted { get; set; }
@@ -61,6 +61,30 @@ public record CascadeResult : IJsonOnDeserialized
     /// </summary>
     [JsonPropertyName("error")]
     public string? Error { get; set; }
+
+    /// <summary>
+    /// True when execution stopped at a rate limit.
+    /// </summary>
+    [JsonPropertyName("rate_limited")]
+    public bool? RateLimited { get; set; }
+
+    /// <summary>
+    /// True when execution stopped at a plan usage limit.
+    /// </summary>
+    [JsonPropertyName("usage_limited")]
+    public bool? UsageLimited { get; set; }
+
+    /// <summary>
+    /// Dependencies still missing when the evaluation remains pending.
+    /// </summary>
+    [JsonPropertyName("need")]
+    public IEnumerable<string>? Need { get; set; }
+
+    /// <summary>
+    /// Nested pending evaluations triggered by this rule's writeback.
+    /// </summary>
+    [JsonPropertyName("cascaded")]
+    public IEnumerable<CascadeResult>? Cascaded { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

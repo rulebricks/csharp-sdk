@@ -54,10 +54,31 @@ public record DecisionLog : IJsonOnDeserialized, IJsonOnSerializing
     public DecisionLogResponse? Response { get; set; }
 
     /// <summary>
-    /// Decision details including matched conditions, rows, and evaluation metadata. API-owned metadata keys are normalized to snake_case where known, such as `rule_id`, `rule_slug`, `rule_version`, `success_idxs`, `total_usage`, and `entity_count`; user-defined request/response schema keys are preserved.
+    /// Decision details including matched conditions, rows, and evaluation metadata. API-owned metadata keys are normalized to snake_case where known, including rule, flow, context, item, and correlation fields such as `rule_id`, `flow_execution_id`, `root_flow_execution_id`, `parallel_execution_id`, `context_instance_id`, `item_indexes`, and `item_execution_ids` (bulk flow runs' per-item execution ids, aligned 1:1 with the request array). Rule decisions also expose the bounded execution-time vocabulary snapshot under `referenced_values`; `referenced_values_truncated` indicates that one or more payloads or entries were omitted. Executions backed by a frozen published vocabulary include its asset/version pointer under `value_world`. User-defined request/response schema keys are preserved.
     /// </summary>
     [JsonPropertyName("decision")]
     public Dictionary<string, object?>? Decision { get; set; }
+
+    /// <summary>
+    /// Observability (OpenTelemetry) trace ID for this execution. Populated on self-hosted deployments only; always null on cloud.
+    /// </summary>
+    [JsonPropertyName("trace_id")]
+    public string? TraceId { get; set; }
+
+    /// <summary>
+    /// Decompressed execution path trace for flow records: the executed steps with their inputs and outputs. An object for single flow runs, or a null-aligned array (1:1 with the request array) for bulk runs. Only present when `include_traces=true`; null for non-flow records, runs without a stored trace, and traces dropped by the size cap (see the decision's `path_trace_omitted`).
+    /// </summary>
+    [JsonPropertyName("path_trace")]
+    public OneOf<
+        Dictionary<string, object?>,
+        IEnumerable<Dictionary<string, object?>?>
+    >? PathTrace { get; set; }
+
+    /// <summary>
+    /// Only present when `item_filter` was supplied and this record is bulk-shaped: the original zero-based positions (within this record's stored request array) of the items that matched the filter, in order. The record's `request`, `response`, and index-aligned decision fields are sliced to these items; `decision.item_count` keeps the original total. Empty when no items matched. On self-hosted deployments where large bulk runs are logged in chunks, the absolute position within the original API call is `decision.logChunk.offset` plus this value.
+    /// </summary>
+    [JsonPropertyName("matched_items")]
+    public IEnumerable<int>? MatchedItems { get; set; }
 
     /// <summary>
     /// Error message if the execution failed.
@@ -66,7 +87,7 @@ public record DecisionLog : IJsonOnDeserialized, IJsonOnSerializing
     public string? Error { get; set; }
 
     /// <summary>
-    /// Whether the request/response data was truncated due to size limits.
+    /// Whether the request/response data was truncated due to size limits or unavailable payload columns. Responses carry full payloads whenever they were stored.
     /// </summary>
     [JsonPropertyName("abbreviated")]
     public bool? Abbreviated { get; set; }

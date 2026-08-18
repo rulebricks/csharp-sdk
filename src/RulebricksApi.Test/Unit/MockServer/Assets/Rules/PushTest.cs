@@ -113,7 +113,7 @@ public class PushTest : BaseMockServerTest
                     },
                     "settings": {
                       "enabled": true,
-                      "priority": 1,
+                      "priority": 0,
                       "schedule": []
                     }
                   },
@@ -129,7 +129,7 @@ public class PushTest : BaseMockServerTest
                     },
                     "settings": {
                       "enabled": true,
-                      "priority": 2,
+                      "priority": 0,
                       "schedule": []
                     }
                   }
@@ -297,7 +297,7 @@ public class PushTest : BaseMockServerTest
                             {
                                 Enabled = true,
                                 GroupId = null,
-                                Priority = 1,
+                                Priority = 0,
                                 Schedule = new List<Dictionary<string, object?>>() { },
                             },
                         },
@@ -319,7 +319,7 @@ public class PushTest : BaseMockServerTest
                             {
                                 Enabled = true,
                                 GroupId = null,
-                                Priority = 2,
+                                Priority = 0,
                                 Schedule = new List<Dictionary<string, object?>>() { },
                             },
                         },

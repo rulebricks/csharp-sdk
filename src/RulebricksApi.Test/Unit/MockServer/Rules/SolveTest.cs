@@ -31,7 +31,7 @@ public class SolveTest : BaseMockServerTest
             .Given(
                 WireMock
                     .RequestBuilders.Request.Create()
-                    .WithPath("/solve/slug")
+                    .WithPath("/solve/slug/version")
                     .WithHeader("Content-Type", "application/json")
                     .UsingPost()
                     .WithBodyAsJson(requestJson)
@@ -47,6 +47,7 @@ public class SolveTest : BaseMockServerTest
             new SolveRulesRequest
             {
                 Slug = "slug",
+                Version = "version",
                 Body = new Dictionary<string, object?>()
                 {
                     { "name", "John Doe" },

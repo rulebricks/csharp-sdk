@@ -1,4 +1,5 @@
 using global::System.Text.Json.Serialization;
+using RulebricksApi;
 using RulebricksApi.Core;
 
 namespace RulebricksApi.Contexts;
@@ -7,16 +8,10 @@ namespace RulebricksApi.Contexts;
 public record CreateContextRequest
 {
     /// <summary>
-    /// The name of the context.
+    /// The name of the context. The context's slug is generated from it (suffixed on collision).
     /// </summary>
     [JsonPropertyName("name")]
     public required string Name { get; set; }
-
-    /// <summary>
-    /// Optional custom slug. Auto-generated if not provided.
-    /// </summary>
-    [JsonPropertyName("slug")]
-    public string? Slug { get; set; }
 
     /// <summary>
     /// The description of the context.
@@ -25,14 +20,13 @@ public record CreateContextRequest
     public string? Description { get; set; }
 
     /// <summary>
-    /// Initial schema fields for the context. At least one field must be defined.
+    /// The context's schema: an object with `base` (stored facts; at least one required) and optional `derived` (expression-computed facts) field arrays.
     /// </summary>
     [JsonPropertyName("schema")]
-    public IEnumerable<CreateContextRequestSchemaItem> Schema { get; set; } =
-        new List<CreateContextRequestSchemaItem>();
+    public required ContextSchema Schema { get; set; }
 
     /// <summary>
-    /// The field key to use as the unique identifier for instances. Must be a key from the schema.
+    /// The fact key to use as the unique identifier for instances. Must be a key from schema.base.
     /// </summary>
     [JsonPropertyName("identity_fact")]
     public required string IdentityFact { get; set; }
@@ -44,7 +38,7 @@ public record CreateContextRequest
     public bool? AutoExecuteDecisions { get; set; }
 
     /// <summary>
-    /// Time-to-live in seconds for live context instances. Instances expire after this duration.
+    /// Time-to-live in seconds for live context instances (60 seconds to 30 days). Instances expire after this duration; each write extends the expiry.
     /// </summary>
     [JsonPropertyName("ttl_seconds")]
     public int? TtlSeconds { get; set; }
@@ -56,22 +50,10 @@ public record CreateContextRequest
     public int? HistoryLimit { get; set; }
 
     /// <summary>
-    /// How to handle fields that don't match the schema.
+    /// How to handle submitted fields that don't match the schema: `ignore` drops them, `reject` fails the request (or the batch item), `store` persists them alongside declared facts.
     /// </summary>
     [JsonPropertyName("on_schema_mismatch")]
     public CreateContextRequestOnSchemaMismatch? OnSchemaMismatch { get; set; }
-
-    /// <summary>
-    /// Webhook URL called when a rule or flow successfully solves.
-    /// </summary>
-    [JsonPropertyName("webhook_on_solve")]
-    public string? WebhookOnSolve { get; set; }
-
-    /// <summary>
-    /// Webhook URL called when a live context expires due to TTL.
-    /// </summary>
-    [JsonPropertyName("webhook_on_expire")]
-    public string? WebhookOnExpire { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

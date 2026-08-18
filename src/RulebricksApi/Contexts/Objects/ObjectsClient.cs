@@ -14,10 +14,17 @@ public partial class ObjectsClient : IObjectsClient
     }
 
     private async Task<WithRawResponse<IEnumerable<ContextListItem>>> ListAsyncCore(
+        ListObjectsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
+        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 3)
+            .Add("folder", request.Folder)
+            .Add("user_group", request.UserGroup)
+            .Add("name", request.Name)
+            .MergeAdditional(options?.AdditionalQueryParameters)
+            .Build();
         var _headers = await new RulebricksApi.Core.HeadersBuilder.Builder()
             .Add(_client.Options.Headers)
             .Add(_client.Options.AdditionalHeaders)
@@ -30,6 +37,7 @@ public partial class ObjectsClient : IObjectsClient
                 {
                     Method = HttpMethod.Get,
                     Path = "admin/contexts",
+                    QueryString = _queryString,
                     Headers = _headers,
                     Options = options,
                 },
@@ -91,7 +99,7 @@ public partial class ObjectsClient : IObjectsClient
         }
     }
 
-    private async Task<WithRawResponse<ContextDetail>> CreateAsyncCore(
+    private async Task<WithRawResponse<CreateContextResponse>> CreateAsyncCore(
         CreateContextRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -124,8 +132,8 @@ public partial class ObjectsClient : IObjectsClient
                 .ConfigureAwait(false);
             try
             {
-                var responseData = JsonUtils.Deserialize<ContextDetail>(responseBody)!;
-                return new WithRawResponse<ContextDetail>()
+                var responseData = JsonUtils.Deserialize<CreateContextResponse>(responseBody)!;
+                return new WithRawResponse<CreateContextResponse>()
                 {
                     Data = responseData,
                     RawResponse = new RawResponse()
@@ -156,6 +164,8 @@ public partial class ObjectsClient : IObjectsClient
                 {
                     case 400:
                         throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 409:
+                        throw new ConflictError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
                 }
@@ -423,18 +433,19 @@ public partial class ObjectsClient : IObjectsClient
     }
 
     /// <summary>
-    /// Retrieve all contexts for the authenticated user.
+    /// Retrieve all contexts for the authenticated user. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, by user group name or ID when the API key has access to that group, or by name.
     /// </summary>
     /// <example><code>
-    /// await client.Contexts.Objects.ListAsync();
+    /// await client.Contexts.Objects.ListAsync(new ListObjectsRequest());
     /// </code></example>
     public WithRawResponseTask<IEnumerable<ContextListItem>> ListAsync(
+        ListObjectsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
         return new WithRawResponseTask<IEnumerable<ContextListItem>>(
-            ListAsyncCore(options, cancellationToken)
+            ListAsyncCore(request, options, cancellationToken)
         );
     }
 
@@ -447,32 +458,37 @@ public partial class ObjectsClient : IObjectsClient
     ///     {
     ///         Name = "Customer",
     ///         Description = "Represents a customer in the system",
-    ///         Schema = new List&lt;CreateContextRequestSchemaItem&gt;()
+    ///         Schema = new ContextSchema
     ///         {
-    ///             new CreateContextRequestSchemaItem
+    ///             Base = new List&lt;ContextSchemaField&gt;()
     ///             {
-    ///                 Key = "email",
-    ///                 Name = "Email",
-    ///                 Type = "string",
+    ///                 new ContextSchemaField
+    ///                 {
+    ///                     Key = "email",
+    ///                     Name = "Email",
+    ///                     Type = ContextSchemaFieldType.String,
+    ///                     Required = true,
+    ///                 },
+    ///                 new ContextSchemaField
+    ///                 {
+    ///                     Key = "age",
+    ///                     Name = "Age",
+    ///                     Type = ContextSchemaFieldType.Number,
+    ///                 },
     ///             },
-    ///             new CreateContextRequestSchemaItem
-    ///             {
-    ///                 Key = "age",
-    ///                 Name = "Age",
-    ///                 Type = "number",
-    ///             },
+    ///             Derived = new List&lt;ContextSchemaField&gt;() { },
     ///         },
     ///         IdentityFact = "email",
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<ContextDetail> CreateAsync(
+    public WithRawResponseTask<CreateContextResponse> CreateAsync(
         CreateContextRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<ContextDetail>(
+        return new WithRawResponseTask<CreateContextResponse>(
             CreateAsyncCore(request, options, cancellationToken)
         );
     }
@@ -482,7 +498,7 @@ public partial class ObjectsClient : IObjectsClient
     /// </summary>
     /// <example><code>
     /// await client.Contexts.Objects.GetAsync(
-    ///     new GetObjectsRequest { Id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }
+    ///     new RulebricksApi.Contexts.GetObjectsRequest { Id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }
     /// );
     /// </code></example>
     public WithRawResponseTask<ContextDetail> GetAsync(
@@ -525,7 +541,7 @@ public partial class ObjectsClient : IObjectsClient
     /// </summary>
     /// <example><code>
     /// await client.Contexts.Objects.DeleteAsync(
-    ///     new DeleteObjectsRequest { Id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }
+    ///     new RulebricksApi.Contexts.DeleteObjectsRequest { Id = "a1b2c3d4-e5f6-7890-abcd-ef1234567890" }
     /// );
     /// </code></example>
     public WithRawResponseTask<DeleteContextResponse> DeleteAsync(

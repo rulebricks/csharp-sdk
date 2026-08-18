@@ -14,7 +14,7 @@ public class DeleteTest : BaseMockServerTest
     {
         const string mockResponse = """
             {
-              "message": "Relationship deleted successfully."
+              "message": "Relationship deleted"
             }
             """;
 

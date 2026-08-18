@@ -43,7 +43,10 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "J6SacZJ75i",
@@ -56,7 +59,10 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               }
             ]
             """;
@@ -140,7 +146,10 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "J6SacZJ75i",
@@ -153,7 +162,10 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               }
             ]
             """;
@@ -257,7 +269,10 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "J6SacZJ75i",
@@ -270,7 +285,10 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               }
             ]
             """;
@@ -360,7 +378,10 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "J6SacZJ75i",
@@ -373,7 +394,10 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               }
             ]
             """;
@@ -438,7 +462,7 @@ public class UpdateTest : BaseMockServerTest
             [
               {
                 "id": "A1BcdE23f4",
-                "name": "User Profile.First Name",
+                "name": "user_profile.first_name",
                 "type": "string",
                 "value": "Alice",
                 "usages": [
@@ -447,11 +471,14 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "B2CdeF34g5",
-                "name": "User Profile.Last Name",
+                "name": "user_profile.last_name",
                 "type": "string",
                 "value": "Johnson",
                 "usages": [
@@ -460,11 +487,14 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "C3DefG45h6",
-                "name": "User Profile.Contact Info.Email Address",
+                "name": "user_profile.contact_info.email_address",
                 "type": "string",
                 "value": "alice@example.com",
                 "usages": [
@@ -473,11 +503,14 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "D4EfgH56i7",
-                "name": "User Profile.Contact Info.Phone Number",
+                "name": "user_profile.contact_info.phone_number",
                 "type": "string",
                 "value": "555-0123",
                 "usages": [
@@ -486,11 +519,14 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "E5FghI67j8",
-                "name": "Account Settings.Is Premium User",
+                "name": "account_settings.is_premium_user",
                 "type": "boolean",
                 "value": true,
                 "usages": [
@@ -499,11 +535,14 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "F6GhiJ78k9",
-                "name": "Account Settings.Subscription Tier",
+                "name": "account_settings.subscription_tier",
                 "type": "string",
                 "value": "gold",
                 "usages": [
@@ -512,11 +551,14 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "G7HijK89l0",
-                "name": "Account Settings.Preferences",
+                "name": "account_settings.preferences",
                 "type": "list",
                 "value": [
                   "email_notifications",
@@ -528,11 +570,14 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               },
               {
                 "id": "H8IjkL90m1",
-                "name": "Account Balance",
+                "name": "account_balance",
                 "type": "number",
                 "value": 1250.75,
                 "usages": [
@@ -541,7 +586,10 @@ public class UpdateTest : BaseMockServerTest
                 "user_groups": [
                   "marketing",
                   "developers"
-                ]
+                ],
+                "metadata": {
+                  "key": "value"
+                }
               }
             ]
             """;
