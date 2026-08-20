@@ -14,7 +14,7 @@ public partial interface IValuesClient
     );
 
     /// <summary>
-    /// Update existing vocabulary values or add new ones for the authenticated user. Supports both flat and nested object structures. Nested objects are automatically flattened using dot notation with keys preserved exactly as sent (e.g. nested 'user_profile.first_name' becomes the value name 'user_profile.first_name'). Writes are set-based upserts keyed by value name - existing values keep their ids, so rule references stay valid - and each call is idempotent, so retrying a failed request is always safe. Imports of any size go through this endpoint (POST /values/bulk is an equivalent alias): drive large dictionaries as a sequence of chunked calls, each bounded by your deployment's request body limit. Payloads may compose values from other values with reference markers: { "$ref": "<value name="">" } references a value by name (existing values first, then values created by the same request), and { "$rb": "globalValue", "id": "<value id="">" } references by id. A scalar payload may be a single reference; list payloads may mix literal items and references. References are validated (existence, type match, cycles) before anything is written. Workspaces at or below the catalog threshold receive the full value list back (legacy behavior); larger workspaces receive summary counts ({ created, updated, processed }).</value></value>
+    /// Update existing vocabulary values or add new ones for the authenticated user. Supports both flat and nested object structures.
     /// </summary>
     WithRawResponseTask<OneOf<IEnumerable<DynamicValue>, UpdateValuesSummaryResponse>> UpdateAsync(
         UpdateValuesRequest request,

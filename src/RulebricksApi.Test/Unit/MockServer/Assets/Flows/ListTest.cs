@@ -20,6 +20,9 @@ public class ListTest : BaseMockServerTest
                 "slug": "x6Q4zhD_Lm",
                 "published": true,
                 "updated_at": "2024-05-15T10:30:22.000Z",
+                "labels": [
+                  "labels"
+                ],
                 "origin_rule": {
                   "id": "rule-1234-5678-90ab",
                   "name": "Customer Eligibility",
@@ -52,6 +55,9 @@ public class ListTest : BaseMockServerTest
                 "slug": "uKPCd8hdsZ",
                 "published": false,
                 "updated_at": "2024-04-18T14:45:33.000Z",
+                "labels": [
+                  "labels"
+                ],
                 "user_groups": [
                   "user_groups"
                 ],

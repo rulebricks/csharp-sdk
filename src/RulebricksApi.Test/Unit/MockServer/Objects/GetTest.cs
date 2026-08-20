@@ -20,7 +20,10 @@ public class GetTest : BaseMockServerTest
               "source_format": "source_format",
               "parsed_fields": [
                 {
-                  "key": "value"
+                  "key": "key",
+                  "scope": "scope",
+                  "schemaPath": "schemaPath",
+                  "derivedObjectName": "derivedObjectName"
                 }
               ],
               "user_groups": [

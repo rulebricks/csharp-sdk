@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using RulebricksApi;
 using RulebricksApi.Test_.Unit.MockServer;
 using RulebricksApi.Test_.Utils;
 
@@ -24,6 +23,7 @@ public class UpsertTest : BaseMockServerTest
 
         const string mockResponse = """
             {
+              "dry_run": true,
               "created": true,
               "object": {
                 "id": "id",
@@ -32,9 +32,7 @@ public class UpsertTest : BaseMockServerTest
                 "schema_type": "schema_type",
                 "source_format": "source_format",
                 "parsed_fields": [
-                  {
-                    "key": "value"
-                  }
+                  {}
                 ],
                 "user_groups": [
                   "user_groups"
@@ -59,7 +57,6 @@ public class UpsertTest : BaseMockServerTest
                 WireMock
                     .RequestBuilders.Request.Create()
                     .WithPath("/objects")
-                    .WithHeader("Content-Type", "application/json")
                     .UsingPut()
                     .WithBodyAsJson(requestJson)
             )
@@ -71,12 +68,17 @@ public class UpsertTest : BaseMockServerTest
             );
 
         var response = await Client.Objects.UpsertAsync(
-            new UpsertObjectRequest
+            new Dictionary<object, object?>()
             {
-                Name = "Claim",
-                Content =
-                    "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"countryCode\": { \"type\": \"string\", \"title\": \"Country Code\", \"enum\": [\"US\", \"CA\", \"GB\"] }\n  }\n}",
-                UserGroups = new List<string>() { "underwriting" },
+                {
+                    "content",
+                    "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"countryCode\": { \"type\": \"string\", \"title\": \"Country Code\", \"enum\": [\"US\", \"CA\", \"GB\"] }\n  }\n}"
+                },
+                { "name", "Claim" },
+                {
+                    "user_groups",
+                    new List<object?>() { "underwriting" }
+                },
             }
         );
         JsonAssert.AreEqual(response, mockResponse);

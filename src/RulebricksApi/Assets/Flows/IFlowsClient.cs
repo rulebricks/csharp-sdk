@@ -5,7 +5,7 @@ namespace RulebricksApi.Assets;
 public partial interface IFlowsClient
 {
     /// <summary>
-    /// List all flows in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, by user group name or ID when the API key has access to that group, or by name.
+    /// List all flows in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, labels, user group name or ID when the API key has access to that group, or by name.
     /// </summary>
     WithRawResponseTask<IEnumerable<FlowDetail>> ListAsync(
         ListFlowsRequest request,

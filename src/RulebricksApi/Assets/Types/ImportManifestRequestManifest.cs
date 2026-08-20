@@ -24,13 +24,13 @@ public record ImportManifestRequestManifest : IJsonOnDeserialized
     /// Rules to import.
     /// </summary>
     [JsonPropertyName("rules")]
-    public IEnumerable<Dictionary<string, object?>>? Rules { get; set; }
+    public IEnumerable<ManifestLabeledAsset>? Rules { get; set; }
 
     /// <summary>
     /// Flows to import.
     /// </summary>
     [JsonPropertyName("flows")]
-    public IEnumerable<Dictionary<string, object?>>? Flows { get; set; }
+    public IEnumerable<ManifestLabeledAsset>? Flows { get; set; }
 
     /// <summary>
     /// Contexts to import.
@@ -45,7 +45,7 @@ public record ImportManifestRequestManifest : IJsonOnDeserialized
     public IEnumerable<Dictionary<string, object?>>? Contexts { get; set; }
 
     /// <summary>
-    /// Vocabulary values to import.
+    /// Vocabulary values to import. Entries in object-managed namespaces are skipped and reported instead of being overwritten.
     /// </summary>
     [JsonPropertyName("values")]
     public IEnumerable<Dictionary<string, object?>>? Values { get; set; }

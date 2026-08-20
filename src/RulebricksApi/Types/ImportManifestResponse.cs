@@ -30,7 +30,7 @@ public record ImportManifestResponse : IJsonOnDeserialized
     public IEnumerable<ImportManifestResponseUpdatedItem>? Updated { get; set; }
 
     /// <summary>
-    /// Assets that were skipped during import.
+    /// Assets that were skipped during import. Object-managed values are listed here with a reason such as 'Collection is managed by a workspace object' or 'Value is managed by a workspace object'; they do not cause a whole-import 409.
     /// </summary>
     [JsonPropertyName("skipped")]
     public IEnumerable<ImportManifestResponseSkippedItem>? Skipped { get; set; }

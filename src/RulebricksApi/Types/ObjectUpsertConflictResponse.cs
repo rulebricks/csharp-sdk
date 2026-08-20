@@ -5,32 +5,23 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 [Serializable]
-public record UpsertObjectResponse : IJsonOnDeserialized
+public record ObjectUpsertConflictResponse : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Present and true for a dry-run response; no object or managed values were written.
+    /// Conflict message.
     /// </summary>
-    [JsonPropertyName("dry_run")]
-    public bool? DryRun { get; set; }
+    [JsonPropertyName("error")]
+    public required string Error { get; set; }
 
     /// <summary>
-    /// True when the object was created by this call.
+    /// Values the object would generate but cannot adopt or overwrite. Present for value-name collisions and omitted for conflicts without colliding values.
     /// </summary>
-    [JsonPropertyName("created")]
-    public bool? Created { get; set; }
-
-    [JsonPropertyName("object")]
-    public WorkspaceObject? Object { get; set; }
-
-    /// <summary>
-    /// Managed-value sync results (or would_sync / would_archive for dry runs).
-    /// </summary>
-    [JsonPropertyName("values")]
-    public UpsertObjectResponseValues? Values { get; set; }
+    [JsonPropertyName("collisions")]
+    public IEnumerable<ObjectValueCollision>? Collisions { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

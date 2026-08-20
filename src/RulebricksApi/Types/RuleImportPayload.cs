@@ -43,6 +43,9 @@ public record RuleImportPayload : IJsonOnDeserialized, IJsonOnSerializing
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
+    [JsonPropertyName("labels")]
+    public IEnumerable<string>? Labels { get; set; }
+
     /// <summary>
     /// Creation timestamp.
     /// </summary>

@@ -1,9 +1,11 @@
+using OneOf;
+
 namespace RulebricksApi;
 
 public partial interface IObjectsClient
 {
     /// <summary>
-    /// Lists the workspace's objects (JSON Schemas). Results are scoped to the API key holder's user groups, matching the visibility model of values, rules, and flows: group-restricted keys only see objects whose user_groups overlap theirs.
+    /// Lists the workspace's objects (JSON Schemas). The provided API key must have permission to view vocabulary values. Results are scoped to the API key holder's user groups.
     /// </summary>
     WithRawResponseTask<IEnumerable<WorkspaceObject>> ListAsync(
         RequestOptions? options = null,
@@ -11,16 +13,16 @@ public partial interface IObjectsClient
     );
 
     /// <summary>
-    /// Creates or updates an object by ID or name and syncs enum values it generates. Objects help workspace admins programmatically determine multiple collections of values based on Rulebricks' contracts with external systems from a single JSON Schema source.
+    /// Creates or updates an object by ID or name and syncs enum values it generates. `content` and at least one of `id` or `name` are required. Objects help workspace admins programmatically determine multiple collections of values based on Rulebricks' contracts with external systems from a single JSON Schema source. Renaming the object's display name does not move its managed collection paths: those paths derive from schema field keys. When a schema field key itself is renamed, `field_rename` can preserve the generated values' identities.
     /// </summary>
     WithRawResponseTask<UpsertObjectResponse> UpsertAsync(
-        UpsertObjectRequest request,
+        OneOf<object> request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
     /// <summary>
-    /// Fetches one object by ID or exact name.
+    /// Fetches one object by ID or exact name. The provided API key must have permission to view vocabulary values.
     /// </summary>
     WithRawResponseTask<WorkspaceObject> GetAsync(
         GetObjectsRequest request,
@@ -29,7 +31,7 @@ public partial interface IObjectsClient
     );
 
     /// <summary>
-    /// Deletes the object. Its generated values always lose their management lock; by default they are also archived (published rules keep resolving them by id). Pass values=detach to keep them active as ordinary, hand-editable values instead. Requires the manage objects entitlement.
+    /// Deletes the object. By default, unused values are permanently deleted while values referenced by draft, current, or historical rules, flows, or other vocabulary values are archived. Pass values=detach to keep every generated value active as an ordinary, hand-editable value.
     /// </summary>
     WithRawResponseTask<DeleteObjectResponse> DeleteAsync(
         DeleteObjectsRequest request,

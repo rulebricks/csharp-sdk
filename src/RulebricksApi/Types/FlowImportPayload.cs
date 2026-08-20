@@ -25,6 +25,9 @@ public record FlowImportPayload : IJsonOnDeserialized, IJsonOnSerializing
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 
+    [JsonPropertyName("labels")]
+    public IEnumerable<string>? Labels { get; set; }
+
     /// <summary>
     /// The flow's nodes. Exactly one must be an `origin`.
     /// </summary>

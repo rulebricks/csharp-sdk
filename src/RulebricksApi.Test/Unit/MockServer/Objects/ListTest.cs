@@ -20,9 +20,7 @@ public class ListTest : BaseMockServerTest
                 "schema_type": "schema_type",
                 "source_format": "source_format",
                 "parsed_fields": [
-                  {
-                    "key": "value"
-                  }
+                  {}
                 ],
                 "user_groups": [
                   "user_groups"

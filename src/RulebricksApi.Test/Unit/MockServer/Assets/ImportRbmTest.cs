@@ -77,20 +77,26 @@ public class ImportRbmTest : BaseMockServerTest
                 Manifest = new ImportManifestRequestManifest
                 {
                     Version = "1.0",
-                    Rules = new List<Dictionary<string, object?>>()
+                    Rules = new List<ManifestLabeledAsset>()
                     {
-                        new Dictionary<string, object?>()
+                        new ManifestLabeledAsset
                         {
-                            { "name", "Pricing Rule" },
-                            { "slug", "pricing-rule" },
+                            AdditionalProperties = new AdditionalProperties
+                            {
+                                ["name"] = "Pricing Rule",
+                                ["slug"] = "pricing-rule",
+                            },
                         },
                     },
-                    Flows = new List<Dictionary<string, object?>>()
+                    Flows = new List<ManifestLabeledAsset>()
                     {
-                        new Dictionary<string, object?>()
+                        new ManifestLabeledAsset
                         {
-                            { "name", "Onboarding Flow" },
-                            { "slug", "onboarding-flow" },
+                            AdditionalProperties = new AdditionalProperties
+                            {
+                                ["name"] = "Onboarding Flow",
+                                ["slug"] = "onboarding-flow",
+                            },
                         },
                     },
                     Entities = new List<Dictionary<string, object?>>()

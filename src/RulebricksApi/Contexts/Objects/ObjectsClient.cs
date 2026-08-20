@@ -165,7 +165,7 @@ public partial class ObjectsClient : IObjectsClient
                     case 400:
                         throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
                     case 409:
-                        throw new ConflictError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new ConflictError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
                 }

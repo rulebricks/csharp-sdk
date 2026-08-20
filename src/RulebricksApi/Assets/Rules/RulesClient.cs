@@ -96,7 +96,7 @@ public partial class RulesClient : IRulesClient
         }
     }
 
-    private async Task<WithRawResponse<Dictionary<string, object?>>> PullAsyncCore(
+    private async Task<WithRawResponse<RuleExport>> PullAsyncCore(
         PullRulesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -132,10 +132,8 @@ public partial class RulesClient : IRulesClient
                 .ConfigureAwait(false);
             try
             {
-                var responseData = JsonUtils.Deserialize<Dictionary<string, object?>>(
-                    responseBody
-                )!;
-                return new WithRawResponse<Dictionary<string, object?>>()
+                var responseData = JsonUtils.Deserialize<RuleExport>(responseBody)!;
+                return new WithRawResponse<RuleExport>()
                 {
                     Data = responseData,
                     RawResponse = new RawResponse()
@@ -184,7 +182,7 @@ public partial class RulesClient : IRulesClient
         }
     }
 
-    private async Task<WithRawResponse<Dictionary<string, object?>>> PushAsyncCore(
+    private async Task<WithRawResponse<RuleExport>> PushAsyncCore(
         ImportRuleRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -217,10 +215,8 @@ public partial class RulesClient : IRulesClient
                 .ConfigureAwait(false);
             try
             {
-                var responseData = JsonUtils.Deserialize<Dictionary<string, object?>>(
-                    responseBody
-                )!;
-                return new WithRawResponse<Dictionary<string, object?>>()
+                var responseData = JsonUtils.Deserialize<RuleExport>(responseBody)!;
+                return new WithRawResponse<RuleExport>()
                 {
                     Data = responseData,
                     RawResponse = new RawResponse()
@@ -256,7 +252,7 @@ public partial class RulesClient : IRulesClient
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 409:
-                        throw new ConflictError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new ConflictError(JsonUtils.Deserialize<object>(responseBody));
                     case 422:
                         throw new UnprocessableEntityError(
                             JsonUtils.Deserialize<Error>(responseBody)
@@ -283,8 +279,9 @@ public partial class RulesClient : IRulesClient
         CancellationToken cancellationToken = default
     )
     {
-        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 3)
+        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 4)
             .Add("folder", request.Folder)
+            .Add("labels", request.Labels)
             .Add("user_group", request.UserGroup)
             .Add("name", request.Name)
             .MergeAdditional(options?.AdditionalQueryParameters)
@@ -390,13 +387,13 @@ public partial class RulesClient : IRulesClient
     ///     new PullRulesRequest { Id = "2855f8da-2654-4df9-8903-8f797cbfe8eb" }
     /// );
     /// </code></example>
-    public WithRawResponseTask<Dictionary<string, object?>> PullAsync(
+    public WithRawResponseTask<RuleExport> PullAsync(
         PullRulesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<Dictionary<string, object?>>(
+        return new WithRawResponseTask<RuleExport>(
             PullAsyncCore(request, options, cancellationToken)
         );
     }
@@ -567,19 +564,19 @@ public partial class RulesClient : IRulesClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<Dictionary<string, object?>> PushAsync(
+    public WithRawResponseTask<RuleExport> PushAsync(
         ImportRuleRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<Dictionary<string, object?>>(
+        return new WithRawResponseTask<RuleExport>(
             PushAsyncCore(request, options, cancellationToken)
         );
     }
 
     /// <summary>
-    /// List all rules in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, by user group name or ID when the API key has access to that group, or by name.
+    /// List all rules in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, labels, user group name or ID when the API key has access to that group, or by name.
     /// </summary>
     /// <example><code>
     /// await client.Assets.Rules.ListAsync(

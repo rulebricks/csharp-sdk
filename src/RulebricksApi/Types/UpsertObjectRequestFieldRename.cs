@@ -4,33 +4,27 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
+/// <summary>
+/// Optional single-field rename hint for an update. When `content` replaces an existing schema field key with a new key, this hint preserves matching managed enum value IDs instead of archiving and recreating them.
+/// </summary>
 [Serializable]
-public record UpsertObjectResponse : IJsonOnDeserialized
+public record UpsertObjectRequestFieldRename : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Present and true for a dry-run response; no object or managed values were written.
+    /// Previous schema field key or schemaPath present on the stored object.
     /// </summary>
-    [JsonPropertyName("dry_run")]
-    public bool? DryRun { get; set; }
+    [JsonPropertyName("from_key")]
+    public required string FromKey { get; set; }
 
     /// <summary>
-    /// True when the object was created by this call.
+    /// Replacement schema field key or schemaPath present in the submitted content.
     /// </summary>
-    [JsonPropertyName("created")]
-    public bool? Created { get; set; }
-
-    [JsonPropertyName("object")]
-    public WorkspaceObject? Object { get; set; }
-
-    /// <summary>
-    /// Managed-value sync results (or would_sync / would_archive for dry runs).
-    /// </summary>
-    [JsonPropertyName("values")]
-    public UpsertObjectResponseValues? Values { get; set; }
+    [JsonPropertyName("to_key")]
+    public required string ToKey { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

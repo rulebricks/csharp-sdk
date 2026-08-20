@@ -23,6 +23,9 @@ public record RuleDetail : IJsonOnDeserialized
     [JsonPropertyName("updated_at")]
     public DateTime? UpdatedAt { get; set; }
 
+    [JsonPropertyName("labels")]
+    public IEnumerable<string>? Labels { get; set; }
+
     /// <summary>
     /// Whether the rule is currently published.
     /// </summary>

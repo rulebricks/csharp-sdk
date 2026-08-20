@@ -51,13 +51,13 @@ public record ExportManifestResponseManifest : IJsonOnDeserialized
     /// Exported rules.
     /// </summary>
     [JsonPropertyName("rules")]
-    public IEnumerable<Dictionary<string, object?>>? Rules { get; set; }
+    public IEnumerable<ManifestLabeledAsset>? Rules { get; set; }
 
     /// <summary>
     /// Exported flows.
     /// </summary>
     [JsonPropertyName("flows")]
-    public IEnumerable<Dictionary<string, object?>>? Flows { get; set; }
+    public IEnumerable<ManifestLabeledAsset>? Flows { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

@@ -172,7 +172,7 @@ public partial class RelationshipsClient : IRelationshipsClient
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 409:
-                        throw new ConflictError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new ConflictError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
                 }

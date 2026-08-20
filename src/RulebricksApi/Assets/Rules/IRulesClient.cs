@@ -16,7 +16,7 @@ public partial interface IRulesClient
     /// <summary>
     /// Export a specific rule by its ID. This response preserves the raw rule document casing (for example, `requestSchema`, `sampleRequest`, and `createdAt`) so it can round-trip through `/admin/rules/import` and `.rbm` workflows.
     /// </summary>
-    WithRawResponseTask<Dictionary<string, object?>> PullAsync(
+    WithRawResponseTask<RuleExport> PullAsync(
         PullRulesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -25,14 +25,14 @@ public partial interface IRulesClient
     /// <summary>
     /// Create or update a rule. If `id` is provided, the matching rule is partially updated (all other fields optional). If `id` is omitted, a new rule is created (`id` and `slug` are auto-generated; all other fields required).
     /// </summary>
-    WithRawResponseTask<Dictionary<string, object?>> PushAsync(
+    WithRawResponseTask<RuleExport> PushAsync(
         ImportRuleRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     );
 
     /// <summary>
-    /// List all rules in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, by user group name or ID when the API key has access to that group, or by name.
+    /// List all rules in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, labels, user group name or ID when the API key has access to that group, or by name.
     /// </summary>
     WithRawResponseTask<IEnumerable<RuleDetail>> ListAsync(
         ListRulesRequest request,

@@ -15,6 +15,8 @@ public class DeleteTest : BaseMockServerTest
             {
               "message": "message",
               "values": {
+                "total": 1,
+                "deleted": 1,
                 "detached": 1,
                 "archived": 1
               }

@@ -19,8 +19,9 @@ public partial class FlowsClient : IFlowsClient
         CancellationToken cancellationToken = default
     )
     {
-        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 3)
+        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 4)
             .Add("folder", request.Folder)
+            .Add("labels", request.Labels)
             .Add("user_group", request.UserGroup)
             .Add("name", request.Name)
             .MergeAdditional(options?.AdditionalQueryParameters)
@@ -349,7 +350,7 @@ public partial class FlowsClient : IFlowsClient
     }
 
     /// <summary>
-    /// List all flows in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, by user group name or ID when the API key has access to that group, or by name.
+    /// List all flows in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, labels, user group name or ID when the API key has access to that group, or by name.
     /// </summary>
     /// <example><code>
     /// await client.Assets.Flows.ListAsync(new RulebricksApi.Assets.ListFlowsRequest());

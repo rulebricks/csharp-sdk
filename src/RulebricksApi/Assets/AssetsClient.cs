@@ -272,7 +272,7 @@ public partial class AssetsClient : IAssetsClient
     }
 
     /// <summary>
-    /// Import rules, flows, contexts, and values from an Rulebricks manifest file (*.rbm). Both plain manifests and compressed ones (the compress-json array form produced by exporting with `compress: true`) are accepted and detected automatically. Run Flow (subflow) references between flows in the manifest are resolved to the slugs, IDs, and published versions the flows receive in this workspace.
+    /// Import rules, flows, contexts, and values from an Rulebricks manifest file (*.rbm).
     /// </summary>
     /// <example><code>
     /// await client.Assets.ImportRbmAsync(
@@ -281,20 +281,26 @@ public partial class AssetsClient : IAssetsClient
     ///         Manifest = new ImportManifestRequestManifest
     ///         {
     ///             Version = "1.0",
-    ///             Rules = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
+    ///             Rules = new List&lt;ManifestLabeledAsset&gt;()
     ///             {
-    ///                 new Dictionary&lt;string, object?&gt;()
+    ///                 new ManifestLabeledAsset
     ///                 {
-    ///                     { "name", "Pricing Rule" },
-    ///                     { "slug", "pricing-rule" },
+    ///                     AdditionalProperties = new AdditionalProperties
+    ///                     {
+    ///                         ["name"] = "Pricing Rule",
+    ///                         ["slug"] = "pricing-rule",
+    ///                     },
     ///                 },
     ///             },
-    ///             Flows = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
+    ///             Flows = new List&lt;ManifestLabeledAsset&gt;()
     ///             {
-    ///                 new Dictionary&lt;string, object?&gt;()
+    ///                 new ManifestLabeledAsset
     ///                 {
-    ///                     { "name", "Onboarding Flow" },
-    ///                     { "slug", "onboarding-flow" },
+    ///                     AdditionalProperties = new AdditionalProperties
+    ///                     {
+    ///                         ["name"] = "Onboarding Flow",
+    ///                         ["slug"] = "onboarding-flow",
+    ///                     },
     ///                 },
     ///             },
     ///             Entities = new List&lt;Dictionary&lt;string, object?&gt;&gt;()

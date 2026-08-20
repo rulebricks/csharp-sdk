@@ -23,6 +23,9 @@ public record FlowDetail : IJsonOnDeserialized
     [JsonPropertyName("updated_at")]
     public DateTime? UpdatedAt { get; set; }
 
+    [JsonPropertyName("labels")]
+    public IEnumerable<string>? Labels { get; set; }
+
     /// <summary>
     /// The origin rule that this flow starts from. Flows execute starting from this rule's outputs.
     /// </summary>

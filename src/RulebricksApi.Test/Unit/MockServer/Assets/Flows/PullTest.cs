@@ -16,6 +16,9 @@ public class PullTest : BaseMockServerTest
             {
               "name": "name",
               "description": "description",
+              "labels": [
+                "labels"
+              ],
               "nodes": [
                 {
                   "ref": "code",
