@@ -37,7 +37,9 @@ public class QueryTest : BaseMockServerTest
                     1
                   ],
                   "abbreviated": false,
-                  "error": "error"
+                  "error": {
+                    "key": "value"
+                  }
                 }
               ],
               "cursor": "eyJ0IjoiMTc1MzY1MDAwMDEyMyIsInMiOjB9",

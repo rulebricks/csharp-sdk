@@ -33,6 +33,12 @@ public record CascadeResult : IJsonOnDeserialized
     public string? Flow { get; set; }
 
     /// <summary>
+    /// Flow entries only: the run's execution ID, accepted by `/decisions/query` `trace`.
+    /// </summary>
+    [JsonPropertyName("execution_id")]
+    public string? ExecutionId { get; set; }
+
+    /// <summary>
     /// Whether the evaluation succeeded, failed, remains pending, or was skipped because the same inputs already completed successfully.
     /// </summary>
     [JsonPropertyName("status")]

@@ -57,7 +57,7 @@ public record ContextInstanceState : IJsonOnDeserialized
     public Dictionary<string, object?>? Relations { get; set; }
 
     /// <summary>
-    /// Per-asset execution metadata, present after a bound rule or flow has run for this instance.
+    /// Per-asset execution metadata, including `execution_id` for flow runs, present after a bound rule or flow has run for this instance.
     /// </summary>
     [JsonPropertyName("executions")]
     public Dictionary<string, object?>? Executions { get; set; }

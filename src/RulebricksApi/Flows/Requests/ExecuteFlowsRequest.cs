@@ -1,4 +1,5 @@
 using global::System.Text.Json.Serialization;
+using OneOf;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -19,7 +20,10 @@ public record ExecuteFlowsRequest
     public string Version { get; set; } = "latest";
 
     [JsonIgnore]
-    public Dictionary<string, object?> Body { get; set; } = new Dictionary<string, object?>();
+    public required OneOf<
+        Dictionary<string, object?>,
+        IEnumerable<Dictionary<string, object?>>
+    > Body { get; set; }
 
     /// <inheritdoc />
     public override string ToString()

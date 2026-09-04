@@ -33,6 +33,12 @@ public record SolveContextFlowResponse : IJsonOnDeserialized
     public string? Flow { get; set; }
 
     /// <summary>
+    /// The flow run's execution ID, accepted by `/decisions/query` `trace`.
+    /// </summary>
+    [JsonPropertyName("execution_id")]
+    public string? ExecutionId { get; set; }
+
+    /// <summary>
     /// The flow execution output.
     /// </summary>
     [JsonPropertyName("result")]

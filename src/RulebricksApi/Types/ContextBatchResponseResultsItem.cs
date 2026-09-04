@@ -42,7 +42,7 @@ public record ContextBatchResponseResultsItem : IJsonOnDeserialized
     public DateTime? ExpiresAt { get; set; }
 
     /// <summary>
-    /// Per-asset record of the last run: input hash, status, timestamp, trace IDs, error.
+    /// Per-asset record of the last run: input hash, status, timestamp, trace IDs, `execution_id` for flows, error.
     /// </summary>
     [JsonPropertyName("executions")]
     public Dictionary<string, object?>? Executions { get; set; }

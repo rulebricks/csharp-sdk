@@ -20,6 +20,12 @@ public record ContextBatchResponseResultsItemExecutedItem : IJsonOnDeserialized
     [JsonPropertyName("status")]
     public ContextBatchResponseResultsItemExecutedItemStatus? Status { get; set; }
 
+    /// <summary>
+    /// Flow entries only: the run's execution ID, accepted by `/decisions/query` `trace`.
+    /// </summary>
+    [JsonPropertyName("execution_id")]
+    public string? ExecutionId { get; set; }
+
     [JsonPropertyName("error")]
     public string? Error { get; set; }
 

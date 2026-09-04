@@ -1,4 +1,5 @@
 using global::System.Text.Json;
+using OneOf;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -12,7 +13,11 @@ public partial class FlowsClient : IFlowsClient
         _client = client;
     }
 
-    private async Task<WithRawResponse<Dictionary<string, object?>>> ExecuteAsyncCore(
+    private async Task<
+        WithRawResponse<
+            OneOf<Dictionary<string, object?>, IEnumerable<Dictionary<string, object?>>>
+        >
+    > ExecuteAsyncCore(
         ExecuteFlowsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -49,10 +54,12 @@ public partial class FlowsClient : IFlowsClient
                 .ConfigureAwait(false);
             try
             {
-                var responseData = JsonUtils.Deserialize<Dictionary<string, object?>>(
-                    responseBody
-                )!;
-                return new WithRawResponse<Dictionary<string, object?>>()
+                var responseData = JsonUtils.Deserialize<
+                    OneOf<Dictionary<string, object?>, IEnumerable<Dictionary<string, object?>>>
+                >(responseBody)!;
+                return new WithRawResponse<
+                    OneOf<Dictionary<string, object?>, IEnumerable<Dictionary<string, object?>>>
+                >()
                 {
                     Data = responseData,
                     RawResponse = new RawResponse()
@@ -123,14 +130,16 @@ public partial class FlowsClient : IFlowsClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<Dictionary<string, object?>> ExecuteAsync(
+    public WithRawResponseTask<
+        OneOf<Dictionary<string, object?>, IEnumerable<Dictionary<string, object?>>>
+    > ExecuteAsync(
         ExecuteFlowsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<Dictionary<string, object?>>(
-            ExecuteAsyncCore(request, options, cancellationToken)
-        );
+        return new WithRawResponseTask<
+            OneOf<Dictionary<string, object?>, IEnumerable<Dictionary<string, object?>>>
+        >(ExecuteAsyncCore(request, options, cancellationToken));
     }
 }
