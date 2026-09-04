@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using RulebricksApi;
 using RulebricksApi.Test_.Unit.MockServer;
 using RulebricksApi.Test_.Utils;
 
@@ -47,7 +48,7 @@ public class GetTest : BaseMockServerTest
             );
 
         var response = await Client.Objects.GetAsync(
-            new RulebricksApi.GetObjectsRequest { ObjectId = "objectId" }
+            new GetObjectsRequest { ObjectId = "objectId" }
         );
         JsonAssert.AreEqual(response, mockResponse);
     }

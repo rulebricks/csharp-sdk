@@ -11,7 +11,7 @@ public record WorkspaceObjectParsedFieldsItem : IJsonOnDeserialized, IJsonOnSeri
         new Dictionary<string, object?>();
 
     /// <summary>
-    /// Rule-facing field key. Array-item fields use a key relative to their scope and never include [] notation.
+    /// Rule-facing field key.
     /// </summary>
     [JsonPropertyName("key")]
     public string? Key { get; set; }
@@ -23,13 +23,13 @@ public record WorkspaceObjectParsedFieldsItem : IJsonOnDeserialized, IJsonOnSeri
     public string? Scope { get; set; }
 
     /// <summary>
-    /// Source-schema path used for editing and enum collection derivation; may include [] markers.
+    /// Path in the source schema.
     /// </summary>
     [JsonPropertyName("schemaPath")]
     public string? SchemaPath { get; set; }
 
     /// <summary>
-    /// Display-only, fully qualified label for an array-item scope, including the stored object name and every nesting level (for example, 'Inventory Warehouses Cars'). It does not identify a stored object or control managed collection paths; those derive from schema field keys/schemaPath.
+    /// Display label for an array-item field.
     /// </summary>
     [JsonPropertyName("derivedObjectName")]
     public string? DerivedObjectName { get; set; }

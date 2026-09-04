@@ -14,11 +14,26 @@ public record ExportManifestPreviewResponsePreviewItemsFlowsItem : IJsonOnDeseri
     [JsonPropertyName("id")]
     public string? Id { get; set; }
 
+    [JsonPropertyName("stableId")]
+    public string? StableId { get; set; }
+
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
     [JsonPropertyName("slug")]
     public string? Slug { get; set; }
+
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    [JsonPropertyName("published")]
+    public bool? Published { get; set; }
+
+    [JsonPropertyName("nodeCount")]
+    public int? NodeCount { get; set; }
+
+    [JsonPropertyName("updatedAt")]
+    public DateTime? UpdatedAt { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

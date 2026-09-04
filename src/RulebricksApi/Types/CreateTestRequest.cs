@@ -30,6 +30,12 @@ public record CreateTestRequest : IJsonOnDeserialized
     public Dictionary<string, object?> Response { get; set; } = new Dictionary<string, object?>();
 
     /// <summary>
+    /// Optional comparison policy. Missing or null values default to contains for rules and flows.
+    /// </summary>
+    [JsonPropertyName("policy")]
+    public CreateTestRequestPolicy? Policy { get; set; }
+
+    /// <summary>
     /// Indicates whether the test is critical.
     /// </summary>
     [JsonPropertyName("critical")]

@@ -22,6 +22,7 @@ public class DeleteTest : BaseMockServerTest
               "response": {
                 "status": "success"
               },
+              "policy": "contains",
               "critical": true,
               "error": false,
               "success": false

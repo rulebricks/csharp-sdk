@@ -18,19 +18,25 @@ public record ImportManifestResponse : IJsonOnDeserialized
     public bool? Success { get; set; }
 
     /// <summary>
+    /// 'rejected' means the plan was refused before any write (for example a 'block' conflict); 'partial' means some assets were written and others failed.
+    /// </summary>
+    [JsonPropertyName("outcome")]
+    public ImportManifestResponseOutcome? Outcome { get; set; }
+
+    /// <summary>
     /// Assets that were created during import.
     /// </summary>
     [JsonPropertyName("created")]
     public IEnumerable<ImportManifestResponseCreatedItem>? Created { get; set; }
 
     /// <summary>
-    /// Assets that were updated during import.
+    /// Assets that already existed and were replaced by the manifest's version (conflict_strategy 'override').
     /// </summary>
     [JsonPropertyName("updated")]
     public IEnumerable<ImportManifestResponseUpdatedItem>? Updated { get; set; }
 
     /// <summary>
-    /// Assets that were skipped during import. Object-managed values are listed here with a reason such as 'Collection is managed by a workspace object' or 'Value is managed by a workspace object'; they do not cause a whole-import 409.
+    /// Assets skipped during import, including object-managed values.
     /// </summary>
     [JsonPropertyName("skipped")]
     public IEnumerable<ImportManifestResponseSkippedItem>? Skipped { get; set; }

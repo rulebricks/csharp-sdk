@@ -1,5 +1,4 @@
 using global::System.Text.Json;
-using RulebricksApi.Contexts;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -11,13 +10,7 @@ public partial class ContextsClient : IContextsClient
     internal ContextsClient(RawClient client)
     {
         _client = client;
-        Objects = new RulebricksApi.Contexts.ObjectsClient(_client);
-        Relationships = new RelationshipsClient(_client);
     }
-
-    public RulebricksApi.Contexts.IObjectsClient Objects { get; }
-
-    public IRelationshipsClient Relationships { get; }
 
     private async Task<WithRawResponse<ContextInstanceState>> GetAsyncCore(
         GetContextsRequest request,
@@ -638,7 +631,7 @@ public partial class ContextsClient : IContextsClient
     /// </summary>
     /// <example><code>
     /// await client.Contexts.GetAsync(
-    ///     new GetContextsRequest { Slug = "customer", Instance = "cust-12345" }
+    ///     new RulebricksApi.GetContextsRequest { Slug = "customer", Instance = "cust-12345" }
     /// );
     /// </code></example>
     public WithRawResponseTask<ContextInstanceState> GetAsync(
@@ -685,7 +678,7 @@ public partial class ContextsClient : IContextsClient
     /// </summary>
     /// <example><code>
     /// await client.Contexts.DeleteAsync(
-    ///     new DeleteContextsRequest { Slug = "customer", Instance = "cust-12345" }
+    ///     new RulebricksApi.DeleteContextsRequest { Slug = "customer", Instance = "cust-12345" }
     /// );
     /// </code></example>
     public WithRawResponseTask<DeleteContextInstanceResponse> DeleteAsync(

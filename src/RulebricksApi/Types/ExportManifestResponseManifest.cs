@@ -15,10 +15,10 @@ public record ExportManifestResponseManifest : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Manifest format version.
+    /// RBM schema version.
     /// </summary>
-    [JsonPropertyName("version")]
-    public string? Version { get; set; }
+    [JsonPropertyName("schema_version")]
+    public int? SchemaVersion { get; set; }
 
     /// <summary>
     /// Manifest name.
@@ -34,6 +34,12 @@ public record ExportManifestResponseManifest : IJsonOnDeserialized
 
     [JsonPropertyName("exported_at")]
     public DateTime? ExportedAt { get; set; }
+
+    /// <summary>
+    /// Source workspace identifier.
+    /// </summary>
+    [JsonPropertyName("exported_from")]
+    public string? ExportedFrom { get; set; }
 
     /// <summary>
     /// Exported contexts.

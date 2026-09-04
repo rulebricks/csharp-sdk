@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using RulebricksApi;
 using RulebricksApi.Test_.Unit.MockServer;
 using RulebricksApi.Test_.Utils;
 
@@ -33,7 +32,7 @@ public class DeleteTest : BaseMockServerTest
             );
 
         var response = await Client.Contexts.DeleteAsync(
-            new DeleteContextsRequest { Slug = "customer", Instance = "cust-12345" }
+            new RulebricksApi.DeleteContextsRequest { Slug = "customer", Instance = "cust-12345" }
         );
         JsonAssert.AreEqual(response, mockResponse);
     }

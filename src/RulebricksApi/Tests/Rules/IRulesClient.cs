@@ -14,7 +14,7 @@ public partial interface IRulesClient
     );
 
     /// <summary>
-    /// Adds a new test to the test suite of a rule identified by the slug.
+    /// Adds a new test to the rule. `contains` (Contains Data, the default) finds the expected fragment anywhere in the output, `matches` (Matches Exactly) requires complete equality, and `excludes` (Excludes Data) requires the fragment to be absent.
     /// </summary>
     WithRawResponseTask<RulebricksApi.Test> CreateAsync(
         CreateRulesRequest request,

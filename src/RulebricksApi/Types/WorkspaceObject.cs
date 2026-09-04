@@ -21,7 +21,7 @@ public record WorkspaceObject : IJsonOnDeserialized
     public required string Id { get; set; }
 
     /// <summary>
-    /// Display name (unique in practice per workspace). Changing it does not move managed collection paths, which derive from schema field keys.
+    /// Object display name. Renaming it does not move managed collections.
     /// </summary>
     [JsonPropertyName("name")]
     public required string Name { get; set; }
@@ -45,7 +45,7 @@ public record WorkspaceObject : IJsonOnDeserialized
     public string? SourceFormat { get; set; }
 
     /// <summary>
-    /// Flattened field descriptors derived from the schema. Fields inside arrays of objects use an item-relative key (for example, 'status'), a scope naming the containing array (for example, 'boss'), and a schemaPath for locating the field in the source schema (for example, 'boss[].status'). The object remains a single stored API resource.
+    /// Flattened fields derived from the schema.
     /// </summary>
     [JsonPropertyName("parsed_fields")]
     public IEnumerable<WorkspaceObjectParsedFieldsItem>? ParsedFields { get; set; }

@@ -5,7 +5,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 /// <summary>
-/// Optional single-field rename hint for an update. When `content` replaces an existing schema field key with a new key, this hint preserves matching managed enum value IDs instead of archiving and recreating them.
+/// Renames a field while preserving generated value IDs.
 /// </summary>
 [Serializable]
 public record UpsertObjectRequestFieldRename : IJsonOnDeserialized
@@ -15,13 +15,13 @@ public record UpsertObjectRequestFieldRename : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Previous schema field key or schemaPath present on the stored object.
+    /// Existing field key or schema path.
     /// </summary>
     [JsonPropertyName("from_key")]
     public required string FromKey { get; set; }
 
     /// <summary>
-    /// Replacement schema field key or schemaPath present in the submitted content.
+    /// New field key or schema path.
     /// </summary>
     [JsonPropertyName("to_key")]
     public required string ToKey { get; set; }

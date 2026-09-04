@@ -369,7 +369,7 @@ public partial class ObjectsClient : IObjectsClient
     }
 
     /// <summary>
-    /// Creates or updates an object by ID or name and syncs enum values it generates. `content` and at least one of `id` or `name` are required. Objects help workspace admins programmatically determine multiple collections of values based on Rulebricks' contracts with external systems from a single JSON Schema source. Renaming the object's display name does not move its managed collection paths: those paths derive from schema field keys. When a schema field key itself is renamed, `field_rename` can preserve the generated values' identities.
+    /// Creates or updates an object and syncs its generated enum values.
     /// </summary>
     /// <example><code>
     /// await client.Objects.UpsertAsync(
@@ -377,7 +377,28 @@ public partial class ObjectsClient : IObjectsClient
     ///     {
     ///         {
     ///             "content",
-    ///             "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"countryCode\": { \"type\": \"string\", \"title\": \"Country Code\", \"enum\": [\"US\", \"CA\", \"GB\"] }\n  }\n}"
+    ///             new Dictionary&lt;object, object?&gt;()
+    ///             {
+    ///                 {
+    ///                     "properties",
+    ///                     new Dictionary&lt;object, object?&gt;()
+    ///                     {
+    ///                         {
+    ///                             "countryCode",
+    ///                             new Dictionary&lt;object, object?&gt;()
+    ///                             {
+    ///                                 {
+    ///                                     "enum",
+    ///                                     new List&lt;object?&gt;() { "US", "CA", "GB" }
+    ///                                 },
+    ///                                 { "title", "Country Code" },
+    ///                                 { "type", "string" },
+    ///                             }
+    ///                         },
+    ///                     }
+    ///                 },
+    ///                 { "type", "object" },
+    ///             }
     ///         },
     ///         { "name", "Claim" },
     ///         {
@@ -402,7 +423,7 @@ public partial class ObjectsClient : IObjectsClient
     /// Fetches one object by ID or exact name. The provided API key must have permission to view vocabulary values.
     /// </summary>
     /// <example><code>
-    /// await client.Objects.GetAsync(new RulebricksApi.GetObjectsRequest { ObjectId = "objectId" });
+    /// await client.Objects.GetAsync(new GetObjectsRequest { ObjectId = "objectId" });
     /// </code></example>
     public WithRawResponseTask<WorkspaceObject> GetAsync(
         GetObjectsRequest request,
@@ -419,7 +440,7 @@ public partial class ObjectsClient : IObjectsClient
     /// Deletes the object. By default, unused values are permanently deleted while values referenced by draft, current, or historical rules, flows, or other vocabulary values are archived. Pass values=detach to keep every generated value active as an ordinary, hand-editable value.
     /// </summary>
     /// <example><code>
-    /// await client.Objects.DeleteAsync(new RulebricksApi.DeleteObjectsRequest { ObjectId = "objectId" });
+    /// await client.Objects.DeleteAsync(new DeleteObjectsRequest { ObjectId = "objectId" });
     /// </code></example>
     public WithRawResponseTask<DeleteObjectResponse> DeleteAsync(
         DeleteObjectsRequest request,

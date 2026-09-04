@@ -23,6 +23,9 @@ public record ExportManifestPreviewResponsePreviewItems : IJsonOnDeserialized
     [JsonPropertyName("values")]
     public IEnumerable<ExportManifestPreviewResponsePreviewItemsValuesItem>? Values { get; set; }
 
+    [JsonPropertyName("entityRelationships")]
+    public IEnumerable<Dictionary<string, object?>>? EntityRelationships { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

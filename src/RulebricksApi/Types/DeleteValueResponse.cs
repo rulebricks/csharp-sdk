@@ -5,7 +5,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 /// <summary>
-/// Result of deleting a vocabulary value, including value-to-value reference effects.
+/// Result of deleting a vocabulary value.
 /// </summary>
 [Serializable]
 public record DeleteValueResponse : IJsonOnDeserialized
@@ -15,19 +15,13 @@ public record DeleteValueResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Human-readable confirmation.
+    /// Confirmation message.
     /// </summary>
     [JsonPropertyName("message")]
     public string? Message { get; set; }
 
     /// <summary>
-    /// Values that were deleted with the target because their entire payload referenced it.
-    /// </summary>
-    [JsonPropertyName("cascade_deleted")]
-    public IEnumerable<DeleteValueResponseCascadeDeletedItem>? CascadeDeleted { get; set; }
-
-    /// <summary>
-    /// List values that lost item(s) referencing the deleted value but were otherwise kept.
+    /// Values updated to replace references to the deleted value.
     /// </summary>
     [JsonPropertyName("updated_list_values")]
     public IEnumerable<DeleteValueResponseUpdatedListValuesItem>? UpdatedListValues { get; set; }

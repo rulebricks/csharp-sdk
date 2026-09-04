@@ -85,6 +85,12 @@ public partial class FlowsClient : IFlowsClient
                         throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 503:
+                        throw new ServiceUnavailableError(
+                            JsonUtils.Deserialize<object>(responseBody)
+                        );
+                    case 504:
+                        throw new GatewayTimeoutError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -100,7 +106,7 @@ public partial class FlowsClient : IFlowsClient
     }
 
     /// <summary>
-    /// Execute a flow by its slug. Optionally target a specific published version (e.g. `3`) or a release environment (e.g. `production`) via the `version` path segment; `latest` (the default) executes the current published version.
+    /// Execute a flow by slug and optional version. Policy failures return `{ error }` with status 200, including per-item errors for bulk requests. Errors: 400 invalid input, 500 unhandled execution failure, 503 unavailable, 504 timeout.
     /// </summary>
     /// <example><code>
     /// await client.Flows.ExecuteAsync(

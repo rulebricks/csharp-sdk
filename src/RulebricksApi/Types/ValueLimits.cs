@@ -32,6 +32,12 @@ public record ValueLimits : IJsonOnDeserialized
     [JsonPropertyName("MAX_KEY_LENGTH")]
     public int? MaxKeyLength { get; set; }
 
+    /// <summary>
+    /// Maximum UTF-8 encoded byte length of a value name, including collection prefixes
+    /// </summary>
+    [JsonPropertyName("MAX_KEY_BYTES")]
+    public int? MaxKeyBytes { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

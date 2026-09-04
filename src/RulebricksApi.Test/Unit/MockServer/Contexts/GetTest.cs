@@ -1,5 +1,4 @@
 using NUnit.Framework;
-using RulebricksApi;
 using RulebricksApi.Test_.Unit.MockServer;
 using RulebricksApi.Test_.Utils;
 
@@ -31,7 +30,7 @@ public class GetTest : BaseMockServerTest
             );
 
         var response = await Client.Contexts.GetAsync(
-            new GetContextsRequest { Slug = "customer", Instance = "cust-12345" }
+            new RulebricksApi.GetContextsRequest { Slug = "customer", Instance = "cust-12345" }
         );
         JsonAssert.AreEqual(response, mockResponse);
     }

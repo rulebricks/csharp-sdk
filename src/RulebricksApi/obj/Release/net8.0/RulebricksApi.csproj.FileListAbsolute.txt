@@ -1,0 +1,13 @@
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/bin/Release/net8.0/RulebricksApi.deps.json
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/bin/Release/net8.0/RulebricksApi.dll
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/bin/Release/net8.0/RulebricksApi.pdb
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/obj/Release/net8.0/RulebricksApi.csproj.AssemblyReference.cache
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/obj/Release/net8.0/RulebricksApi.GeneratedMSBuildEditorConfig.editorconfig
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/obj/Release/net8.0/RulebricksApi.AssemblyInfoInputs.cache
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/obj/Release/net8.0/RulebricksApi.AssemblyInfo.cs
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/obj/Release/net8.0/RulebricksApi.csproj.CoreCompileInputs.cache
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/obj/Release/net8.0/RulebricksApi.sourcelink.json
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/obj/Release/net8.0/RulebricksApi.dll
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/obj/Release/net8.0/refint/RulebricksApi.dll
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/obj/Release/net8.0/RulebricksApi.pdb
+/Users/sidgarimella/Desktop/rulebricks-sdks/csharp-sdk/src/RulebricksApi/obj/Release/net8.0/ref/RulebricksApi.dll

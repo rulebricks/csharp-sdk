@@ -17,6 +17,9 @@ public record RunTestsResponseFailuresItem : IJsonOnDeserialized
     [JsonPropertyName("name")]
     public required string Name { get; set; }
 
+    [JsonPropertyName("policy")]
+    public required RunTestsResponseFailuresItemPolicy Policy { get; set; }
+
     [JsonPropertyName("critical")]
     public required bool Critical { get; set; }
 

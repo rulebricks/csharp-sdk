@@ -23,7 +23,7 @@ public partial interface IValuesClient
     );
 
     /// <summary>
-    /// Delete a specific vocabulary value for the authenticated user by its ID. Deletion is blocked while the value is referenced by any rule or flow. Values whose entire payload references the deleted value are deleted with it (cascade), and list values referencing it lose the referencing items; both effects are reported in the response.
+    /// Deletes a value by ID. Rule and flow references block deletion; value references are replaced with the deleted value's content.
     /// </summary>
     WithRawResponseTask<DeleteValueResponse> DeleteAsync(
         DeleteValuesRequest request,

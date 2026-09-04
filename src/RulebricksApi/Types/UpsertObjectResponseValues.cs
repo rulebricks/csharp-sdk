@@ -5,7 +5,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 /// <summary>
-/// Managed-value sync results (or would_sync / would_archive for dry runs).
+/// Managed-value sync results.
 /// </summary>
 [Serializable]
 public record UpsertObjectResponseValues : IJsonOnDeserialized
@@ -21,7 +21,7 @@ public record UpsertObjectResponseValues : IJsonOnDeserialized
     public int? Synced { get; set; }
 
     /// <summary>
-    /// Previously generated values archived because the schema no longer declares them.
+    /// Generated values removed from the schema.
     /// </summary>
     [JsonPropertyName("archived")]
     public int? Archived { get; set; }

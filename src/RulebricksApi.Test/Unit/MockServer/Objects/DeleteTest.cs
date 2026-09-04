@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using RulebricksApi;
 using RulebricksApi.Test_.Unit.MockServer;
 using RulebricksApi.Test_.Utils;
 
@@ -38,7 +39,7 @@ public class DeleteTest : BaseMockServerTest
             );
 
         var response = await Client.Objects.DeleteAsync(
-            new RulebricksApi.DeleteObjectsRequest { ObjectId = "objectId" }
+            new DeleteObjectsRequest { ObjectId = "objectId" }
         );
         JsonAssert.AreEqual(response, mockResponse);
     }

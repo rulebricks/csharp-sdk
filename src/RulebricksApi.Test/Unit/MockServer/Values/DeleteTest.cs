@@ -15,12 +15,6 @@ public class DeleteTest : BaseMockServerTest
         const string mockResponse = """
             {
               "message": "Value \"Favorite Color\" deleted successfully",
-              "cascade_deleted": [
-                {
-                  "id": "id",
-                  "name": "name"
-                }
-              ],
               "updated_list_values": [
                 {
                   "id": "id",

@@ -14,7 +14,20 @@ public class UpsertTest : BaseMockServerTest
         const string requestJson = """
             {
               "name": "Claim",
-              "content": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"countryCode\": { \"type\": \"string\", \"title\": \"Country Code\", \"enum\": [\"US\", \"CA\", \"GB\"] }\n  }\n}",
+              "content": {
+                "type": "object",
+                "properties": {
+                  "countryCode": {
+                    "type": "string",
+                    "title": "Country Code",
+                    "enum": [
+                      "US",
+                      "CA",
+                      "GB"
+                    ]
+                  }
+                }
+              },
               "user_groups": [
                 "underwriting"
               ]
@@ -72,7 +85,28 @@ public class UpsertTest : BaseMockServerTest
             {
                 {
                     "content",
-                    "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"countryCode\": { \"type\": \"string\", \"title\": \"Country Code\", \"enum\": [\"US\", \"CA\", \"GB\"] }\n  }\n}"
+                    new Dictionary<object, object?>()
+                    {
+                        {
+                            "properties",
+                            new Dictionary<object, object?>()
+                            {
+                                {
+                                    "countryCode",
+                                    new Dictionary<object, object?>()
+                                    {
+                                        {
+                                            "enum",
+                                            new List<object?>() { "US", "CA", "GB" }
+                                        },
+                                        { "title", "Country Code" },
+                                        { "type", "string" },
+                                    }
+                                },
+                            }
+                        },
+                        { "type", "object" },
+                    }
                 },
                 { "name", "Claim" },
                 {

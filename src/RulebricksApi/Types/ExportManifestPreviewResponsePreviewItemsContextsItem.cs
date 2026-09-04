@@ -14,11 +14,20 @@ public record ExportManifestPreviewResponsePreviewItemsContextsItem : IJsonOnDes
     [JsonPropertyName("id")]
     public string? Id { get; set; }
 
+    [JsonPropertyName("stableId")]
+    public string? StableId { get; set; }
+
     [JsonPropertyName("name")]
     public string? Name { get; set; }
 
     [JsonPropertyName("slug")]
     public string? Slug { get; set; }
+
+    [JsonPropertyName("fieldCount")]
+    public int? FieldCount { get; set; }
+
+    [JsonPropertyName("identity_field")]
+    public string? IdentityField { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

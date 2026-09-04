@@ -10,7 +10,7 @@ namespace RulebricksApi.Test_.Unit.MockServer.Rules;
 public class SolveTest : BaseMockServerTest
 {
     [NUnit.Framework.Test]
-    public async Task MockServerTest()
+    public async Task MockServerTest_1()
     {
         const string requestJson = """
             {
@@ -24,6 +24,63 @@ public class SolveTest : BaseMockServerTest
             {
               "eligible": true,
               "message": "User is eligible for the promotion."
+            }
+            """;
+
+        Server
+            .Given(
+                WireMock
+                    .RequestBuilders.Request.Create()
+                    .WithPath("/solve/slug/version")
+                    .WithHeader("Content-Type", "application/json")
+                    .UsingPost()
+                    .WithBodyAsJson(requestJson)
+            )
+            .RespondWith(
+                WireMock
+                    .ResponseBuilders.Response.Create()
+                    .WithStatusCode(200)
+                    .WithBody(mockResponse)
+            );
+
+        var response = await Client.Rules.SolveAsync(
+            new SolveRulesRequest
+            {
+                Slug = "slug",
+                Version = "version",
+                Body = new Dictionary<string, object?>()
+                {
+                    { "name", "John Doe" },
+                    { "age", 30 },
+                    { "email", "jdoe@acme.co" },
+                },
+            }
+        );
+        JsonAssert.AreEqual(response, mockResponse);
+    }
+
+    [NUnit.Framework.Test]
+    public async Task MockServerTest_2()
+    {
+        const string requestJson = """
+            {
+              "name": "John Doe",
+              "age": 30,
+              "email": "jdoe@acme.co"
+            }
+            """;
+
+        const string mockResponse = """
+            {
+              "results": [
+                {
+                  "status": "approved",
+                  "fee": 10
+                },
+                {
+                  "status": "review"
+                }
+              ]
             }
             """;
 

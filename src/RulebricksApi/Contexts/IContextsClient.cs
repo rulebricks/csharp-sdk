@@ -1,12 +1,7 @@
-using RulebricksApi.Contexts;
-
 namespace RulebricksApi;
 
 public partial interface IContextsClient
 {
-    public RulebricksApi.Contexts.IObjectsClient Objects { get; }
-    public IRelationshipsClient Relationships { get; }
-
     /// <summary>
     /// Retrieve the current state of a context instance.
     /// </summary>

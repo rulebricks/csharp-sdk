@@ -368,7 +368,7 @@ public partial class FlowsClient : IFlowsClient
     }
 
     /// <summary>
-    /// Adds a new test to the test suite of a flow identified by the slug.
+    /// Adds a new test to the flow. `contains` (Contains Data, the default) finds the expected fragment anywhere in the output, `matches` (Matches Exactly) requires complete equality, and `excludes` (Excludes Data) requires the fragment to be absent.
     /// </summary>
     /// <example><code>
     /// await client.Tests.Flows.CreateAsync(
@@ -380,6 +380,7 @@ public partial class FlowsClient : IFlowsClient
     ///             Name = "Test 3",
     ///             Request = new Dictionary&lt;string, object?&gt;() { { "param1", "value1" } },
     ///             Response = new Dictionary&lt;string, object?&gt;() { { "status", "success" } },
+    ///             Policy = CreateTestRequestPolicy.Contains,
     ///             Critical = true,
     ///         },
     ///     }

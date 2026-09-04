@@ -22,6 +22,7 @@ public class CreateTest : BaseMockServerTest
               "response": {
                 "status": "success"
               },
+              "policy": "contains",
               "critical": true
             }
             """;
@@ -36,6 +37,7 @@ public class CreateTest : BaseMockServerTest
               "response": {
                 "status": "success"
               },
+              "policy": "contains",
               "critical": true,
               "error": false,
               "success": false
@@ -67,6 +69,7 @@ public class CreateTest : BaseMockServerTest
                     Name = "Test 3",
                     Request = new Dictionary<string, object?>() { { "param1", "value1" } },
                     Response = new Dictionary<string, object?>() { { "status", "success" } },
+                    Policy = CreateTestRequestPolicy.Contains,
                     Critical = true,
                 },
             }

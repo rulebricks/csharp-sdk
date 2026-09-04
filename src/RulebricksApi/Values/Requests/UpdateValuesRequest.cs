@@ -7,7 +7,7 @@ namespace RulebricksApi;
 public record UpdateValuesRequest
 {
     /// <summary>
-    /// A dictionary of keys and values to update or add. This developer-facing sync contract preserves source names and nesting: nested objects are flattened using dot notation while every key segment stays exactly as sent (e.g. 'user.contact_info.email' stays 'user.contact_info.email'). Individual payloads may be value-to-value references (see ValueReference): a scalar payload may be a single { "$ref": "<value name="">" } marker, and list payloads may mix literal items with reference markers.</value>
+    /// Values to create or update. Nested objects use dot-separated names and payloads may reference other values.
     /// </summary>
     [JsonPropertyName("values")]
     public Dictionary<string, object?> Values { get; set; } = new Dictionary<string, object?>();

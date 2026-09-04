@@ -25,6 +25,7 @@ public class ListTest : BaseMockServerTest
                   "error": false,
                   "status": "success"
                 },
+                "policy": "contains",
                 "critical": true,
                 "error": false,
                 "success": true,
@@ -59,6 +60,7 @@ public class ListTest : BaseMockServerTest
                   "error": false,
                   "status": "success"
                 },
+                "policy": "contains",
                 "critical": true,
                 "error": true,
                 "success": false,

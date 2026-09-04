@@ -36,6 +36,12 @@ public record Test : IJsonOnDeserialized
     public Dictionary<string, object?> Response { get; set; } = new Dictionary<string, object?>();
 
     /// <summary>
+    /// How the expected response is compared with the actual response. Contains Data searches at any nesting depth, Matches Exactly compares the complete response, and Excludes Data requires the expected fragment to be absent.
+    /// </summary>
+    [JsonPropertyName("policy")]
+    public required TestPolicy Policy { get; set; }
+
+    /// <summary>
     /// Indicates whether the test is critical.
     /// </summary>
     [JsonPropertyName("critical")]

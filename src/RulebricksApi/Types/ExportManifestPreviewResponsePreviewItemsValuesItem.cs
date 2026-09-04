@@ -14,8 +14,20 @@ public record ExportManifestPreviewResponsePreviewItemsValuesItem : IJsonOnDeser
     [JsonPropertyName("id")]
     public string? Id { get; set; }
 
+    [JsonPropertyName("stableId")]
+    public string? StableId { get; set; }
+
     [JsonPropertyName("name")]
     public string? Name { get; set; }
+
+    [JsonPropertyName("type")]
+    public string? Type { get; set; }
+
+    [JsonPropertyName("valueType")]
+    public string? ValueType { get; set; }
+
+    [JsonPropertyName("value")]
+    public object? Value { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

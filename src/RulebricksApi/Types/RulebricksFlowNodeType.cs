@@ -22,6 +22,8 @@ public readonly record struct RulebricksFlowNodeType : IStringEnum
 
     public static readonly RulebricksFlowNodeType RunFlow = new(Values.RunFlow);
 
+    public static readonly RulebricksFlowNodeType Runflow = new(Values.Runflow);
+
     public static readonly RulebricksFlowNodeType Ifelse = new(Values.Ifelse);
 
     public static readonly RulebricksFlowNodeType ContinueIf = new(Values.ContinueIf);
@@ -73,6 +75,8 @@ public readonly record struct RulebricksFlowNodeType : IStringEnum
     public static readonly RulebricksFlowNodeType Entity = new(Values.Entity);
 
     public static readonly RulebricksFlowNodeType ContextOperation = new(Values.ContextOperation);
+
+    public static readonly RulebricksFlowNodeType Entityoperation = new(Values.Entityoperation);
 
     public static readonly RulebricksFlowNodeType Notification = new(Values.Notification);
 
@@ -188,6 +192,8 @@ public readonly record struct RulebricksFlowNodeType : IStringEnum
 
         public const string RunFlow = "run_flow";
 
+        public const string Runflow = "runflow";
+
         public const string Ifelse = "ifelse";
 
         public const string ContinueIf = "continue_if";
@@ -239,6 +245,8 @@ public readonly record struct RulebricksFlowNodeType : IStringEnum
         public const string Entity = "entity";
 
         public const string ContextOperation = "context_operation";
+
+        public const string Entityoperation = "entityoperation";
 
         public const string Notification = "notification";
 

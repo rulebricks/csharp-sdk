@@ -38,6 +38,7 @@ public class RunTest : BaseMockServerTest
                 {
                   "id": "Wk0CWqGcwrRnezjUJ5N7O",
                   "name": "Approves valid applicant",
+                  "policy": "contains",
                   "critical": true,
                   "success": true,
                   "error": false
@@ -47,6 +48,7 @@ public class RunTest : BaseMockServerTest
                 {
                   "id": "id",
                   "name": "name",
+                  "policy": "contains",
                   "critical": true,
                   "expected": {
                     "key": "value"

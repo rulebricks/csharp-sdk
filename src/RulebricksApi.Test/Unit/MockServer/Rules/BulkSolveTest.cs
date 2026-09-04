@@ -10,7 +10,7 @@ namespace RulebricksApi.Test_.Unit.MockServer.Rules;
 public class BulkSolveTest : BaseMockServerTest
 {
     [NUnit.Framework.Test]
-    public async Task MockServerTest()
+    public async Task MockServerTest_1()
     {
         const string requestJson = """
             [
@@ -36,6 +36,86 @@ public class BulkSolveTest : BaseMockServerTest
               {
                 "eligible": false,
                 "message": "User is not eligible for the promotion."
+              }
+            ]
+            """;
+
+        Server
+            .Given(
+                WireMock
+                    .RequestBuilders.Request.Create()
+                    .WithPath("/bulk-solve/slug/version")
+                    .WithHeader("Content-Type", "application/json")
+                    .UsingPost()
+                    .WithBodyAsJson(requestJson)
+            )
+            .RespondWith(
+                WireMock
+                    .ResponseBuilders.Response.Create()
+                    .WithStatusCode(200)
+                    .WithBody(mockResponse)
+            );
+
+        var response = await Client.Rules.BulkSolveAsync(
+            new BulkSolveRulesRequest
+            {
+                Slug = "slug",
+                Version = "version",
+                Body = new List<Dictionary<string, object?>>()
+                {
+                    new Dictionary<string, object?>()
+                    {
+                        { "name", "John Doe" },
+                        { "age", 30 },
+                        { "email", "jdoe@acme.co" },
+                    },
+                    new Dictionary<string, object?>()
+                    {
+                        { "name", "Jane Doe" },
+                        { "age", 28 },
+                        { "email", "jane@example.com" },
+                    },
+                },
+            }
+        );
+        JsonAssert.AreEqual(response, mockResponse);
+    }
+
+    [NUnit.Framework.Test]
+    public async Task MockServerTest_2()
+    {
+        const string requestJson = """
+            [
+              {
+                "name": "John Doe",
+                "age": 30,
+                "email": "jdoe@acme.co"
+              },
+              {
+                "name": "Jane Doe",
+                "age": 28,
+                "email": "jane@example.com"
+              }
+            ]
+            """;
+
+        const string mockResponse = """
+            [
+              {
+                "results": [
+                  {
+                    "status": "approved",
+                    "fee": 10
+                  },
+                  {
+                    "status": "review"
+                  }
+                ]
+              },
+              {
+                "results": {
+                  "key": "value"
+                }
               }
             ]
             """;

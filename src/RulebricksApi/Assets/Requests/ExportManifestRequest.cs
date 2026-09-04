@@ -48,6 +48,12 @@ public record ExportManifestRequest
     [JsonPropertyName("compress")]
     public bool? Compress { get; set; }
 
+    /// <summary>
+    /// If true, returns the manifest itself as a streamed application/json attachment with Content-Disposition, rather than the normal `{ success, manifest }` response envelope. Combine with `compress: true` for large .rbm downloads.
+    /// </summary>
+    [JsonPropertyName("download")]
+    public bool? Download { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {

@@ -15,6 +15,7 @@ public partial class AssetsClient : IAssetsClient
         Rules = new RulebricksApi.Assets.RulesClient(_client);
         Flows = new RulebricksApi.Assets.FlowsClient(_client);
         Folders = new FoldersClient(_client);
+        Contexts = new RulebricksApi.Assets.ContextsClient(_client);
     }
 
     public RulebricksApi.Assets.IRulesClient Rules { get; }
@@ -22,6 +23,8 @@ public partial class AssetsClient : IAssetsClient
     public RulebricksApi.Assets.IFlowsClient Flows { get; }
 
     public IFoldersClient Folders { get; }
+
+    public RulebricksApi.Assets.IContextsClient Contexts { get; }
 
     private async Task<WithRawResponse<UsageStatistics>> GetUsageAsyncCore(
         RequestOptions? options = null,
@@ -87,8 +90,10 @@ public partial class AssetsClient : IAssetsClient
         }
     }
 
-    private async Task<WithRawResponse<ImportManifestResponse>> ImportRbmAsyncCore(
-        ImportManifestRequest request,
+    private async Task<
+        WithRawResponse<OneOf<ImportManifestResponse, ImportManifestPreviewResponse>>
+    > ImportRbmAsyncCore(
+        Stream request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
@@ -101,13 +106,13 @@ public partial class AssetsClient : IAssetsClient
             .ConfigureAwait(false);
         var response = await _client
             .SendRequestAsync(
-                new JsonRequest
+                new StreamRequest
                 {
                     Method = HttpMethod.Post,
                     Path = "admin/import",
                     Body = request,
                     Headers = _headers,
-                    ContentType = "application/json",
+                    ContentType = "application/octet-stream",
                     Options = options,
                 },
                 cancellationToken
@@ -120,8 +125,12 @@ public partial class AssetsClient : IAssetsClient
                 .ConfigureAwait(false);
             try
             {
-                var responseData = JsonUtils.Deserialize<ImportManifestResponse>(responseBody)!;
-                return new WithRawResponse<ImportManifestResponse>()
+                var responseData = JsonUtils.Deserialize<
+                    OneOf<ImportManifestResponse, ImportManifestPreviewResponse>
+                >(responseBody)!;
+                return new WithRawResponse<
+                    OneOf<ImportManifestResponse, ImportManifestPreviewResponse>
+                >()
                 {
                     Data = responseData,
                     RawResponse = new RawResponse()
@@ -241,6 +250,10 @@ public partial class AssetsClient : IAssetsClient
                         throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
                         throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 503:
+                        throw new ServiceUnavailableError(
+                            JsonUtils.Deserialize<object>(responseBody)
+                        );
                 }
             }
             catch (JsonException)
@@ -272,67 +285,26 @@ public partial class AssetsClient : IAssetsClient
     }
 
     /// <summary>
-    /// Import rules, flows, contexts, and values from an Rulebricks manifest file (*.rbm).
+    /// Import rules, flows, contexts, and values from a Rulebricks manifest file (*.rbm). Plain JSON remains supported, and clients may send the same JSON envelope gzip-compressed with `Content-Type: application/octet-stream` and `X-Rulebricks-Content-Encoding: gzip`.
     /// </summary>
     /// <example><code>
-    /// await client.Assets.ImportRbmAsync(
-    ///     new ImportManifestRequest
-    ///     {
-    ///         Manifest = new ImportManifestRequestManifest
-    ///         {
-    ///             Version = "1.0",
-    ///             Rules = new List&lt;ManifestLabeledAsset&gt;()
-    ///             {
-    ///                 new ManifestLabeledAsset
-    ///                 {
-    ///                     AdditionalProperties = new AdditionalProperties
-    ///                     {
-    ///                         ["name"] = "Pricing Rule",
-    ///                         ["slug"] = "pricing-rule",
-    ///                     },
-    ///                 },
-    ///             },
-    ///             Flows = new List&lt;ManifestLabeledAsset&gt;()
-    ///             {
-    ///                 new ManifestLabeledAsset
-    ///                 {
-    ///                     AdditionalProperties = new AdditionalProperties
-    ///                     {
-    ///                         ["name"] = "Onboarding Flow",
-    ///                         ["slug"] = "onboarding-flow",
-    ///                     },
-    ///                 },
-    ///             },
-    ///             Entities = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
-    ///             {
-    ///                 new Dictionary&lt;string, object?&gt;()
-    ///                 {
-    ///                     { "name", "Customer" },
-    ///                     { "slug", "customer" },
-    ///                 },
-    ///             },
-    ///             Values = new List&lt;Dictionary&lt;string, object?&gt;&gt;()
-    ///             {
-    ///                 new Dictionary&lt;string, object?&gt;() { { "name", "tax_rate" }, { "value", 0.08 } },
-    ///             },
-    ///         },
-    ///         ConflictStrategy = ImportManifestRequestConflictStrategy.Update,
-    ///     }
-    /// );
+    /// await client.Assets.ImportRbmAsync(new MemoryStream(Encoding.UTF8.GetBytes("[bytes]")));
     /// </code></example>
-    public WithRawResponseTask<ImportManifestResponse> ImportRbmAsync(
-        ImportManifestRequest request,
+    public WithRawResponseTask<
+        OneOf<ImportManifestResponse, ImportManifestPreviewResponse>
+    > ImportRbmAsync(
+        Stream request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<ImportManifestResponse>(
-            ImportRbmAsyncCore(request, options, cancellationToken)
-        );
+        return new WithRawResponseTask<
+            OneOf<ImportManifestResponse, ImportManifestPreviewResponse>
+        >(ImportRbmAsyncCore(request, options, cancellationToken));
     }
 
     /// <summary>
-    /// Export selected rules, flows, contexts, and values to an Rulebricks manifest file (*.rbm). Dependencies are resolved automatically: exporting a flow includes its rules, contexts, vocabulary values, and any flows referenced by Run Flow nodes (recursively). Set `compress: true` to receive the manifest in compressed form (a compress-json array), which is much smaller and can be saved directly as a .rbm file; the import endpoint accepts both forms.
+    /// Export selected rules, flows, contexts, and values to a Rulebricks manifest file (*.rbm). Dependencies are resolved automatically: exporting a flow includes its rules, contexts, vocabulary values, and any flows referenced by Run Flow nodes (recursively). Set `compress: true` to receive the manifest in compressed form (a compress-json array). Set `download: true` to receive that manifest directly as a streamed attachment instead of inside the `{ success, manifest }` envelope.
     /// </summary>
     /// <example><code>
     /// await client.Assets.ExportRbmAsync(

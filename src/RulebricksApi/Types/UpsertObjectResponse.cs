@@ -12,7 +12,7 @@ public record UpsertObjectResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// Present and true for a dry-run response; no object or managed values were written.
+    /// True when no changes were written.
     /// </summary>
     [JsonPropertyName("dry_run")]
     public bool? DryRun { get; set; }
@@ -27,7 +27,7 @@ public record UpsertObjectResponse : IJsonOnDeserialized
     public WorkspaceObject? Object { get; set; }
 
     /// <summary>
-    /// Managed-value sync results (or would_sync / would_archive for dry runs).
+    /// Managed-value sync results.
     /// </summary>
     [JsonPropertyName("values")]
     public UpsertObjectResponseValues? Values { get; set; }

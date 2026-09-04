@@ -38,6 +38,7 @@ public class RunTest : BaseMockServerTest
                 {
                   "id": "Wk0CWqGcwrRnezjUJ5N7O",
                   "name": "Happy path",
+                  "policy": "contains",
                   "critical": false,
                   "success": true,
                   "error": false
@@ -45,6 +46,7 @@ public class RunTest : BaseMockServerTest
                 {
                   "id": "Mog-TOCOxUFBVXfuk2xVp",
                   "name": "Edge case",
+                  "policy": "contains",
                   "critical": true,
                   "success": false,
                   "error": true
@@ -54,6 +56,7 @@ public class RunTest : BaseMockServerTest
                 {
                   "id": "Mog-TOCOxUFBVXfuk2xVp",
                   "name": "Edge case",
+                  "policy": "contains",
                   "critical": true,
                   "expected": {
                     "approved": true

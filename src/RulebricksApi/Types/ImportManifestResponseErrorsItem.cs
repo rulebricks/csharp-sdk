@@ -23,6 +23,18 @@ public record ImportManifestResponseErrorsItem : IJsonOnDeserialized
     [JsonPropertyName("reason")]
     public string? Reason { get; set; }
 
+    /// <summary>
+    /// Machine-readable reason for a planning error, e.g. 'stable_id_conflict' when the asset already exists and conflict_strategy is 'block', 'context_name_conflict', or 'access_denied'.
+    /// </summary>
+    [JsonPropertyName("code")]
+    public string? Code { get; set; }
+
+    /// <summary>
+    /// Identifier of the underlying plan issue.
+    /// </summary>
+    [JsonPropertyName("issue_id")]
+    public string? IssueId { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 
