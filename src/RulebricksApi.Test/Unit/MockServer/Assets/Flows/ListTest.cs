@@ -18,6 +18,13 @@ public class ListTest : BaseMockServerTest
                 "name": "Customer Onboarding Flow",
                 "description": "Automate the onboarding process for new customers.",
                 "slug": "x6Q4zhD_Lm",
+                "request_schema": [
+                  {
+                    "key": "email",
+                    "name": "Email",
+                    "type": "string"
+                  }
+                ],
                 "published": true,
                 "updated_at": "2024-05-15T10:30:22.000Z",
                 "labels": [
@@ -53,6 +60,9 @@ public class ListTest : BaseMockServerTest
                 "name": "Order Processing Flow",
                 "description": "Streamline order processing and fulfillment.",
                 "slug": "uKPCd8hdsZ",
+                "request_schema": [
+                  {}
+                ],
                 "published": false,
                 "updated_at": "2024-04-18T14:45:33.000Z",
                 "labels": [

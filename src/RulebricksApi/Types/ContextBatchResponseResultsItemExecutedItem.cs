@@ -29,6 +29,12 @@ public record ContextBatchResponseResultsItemExecutedItem : IJsonOnDeserialized
     [JsonPropertyName("error")]
     public string? Error { get; set; }
 
+    /// <summary>
+    /// Full execution result, present only when include contains execution_results. May be large.
+    /// </summary>
+    [JsonPropertyName("result")]
+    public object? Result { get; set; }
+
     [JsonPropertyName("written_to_context")]
     public IEnumerable<string>? WrittenToContext { get; set; }
 

@@ -5,26 +5,20 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 /// <summary>
-/// The schema definition for a context.
+/// An individual execution failure returned inline as an HTTP 200 result.
 /// </summary>
 [Serializable]
-public record ContextSchema : IJsonOnDeserialized
+public record ExecutionErrorResult : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
     /// <summary>
-    /// User-defined base fields for the context.
+    /// Human-readable execution failure message.
     /// </summary>
-    [JsonPropertyName("base")]
-    public IEnumerable<ContextSchemaField> Base { get; set; } = new List<ContextSchemaField>();
-
-    /// <summary>
-    /// Expression-computed fields. Each entry supplies an `expression` evaluated from base facts, tracked history, and configured relationships.
-    /// </summary>
-    [JsonPropertyName("derived")]
-    public IEnumerable<ContextDerivedField>? Derived { get; set; }
+    [JsonPropertyName("error")]
+    public required string Error { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

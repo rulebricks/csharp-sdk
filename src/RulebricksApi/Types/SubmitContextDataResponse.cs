@@ -16,6 +16,18 @@ public record SubmitContextDataResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// Committed data has incomplete execution work; retained under narrow projections.
+    /// </summary>
+    [JsonPropertyName("execution_degraded")]
+    public string? ExecutionDegraded { get; set; }
+
+    /// <summary>
+    /// Dependent work rejected or incomplete; retained under narrow projections.
+    /// </summary>
+    [JsonPropertyName("cascade_rejections")]
+    public IEnumerable<Dictionary<string, object?>>? CascadeRejections { get; set; }
+
+    /// <summary>
     /// Combined identifier in format 'contextSlug:instanceId'.
     /// </summary>
     [JsonPropertyName("context")]
@@ -52,13 +64,19 @@ public record SubmitContextDataResponse : IJsonOnDeserialized
     public bool? IsNew { get; set; }
 
     /// <summary>
+    /// True when this submission attempted a bound or pending evaluation. Skipped or unchanged inputs alone leave this false.
+    /// </summary>
+    [JsonPropertyName("triggered")]
+    public bool? Triggered { get; set; }
+
+    /// <summary>
     /// When the instance will expire based on context TTL.
     /// </summary>
     [JsonPropertyName("expires_at")]
     public DateTime? ExpiresAt { get; set; }
 
     /// <summary>
-    /// Results from auto-executed rules/flows and pending evaluation cascades, plus summaries when a relationship change re-evaluated dependent contexts.
+    /// Execution summaries from auto-executed rules/flows and pending evaluations, plus summaries of dependent context cascades. Status, errors and flow execution IDs are retained; raw result payloads are present only when include contains execution_results.
     /// </summary>
     [JsonPropertyName("cascaded")]
     public IEnumerable<OneOf<CascadeResult, ContextCascadeSummary>>? Cascaded { get; set; }

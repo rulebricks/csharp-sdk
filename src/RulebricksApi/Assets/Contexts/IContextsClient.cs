@@ -1,3 +1,4 @@
+using OneOf;
 using RulebricksApi;
 using RulebricksApi.Assets.Contexts;
 
@@ -8,9 +9,9 @@ public partial interface IContextsClient
     public IRelationshipsClient Relationships { get; }
 
     /// <summary>
-    /// Retrieve all contexts for the authenticated user. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, by user group name or ID when the API key has access to that group, or by name.
+    /// List contexts accessible to the API key. Filter by context name, folder name/ID, or an accessible user group's name/ID. Returns an array when pagination is omitted; optional limit/cursor pagination returns {data,cursor} in descending creation time and ID order.
     /// </summary>
-    WithRawResponseTask<IEnumerable<ContextListItem>> ListAsync(
+    WithRawResponseTask<OneOf<IEnumerable<ContextListItem>, ContextListPage>> ListAsync(
         ListContextsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default

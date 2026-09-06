@@ -13,7 +13,7 @@ public record BulkIngestContextsRequest
     public required string Slug { get; set; }
 
     /// <summary>
-    /// Comma-separated list of per-instance fields to include in results (instance_id is always present). Omit to include everything. Valid fields: positions, is_new, status, have, need, state, expires_at, executions, executed, triggered, reason. Useful for keeping response size proportional to outcomes rather than data volume, e.g. include=status,executed.
+    /// Select comma-separated fields; `instance_id` is always returned. Default: state and execution summaries. Opt-ins: `executions` (stored metadata), `execution_results` (`executed[].result`). Compact outcomes with flow IDs: `status,triggered,executed`. Unavailable fields are omitted. History: `/history`. Fields: positions, is_new, status, have, need, state, derived, expires_at, created_at, updated_at, executions, executed, triggered, reason, cascaded, relations, execution_results.
     /// </summary>
     [JsonIgnore]
     public string? Include { get; set; }

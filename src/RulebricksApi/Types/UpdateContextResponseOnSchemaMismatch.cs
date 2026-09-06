@@ -4,17 +4,19 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-[JsonConverter(typeof(RulebricksFlowNodeOperation.RulebricksFlowNodeOperationSerializer))]
+[JsonConverter(
+    typeof(UpdateContextResponseOnSchemaMismatch.UpdateContextResponseOnSchemaMismatchSerializer)
+)]
 [Serializable]
-public readonly record struct RulebricksFlowNodeOperation : IStringEnum
+public readonly record struct UpdateContextResponseOnSchemaMismatch : IStringEnum
 {
-    public static readonly RulebricksFlowNodeOperation Read = new(Values.Read);
+    public static readonly UpdateContextResponseOnSchemaMismatch Ignore = new(Values.Ignore);
 
-    public static readonly RulebricksFlowNodeOperation Update = new(Values.Update);
+    public static readonly UpdateContextResponseOnSchemaMismatch Reject = new(Values.Reject);
 
-    public static readonly RulebricksFlowNodeOperation Delete = new(Values.Delete);
+    public static readonly UpdateContextResponseOnSchemaMismatch Store = new(Values.Store);
 
-    public RulebricksFlowNodeOperation(string value)
+    public UpdateContextResponseOnSchemaMismatch(string value)
     {
         Value = value;
     }
@@ -27,9 +29,9 @@ public readonly record struct RulebricksFlowNodeOperation : IStringEnum
     /// <summary>
     /// Create a string enum with the given value.
     /// </summary>
-    public static RulebricksFlowNodeOperation FromCustom(string value)
+    public static UpdateContextResponseOnSchemaMismatch FromCustom(string value)
     {
-        return new RulebricksFlowNodeOperation(value);
+        return new UpdateContextResponseOnSchemaMismatch(value);
     }
 
     public bool Equals(string? other)
@@ -45,20 +47,22 @@ public readonly record struct RulebricksFlowNodeOperation : IStringEnum
         return Value;
     }
 
-    public static bool operator ==(RulebricksFlowNodeOperation value1, string value2) =>
+    public static bool operator ==(UpdateContextResponseOnSchemaMismatch value1, string value2) =>
         value1.Value.Equals(value2);
 
-    public static bool operator !=(RulebricksFlowNodeOperation value1, string value2) =>
+    public static bool operator !=(UpdateContextResponseOnSchemaMismatch value1, string value2) =>
         !value1.Value.Equals(value2);
 
-    public static explicit operator string(RulebricksFlowNodeOperation value) => value.Value;
+    public static explicit operator string(UpdateContextResponseOnSchemaMismatch value) =>
+        value.Value;
 
-    public static explicit operator RulebricksFlowNodeOperation(string value) => new(value);
+    public static explicit operator UpdateContextResponseOnSchemaMismatch(string value) =>
+        new(value);
 
-    internal class RulebricksFlowNodeOperationSerializer
-        : JsonConverter<RulebricksFlowNodeOperation>
+    internal class UpdateContextResponseOnSchemaMismatchSerializer
+        : JsonConverter<UpdateContextResponseOnSchemaMismatch>
     {
-        public override RulebricksFlowNodeOperation Read(
+        public override UpdateContextResponseOnSchemaMismatch Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -69,19 +73,19 @@ public readonly record struct RulebricksFlowNodeOperation : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON value could not be read as a string."
                 );
-            return new RulebricksFlowNodeOperation(stringValue);
+            return new UpdateContextResponseOnSchemaMismatch(stringValue);
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            RulebricksFlowNodeOperation value,
+            UpdateContextResponseOnSchemaMismatch value,
             JsonSerializerOptions options
         )
         {
             writer.WriteStringValue(value.Value);
         }
 
-        public override RulebricksFlowNodeOperation ReadAsPropertyName(
+        public override UpdateContextResponseOnSchemaMismatch ReadAsPropertyName(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -92,12 +96,12 @@ public readonly record struct RulebricksFlowNodeOperation : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON property name could not be read as a string."
                 );
-            return new RulebricksFlowNodeOperation(stringValue);
+            return new UpdateContextResponseOnSchemaMismatch(stringValue);
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            RulebricksFlowNodeOperation value,
+            UpdateContextResponseOnSchemaMismatch value,
             JsonSerializerOptions options
         )
         {
@@ -111,10 +115,10 @@ public readonly record struct RulebricksFlowNodeOperation : IStringEnum
     [Serializable]
     public static class Values
     {
-        public const string Read = "read";
+        public const string Ignore = "ignore";
 
-        public const string Update = "update";
+        public const string Reject = "reject";
 
-        public const string Delete = "delete";
+        public const string Store = "store";
     }
 }

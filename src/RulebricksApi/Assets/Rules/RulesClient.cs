@@ -77,11 +77,11 @@ public partial class RulesClient : IRulesClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -163,11 +163,11 @@ public partial class RulesClient : IRulesClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -246,7 +246,7 @@ public partial class RulesClient : IRulesClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 403:
                         throw new ForbiddenError(JsonUtils.Deserialize<Error>(responseBody));
                     case 404:
@@ -258,7 +258,7 @@ public partial class RulesClient : IRulesClient
                             JsonUtils.Deserialize<Error>(responseBody)
                         );
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -279,7 +279,11 @@ public partial class RulesClient : IRulesClient
         CancellationToken cancellationToken = default
     )
     {
-        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 4)
+        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 8)
+            .Add("id", request.Id)
+            .Add("slug", request.Slug)
+            .Add("search", request.Search)
+            .Add("version", request.Version)
             .Add("folder", request.Folder)
             .Add("labels", request.Labels)
             .Add("user_group", request.UserGroup)
@@ -343,9 +347,13 @@ public partial class RulesClient : IRulesClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
+                    case 403:
+                        throw new ForbiddenError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 404:
+                        throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -576,7 +584,7 @@ public partial class RulesClient : IRulesClient
     }
 
     /// <summary>
-    /// List all rules in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, labels, user group name or ID when the API key has access to that group, or by name.
+    /// List rules in the organization, scoped to the API key holder's user groups. Combine folder, labels, user_group, id, slug, name, and search filters. When version is supplied, the filters must match exactly one accessible rule: multiple matches return 400 and no matches return 404. Version accepts a published version number, release environment slug, or latest, using the same publication and access checks as execution. A missing version or release returns 404. The response remains an array; schemas and condition count come from the selected version, while descriptive workspace metadata stays current. Without version, published rules use their published schemas and unpublished rules use their drafts.
     /// </summary>
     /// <example><code>
     /// await client.Assets.Rules.ListAsync(

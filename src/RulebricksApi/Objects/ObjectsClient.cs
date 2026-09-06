@@ -78,7 +78,7 @@ public partial class ObjectsClient : IObjectsClient
                     case 403:
                         throw new ForbiddenError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -156,7 +156,7 @@ public partial class ObjectsClient : IObjectsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 403:
                         throw new ForbiddenError(JsonUtils.Deserialize<Error>(responseBody));
                     case 404:
@@ -164,7 +164,7 @@ public partial class ObjectsClient : IObjectsClient
                     case 409:
                         throw new ConflictError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -248,7 +248,7 @@ public partial class ObjectsClient : IObjectsClient
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -337,7 +337,7 @@ public partial class ObjectsClient : IObjectsClient
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)

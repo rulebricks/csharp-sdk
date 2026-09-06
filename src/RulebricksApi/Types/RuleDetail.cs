@@ -33,7 +33,7 @@ public record RuleDetail : IJsonOnDeserialized
     public bool? Published { get; set; }
 
     /// <summary>
-    /// The number of condition rows configured for the rule. Uses the published condition count when the rule is published, otherwise the draft condition count.
+    /// The number of condition rows in the selected version. Without version, uses the published condition count when published, otherwise the draft condition count.
     /// </summary>
     [JsonPropertyName("no_conditions")]
     public int? NoConditions { get; set; }
@@ -60,13 +60,13 @@ public record RuleDetail : IJsonOnDeserialized
     public RuleDetailContext? Context { get; set; }
 
     /// <summary>
-    /// The request schema for the rule. Uses published schema when published, otherwise draft schema.
+    /// The request schema for the selected version. Without version, uses published schema when published, otherwise draft schema.
     /// </summary>
     [JsonPropertyName("request_schema")]
     public IEnumerable<SchemaField>? RequestSchema { get; set; }
 
     /// <summary>
-    /// The response schema for the rule. Uses published schema when published, otherwise draft schema.
+    /// The response schema for the selected version. Without version, uses published schema when published, otherwise draft schema.
     /// </summary>
     [JsonPropertyName("response_schema")]
     public IEnumerable<SchemaField>? ResponseSchema { get; set; }

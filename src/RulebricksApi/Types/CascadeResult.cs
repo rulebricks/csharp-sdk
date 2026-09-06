@@ -42,10 +42,10 @@ public record CascadeResult : IJsonOnDeserialized
     /// Whether the evaluation succeeded, failed, remains pending, or was skipped because the same inputs already completed successfully.
     /// </summary>
     [JsonPropertyName("status")]
-    public CascadeResultStatus? Status { get; set; }
+    public required CascadeResultStatus Status { get; set; }
 
     /// <summary>
-    /// The evaluation output.
+    /// The evaluation output. In ordinary Context submit responses, present only when include contains execution_results.
     /// </summary>
     [JsonPropertyName("result")]
     public Dictionary<string, object?>? Result { get; set; }

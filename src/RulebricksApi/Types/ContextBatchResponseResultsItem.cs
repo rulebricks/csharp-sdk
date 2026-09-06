@@ -42,7 +42,7 @@ public record ContextBatchResponseResultsItem : IJsonOnDeserialized
     public DateTime? ExpiresAt { get; set; }
 
     /// <summary>
-    /// Per-asset record of the last run: input hash, status, timestamp, trace IDs, `execution_id` for flows, error.
+    /// Per-asset last-run metadata: input hash, status, timestamp, trace IDs, execution_id for flows, error. Returned only when include contains executions.
     /// </summary>
     [JsonPropertyName("executions")]
     public Dictionary<string, object?>? Executions { get; set; }
@@ -54,13 +54,13 @@ public record ContextBatchResponseResultsItem : IJsonOnDeserialized
     public IEnumerable<ContextBatchResponseResultsItemExecutedItem>? Executed { get; set; }
 
     /// <summary>
-    /// True when at least one bound asset was considered for this instance - including assets that settled as skipped_already_run. False (with a reason) when nothing was attempted.
+    /// True when at least one bound asset was attempted for this instance. False, with a reason, when all assets were skipped or nothing was ready to run.
     /// </summary>
     [JsonPropertyName("triggered")]
     public bool? Triggered { get; set; }
 
     /// <summary>
-    /// Present when triggered is false (executed is empty): not_ready = required facts still missing; inputs_unchanged = the instance is complete but no bound asset had satisfiable inputs to attempt; no_bound_assets = the context has no published bound rules or flows; auto_execute_disabled = the context's auto_execute_decisions is off; execution_unavailable = the execution backend was unreachable. Note: assets whose inputs are unchanged since their last successful run appear as executed entries with status skipped_already_run and leave triggered true.
+    /// When triggered=false: not_ready (missing facts), inputs_unchanged (no ready asset needs rerunning), no_bound_assets (no published bindings), auto_execute_disabled (automatic execution off), execution_unavailable (backend unavailable), or execution_in_progress (ancestor flow running). Skipped entries may appear in executed.
     /// </summary>
     [JsonPropertyName("reason")]
     public ContextBatchResponseResultsItemReason? Reason { get; set; }

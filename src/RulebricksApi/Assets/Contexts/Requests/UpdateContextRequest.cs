@@ -61,6 +61,24 @@ public record UpdateContextRequest
     [JsonPropertyName("on_schema_mismatch")]
     public UpdateContextRequestOnSchemaMismatch? OnSchemaMismatch { get; set; }
 
+    /// <summary>
+    /// Workspace object IDs associated with this context schema.
+    /// </summary>
+    [JsonPropertyName("source_objects")]
+    public IEnumerable<string>? SourceObjects { get; set; }
+
+    /// <summary>
+    /// User groups allowed to access the context.
+    /// </summary>
+    [JsonPropertyName("user_groups")]
+    public IEnumerable<string>? UserGroups { get; set; }
+
+    /// <summary>
+    /// Context folder ID.
+    /// </summary>
+    [JsonPropertyName("folder")]
+    public string? Folder { get; set; }
+
     /// <inheritdoc />
     public override string ToString()
     {

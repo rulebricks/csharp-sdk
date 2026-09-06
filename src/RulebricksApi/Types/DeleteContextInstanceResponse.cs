@@ -15,6 +15,21 @@ public record DeleteContextInstanceResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// The source was deleted but dependent reevaluation did not complete.
+    /// </summary>
+    [JsonPropertyName("execution_degraded")]
+    public string? ExecutionDegraded { get; set; }
+
+    [JsonPropertyName("cascaded")]
+    public IEnumerable<ContextCascadeSummary>? Cascaded { get; set; }
+
+    /// <summary>
+    /// Information needed to reconcile dependent work after physical source deletion. Retain this response; an identical delete cannot reconstruct removed facts.
+    /// </summary>
+    [JsonPropertyName("cascade_recovery")]
+    public DeleteContextInstanceResponseCascadeRecovery? CascadeRecovery { get; set; }
+
+    /// <summary>
     /// Success message.
     /// </summary>
     [JsonPropertyName("message")]

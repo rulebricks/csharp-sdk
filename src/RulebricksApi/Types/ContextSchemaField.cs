@@ -18,13 +18,13 @@ public record ContextSchemaField : IJsonOnDeserialized
     /// The unique key for this field.
     /// </summary>
     [JsonPropertyName("key")]
-    public string? Key { get; set; }
+    public required string Key { get; set; }
 
     /// <summary>
     /// Display name for this field.
     /// </summary>
     [JsonPropertyName("name")]
-    public string? Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Description of this field.
@@ -36,7 +36,7 @@ public record ContextSchemaField : IJsonOnDeserialized
     /// Data type of this field. `object` fields are parent nodes for dotted child facts; `function` fields are output-only.
     /// </summary>
     [JsonPropertyName("type")]
-    public ContextSchemaFieldType? Type { get; set; }
+    public required ContextSchemaFieldType Type { get; set; }
 
     /// <summary>
     /// Default value for this field.

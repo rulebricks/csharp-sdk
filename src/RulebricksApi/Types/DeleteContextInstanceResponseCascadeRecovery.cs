@@ -5,26 +5,23 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 /// <summary>
-/// The schema definition for a context.
+/// Information needed to reconcile dependent work after physical source deletion. Retain this response; an identical delete cannot reconstruct removed facts.
 /// </summary>
 [Serializable]
-public record ContextSchema : IJsonOnDeserialized
+public record DeleteContextInstanceResponseCascadeRecovery : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// User-defined base fields for the context.
-    /// </summary>
-    [JsonPropertyName("base")]
-    public IEnumerable<ContextSchemaField> Base { get; set; } = new List<ContextSchemaField>();
+    [JsonPropertyName("context")]
+    public string? Context { get; set; }
 
-    /// <summary>
-    /// Expression-computed fields. Each entry supplies an `expression` evaluated from base facts, tracked history, and configured relationships.
-    /// </summary>
-    [JsonPropertyName("derived")]
-    public IEnumerable<ContextDerivedField>? Derived { get; set; }
+    [JsonPropertyName("previous_state")]
+    public Dictionary<string, object?>? PreviousState { get; set; }
+
+    [JsonPropertyName("action")]
+    public string? Action { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

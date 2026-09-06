@@ -15,6 +15,12 @@ public record ContextBatchResponse : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// Dependent work rejected or left incomplete; retained even when include narrows the response. Retry after correcting the failure.
+    /// </summary>
+    [JsonPropertyName("cascade_rejections")]
+    public IEnumerable<Dictionary<string, object?>>? CascadeRejections { get; set; }
+
+    /// <summary>
     /// The context slug.
     /// </summary>
     [JsonPropertyName("context")]

@@ -7,6 +7,18 @@ namespace RulebricksApi.Assets;
 public record ListContextsRequest
 {
     /// <summary>
+    /// Page size; enables the {data,cursor} response.
+    /// </summary>
+    [JsonIgnore]
+    public int? Limit { get; set; }
+
+    /// <summary>
+    /// Opaque cursor returned by the previous page; requires limit.
+    /// </summary>
+    [JsonIgnore]
+    public string? Cursor { get; set; }
+
+    /// <summary>
     /// Filter results by folder name or folder ID.
     /// </summary>
     [JsonIgnore]

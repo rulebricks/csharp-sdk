@@ -85,7 +85,7 @@ public class CreateTest : BaseMockServerTest
                             Type = ContextSchemaFieldType.Number,
                         },
                     },
-                    Derived = new List<ContextSchemaField>() { },
+                    Derived = new List<ContextDerivedField>() { },
                 },
                 IdentityFact = "email",
             }

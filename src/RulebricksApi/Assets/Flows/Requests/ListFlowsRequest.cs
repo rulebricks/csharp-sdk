@@ -7,6 +7,30 @@ namespace RulebricksApi.Assets;
 public record ListFlowsRequest
 {
     /// <summary>
+    /// Filter by the exact rule or flow ID.
+    /// </summary>
+    [JsonIgnore]
+    public string? Id { get; set; }
+
+    /// <summary>
+    /// Filter by the exact rule or flow slug (case-sensitive).
+    /// </summary>
+    [JsonIgnore]
+    public string? Slug { get; set; }
+
+    /// <summary>
+    /// Match an exact ID or slug, or a case-insensitive substring of the name. Combined with all other filters.
+    /// </summary>
+    [JsonIgnore]
+    public string? Search { get; set; }
+
+    /// <summary>
+    /// Select a published version number (e.g. 3), release environment slug (e.g. production), or latest. Requires exactly one asset after all filters and permission checks. Multiple matches or an invalid version return 400; no match, an unpublished asset, or a missing version/release returns 404. The response is still a one-item array.
+    /// </summary>
+    [JsonIgnore]
+    public string? Version { get; set; }
+
+    /// <summary>
     /// Filter results by folder name or folder ID.
     /// </summary>
     [JsonIgnore]

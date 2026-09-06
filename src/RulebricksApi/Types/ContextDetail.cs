@@ -107,6 +107,12 @@ public record ContextDetail : IJsonOnDeserialized
     [JsonPropertyName("on_schema_mismatch")]
     public ContextBaseOnSchemaMismatch? OnSchemaMismatch { get; set; }
 
+    /// <summary>
+    /// Workspace object IDs associated with this context schema.
+    /// </summary>
+    [JsonPropertyName("source_objects")]
+    public IEnumerable<string>? SourceObjects { get; set; }
+
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();
 

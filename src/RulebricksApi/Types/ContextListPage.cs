@@ -4,27 +4,21 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-/// <summary>
-/// The schema definition for a context.
-/// </summary>
 [Serializable]
-public record ContextSchema : IJsonOnDeserialized
+public record ContextListPage : IJsonOnDeserialized
 {
     [JsonExtensionData]
     private readonly IDictionary<string, JsonElement> _extensionData =
         new Dictionary<string, JsonElement>();
 
-    /// <summary>
-    /// User-defined base fields for the context.
-    /// </summary>
-    [JsonPropertyName("base")]
-    public IEnumerable<ContextSchemaField> Base { get; set; } = new List<ContextSchemaField>();
+    [JsonPropertyName("data")]
+    public IEnumerable<ContextListItem> Data { get; set; } = new List<ContextListItem>();
 
     /// <summary>
-    /// Expression-computed fields. Each entry supplies an `expression` evaluated from base facts, tracked history, and configured relationships.
+    /// Opaque next-page cursor; null when complete.
     /// </summary>
-    [JsonPropertyName("derived")]
-    public IEnumerable<ContextDerivedField>? Derived { get; set; }
+    [JsonPropertyName("cursor")]
+    public string? Cursor { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

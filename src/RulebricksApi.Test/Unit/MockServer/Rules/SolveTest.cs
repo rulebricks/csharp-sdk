@@ -115,4 +115,53 @@ public class SolveTest : BaseMockServerTest
         );
         JsonAssert.AreEqual(response, mockResponse);
     }
+
+    [NUnit.Framework.Test]
+    public async Task MockServerTest_3()
+    {
+        const string requestJson = """
+            {
+              "name": "John Doe",
+              "age": 30,
+              "email": "jdoe@acme.co"
+            }
+            """;
+
+        const string mockResponse = """
+            {
+              "error": "Rule execution failed."
+            }
+            """;
+
+        Server
+            .Given(
+                WireMock
+                    .RequestBuilders.Request.Create()
+                    .WithPath("/solve/slug/version")
+                    .WithHeader("Content-Type", "application/json")
+                    .UsingPost()
+                    .WithBodyAsJson(requestJson)
+            )
+            .RespondWith(
+                WireMock
+                    .ResponseBuilders.Response.Create()
+                    .WithStatusCode(200)
+                    .WithBody(mockResponse)
+            );
+
+        var response = await Client.Rules.SolveAsync(
+            new SolveRulesRequest
+            {
+                Slug = "slug",
+                Version = "version",
+                Body = new Dictionary<string, object?>()
+                {
+                    { "name", "John Doe" },
+                    { "age", 30 },
+                    { "email", "jdoe@acme.co" },
+                },
+            }
+        );
+        JsonAssert.AreEqual(response, mockResponse);
+    }
 }

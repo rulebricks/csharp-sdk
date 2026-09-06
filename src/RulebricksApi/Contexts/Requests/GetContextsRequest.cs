@@ -19,7 +19,13 @@ public record GetContextsRequest
     public required string Instance { get; set; }
 
     /// <summary>
-    /// Comma-separated relationship names to include in the response under a 'relations' key (has_many relations return a list of related instance states; has_one/belongs_to return a single state or null). Use '*' for all relationships. Omitted by default - related instances are never fetched into the payload unrequested.
+    /// Select comma-separated fields; `context` is always returned. Default: state and execution summaries. Opt-ins: `executions` (GET last-run metadata), `execution_results` (POST `cascaded[].result`). Unavailable fields are omitted; relations require `include_relations`. History: `/history`. Fields: positions, is_new, status, have, need, state, derived, expires_at, created_at, updated_at, executions, executed, triggered, reason, cascaded, relations, execution_results.
+    /// </summary>
+    [JsonIgnore]
+    public string? Include { get; set; }
+
+    /// <summary>
+    /// Include named relationships under `relations` (comma-separated; `*` for all). `has_many` returns a list; `has_one`/`belongs_to` return one state or null. Omitted by default.
     /// </summary>
     [JsonIgnore]
     public string? IncludeRelations { get; set; }

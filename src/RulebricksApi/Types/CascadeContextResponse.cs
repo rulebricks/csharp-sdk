@@ -1,5 +1,6 @@
 using global::System.Text.Json;
 using global::System.Text.Json.Serialization;
+using OneOf;
 using RulebricksApi.Core;
 
 namespace RulebricksApi;
@@ -24,7 +25,7 @@ public record CascadeContextResponse : IJsonOnDeserialized
     /// Results from all cascaded evaluations.
     /// </summary>
     [JsonPropertyName("cascaded")]
-    public IEnumerable<CascadeResult>? Cascaded { get; set; }
+    public IEnumerable<OneOf<CascadeResult, ContextCascadeSummary>>? Cascaded { get; set; }
 
     [JsonIgnore]
     public ReadOnlyAdditionalProperties AdditionalProperties { get; private set; } = new();

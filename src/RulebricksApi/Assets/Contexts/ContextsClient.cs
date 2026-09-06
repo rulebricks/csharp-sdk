@@ -1,4 +1,5 @@
 using global::System.Text.Json;
+using OneOf;
 using RulebricksApi;
 using RulebricksApi.Assets.Contexts;
 using RulebricksApi.Core;
@@ -17,13 +18,17 @@ public partial class ContextsClient : IContextsClient
 
     public IRelationshipsClient Relationships { get; }
 
-    private async Task<WithRawResponse<IEnumerable<ContextListItem>>> ListAsyncCore(
+    private async Task<
+        WithRawResponse<OneOf<IEnumerable<ContextListItem>, ContextListPage>>
+    > ListAsyncCore(
         ListContextsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 3)
+        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 5)
+            .Add("limit", request.Limit)
+            .Add("cursor", request.Cursor)
             .Add("folder", request.Folder)
             .Add("user_group", request.UserGroup)
             .Add("name", request.Name)
@@ -55,10 +60,10 @@ public partial class ContextsClient : IContextsClient
                 .ConfigureAwait(false);
             try
             {
-                var responseData = JsonUtils.Deserialize<IEnumerable<ContextListItem>>(
-                    responseBody
-                )!;
-                return new WithRawResponse<IEnumerable<ContextListItem>>()
+                var responseData = JsonUtils.Deserialize<
+                    OneOf<IEnumerable<ContextListItem>, ContextListPage>
+                >(responseBody)!;
+                return new WithRawResponse<OneOf<IEnumerable<ContextListItem>, ContextListPage>>()
                 {
                     Data = responseData,
                     RawResponse = new RawResponse()
@@ -88,7 +93,7 @@ public partial class ContextsClient : IContextsClient
                 switch (response.StatusCode)
                 {
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -167,11 +172,11 @@ public partial class ContextsClient : IContextsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 409:
                         throw new ConflictError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -253,7 +258,7 @@ public partial class ContextsClient : IContextsClient
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -335,11 +340,11 @@ public partial class ContextsClient : IContextsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -421,7 +426,7 @@ public partial class ContextsClient : IContextsClient
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -437,18 +442,18 @@ public partial class ContextsClient : IContextsClient
     }
 
     /// <summary>
-    /// Retrieve all contexts for the authenticated user. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, by user group name or ID when the API key has access to that group, or by name.
+    /// List contexts accessible to the API key. Filter by context name, folder name/ID, or an accessible user group's name/ID. Returns an array when pagination is omitted; optional limit/cursor pagination returns {data,cursor} in descending creation time and ID order.
     /// </summary>
     /// <example><code>
     /// await client.Assets.Contexts.ListAsync(new ListContextsRequest());
     /// </code></example>
-    public WithRawResponseTask<IEnumerable<ContextListItem>> ListAsync(
+    public WithRawResponseTask<OneOf<IEnumerable<ContextListItem>, ContextListPage>> ListAsync(
         ListContextsRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<IEnumerable<ContextListItem>>(
+        return new WithRawResponseTask<OneOf<IEnumerable<ContextListItem>, ContextListPage>>(
             ListAsyncCore(request, options, cancellationToken)
         );
     }
@@ -480,7 +485,7 @@ public partial class ContextsClient : IContextsClient
     ///                     Type = ContextSchemaFieldType.Number,
     ///                 },
     ///             },
-    ///             Derived = new List&lt;ContextSchemaField&gt;() { },
+    ///             Derived = new List&lt;ContextDerivedField&gt;() { },
     ///         },
     ///         IdentityFact = "email",
     ///     }

@@ -18,13 +18,13 @@ public record SolveContextRuleResponse : IJsonOnDeserialized
     /// Whether the rule executed successfully.
     /// </summary>
     [JsonPropertyName("status")]
-    public SolveContextRuleResponseStatus? Status { get; set; }
+    public required SolveContextRuleResponseStatus Status { get; set; }
 
     /// <summary>
     /// Combined identifier in format 'contextSlug:instanceId'.
     /// </summary>
     [JsonPropertyName("context")]
-    public string? Context { get; set; }
+    public required string Context { get; set; }
 
     /// <summary>
     /// The slug of the rule that was executed.

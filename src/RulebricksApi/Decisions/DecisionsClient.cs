@@ -93,9 +93,9 @@ public partial class DecisionsClient : IDecisionsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                     case 503:
                         throw new ServiceUnavailableError(
                             JsonUtils.Deserialize<object>(responseBody)

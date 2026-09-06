@@ -15,16 +15,37 @@ public record ContextCascadeSummary : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// Relationship type used to find dependent work.
+    /// </summary>
+    [JsonPropertyName("relation_type")]
+    public string? RelationType { get; set; }
+
+    /// <summary>
+    /// Foreign key used to find dependent identities.
+    /// </summary>
+    [JsonPropertyName("foreign_key_field")]
+    public string? ForeignKeyField { get; set; }
+
+    /// <summary>
+    /// Known failed dependent identities from a bounded page.
+    /// </summary>
+    [JsonPropertyName("failed_instance_ids")]
+    public IEnumerable<string>? FailedInstanceIds { get; set; }
+
+    [JsonPropertyName("rejected")]
+    public int? Rejected { get; set; }
+
+    /// <summary>
     /// The dependent context slug.
     /// </summary>
     [JsonPropertyName("context")]
-    public string? Context { get; set; }
+    public required string Context { get; set; }
 
     /// <summary>
     /// The relationship that linked the contexts.
     /// </summary>
     [JsonPropertyName("relation")]
-    public string? Relation { get; set; }
+    public required string Relation { get; set; }
 
     /// <summary>
     /// Distinct existing dependent instances re-evaluated.
@@ -43,12 +64,6 @@ public record ContextCascadeSummary : IJsonOnDeserialized
 
     [JsonPropertyName("skipped")]
     public int? Skipped { get; set; }
-
-    /// <summary>
-    /// True when the affected instances exceeded the bounded cascade limit.
-    /// </summary>
-    [JsonPropertyName("truncated")]
-    public bool? Truncated { get; set; }
 
     /// <summary>
     /// Present when dependent data was committed but execution was unavailable.

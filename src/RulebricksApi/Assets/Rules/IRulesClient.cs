@@ -32,7 +32,7 @@ public partial interface IRulesClient
     );
 
     /// <summary>
-    /// List all rules in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, labels, user group name or ID when the API key has access to that group, or by name.
+    /// List rules in the organization, scoped to the API key holder's user groups. Combine folder, labels, user_group, id, slug, name, and search filters. When version is supplied, the filters must match exactly one accessible rule: multiple matches return 400 and no matches return 404. Version accepts a published version number, release environment slug, or latest, using the same publication and access checks as execution. A missing version or release returns 404. The response remains an array; schemas and condition count come from the selected version, while descriptive workspace metadata stays current. Without version, published rules use their published schemas and unpublished rules use their drafts.
     /// </summary>
     WithRawResponseTask<IEnumerable<RuleDetail>> ListAsync(
         ListRulesRequest request,

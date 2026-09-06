@@ -4,17 +4,21 @@ using RulebricksApi.Core;
 
 namespace RulebricksApi;
 
-[JsonConverter(typeof(RulebricksFlowNodeOperation.RulebricksFlowNodeOperationSerializer))]
+[JsonConverter(typeof(ContextDerivedFieldType.ContextDerivedFieldTypeSerializer))]
 [Serializable]
-public readonly record struct RulebricksFlowNodeOperation : IStringEnum
+public readonly record struct ContextDerivedFieldType : IStringEnum
 {
-    public static readonly RulebricksFlowNodeOperation Read = new(Values.Read);
+    public static readonly ContextDerivedFieldType String = new(Values.String);
 
-    public static readonly RulebricksFlowNodeOperation Update = new(Values.Update);
+    public static readonly ContextDerivedFieldType Number = new(Values.Number);
 
-    public static readonly RulebricksFlowNodeOperation Delete = new(Values.Delete);
+    public static readonly ContextDerivedFieldType Boolean = new(Values.Boolean);
 
-    public RulebricksFlowNodeOperation(string value)
+    public static readonly ContextDerivedFieldType List = new(Values.List);
+
+    public static readonly ContextDerivedFieldType Date = new(Values.Date);
+
+    public ContextDerivedFieldType(string value)
     {
         Value = value;
     }
@@ -27,9 +31,9 @@ public readonly record struct RulebricksFlowNodeOperation : IStringEnum
     /// <summary>
     /// Create a string enum with the given value.
     /// </summary>
-    public static RulebricksFlowNodeOperation FromCustom(string value)
+    public static ContextDerivedFieldType FromCustom(string value)
     {
-        return new RulebricksFlowNodeOperation(value);
+        return new ContextDerivedFieldType(value);
     }
 
     public bool Equals(string? other)
@@ -45,20 +49,19 @@ public readonly record struct RulebricksFlowNodeOperation : IStringEnum
         return Value;
     }
 
-    public static bool operator ==(RulebricksFlowNodeOperation value1, string value2) =>
+    public static bool operator ==(ContextDerivedFieldType value1, string value2) =>
         value1.Value.Equals(value2);
 
-    public static bool operator !=(RulebricksFlowNodeOperation value1, string value2) =>
+    public static bool operator !=(ContextDerivedFieldType value1, string value2) =>
         !value1.Value.Equals(value2);
 
-    public static explicit operator string(RulebricksFlowNodeOperation value) => value.Value;
+    public static explicit operator string(ContextDerivedFieldType value) => value.Value;
 
-    public static explicit operator RulebricksFlowNodeOperation(string value) => new(value);
+    public static explicit operator ContextDerivedFieldType(string value) => new(value);
 
-    internal class RulebricksFlowNodeOperationSerializer
-        : JsonConverter<RulebricksFlowNodeOperation>
+    internal class ContextDerivedFieldTypeSerializer : JsonConverter<ContextDerivedFieldType>
     {
-        public override RulebricksFlowNodeOperation Read(
+        public override ContextDerivedFieldType Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -69,19 +72,19 @@ public readonly record struct RulebricksFlowNodeOperation : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON value could not be read as a string."
                 );
-            return new RulebricksFlowNodeOperation(stringValue);
+            return new ContextDerivedFieldType(stringValue);
         }
 
         public override void Write(
             Utf8JsonWriter writer,
-            RulebricksFlowNodeOperation value,
+            ContextDerivedFieldType value,
             JsonSerializerOptions options
         )
         {
             writer.WriteStringValue(value.Value);
         }
 
-        public override RulebricksFlowNodeOperation ReadAsPropertyName(
+        public override ContextDerivedFieldType ReadAsPropertyName(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
@@ -92,12 +95,12 @@ public readonly record struct RulebricksFlowNodeOperation : IStringEnum
                 ?? throw new global::System.Exception(
                     "The JSON property name could not be read as a string."
                 );
-            return new RulebricksFlowNodeOperation(stringValue);
+            return new ContextDerivedFieldType(stringValue);
         }
 
         public override void WriteAsPropertyName(
             Utf8JsonWriter writer,
-            RulebricksFlowNodeOperation value,
+            ContextDerivedFieldType value,
             JsonSerializerOptions options
         )
         {
@@ -111,10 +114,14 @@ public readonly record struct RulebricksFlowNodeOperation : IStringEnum
     [Serializable]
     public static class Values
     {
-        public const string Read = "read";
+        public const string String = "string";
 
-        public const string Update = "update";
+        public const string Number = "number";
 
-        public const string Delete = "delete";
+        public const string Boolean = "boolean";
+
+        public const string List = "list";
+
+        public const string Date = "date";
     }
 }

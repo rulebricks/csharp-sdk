@@ -15,7 +15,10 @@ public partial class FlowsClient : IFlowsClient
 
     private async Task<
         WithRawResponse<
-            OneOf<Dictionary<string, object?>, IEnumerable<Dictionary<string, object?>>>
+            OneOf<
+                OneOf<Dictionary<string, object?>, ExecutionErrorResult>,
+                IEnumerable<OneOf<Dictionary<string, object?>, ExecutionErrorResult>>
+            >
         >
     > ExecuteAsyncCore(
         ExecuteFlowsRequest request,
@@ -55,10 +58,16 @@ public partial class FlowsClient : IFlowsClient
             try
             {
                 var responseData = JsonUtils.Deserialize<
-                    OneOf<Dictionary<string, object?>, IEnumerable<Dictionary<string, object?>>>
+                    OneOf<
+                        OneOf<Dictionary<string, object?>, ExecutionErrorResult>,
+                        IEnumerable<OneOf<Dictionary<string, object?>, ExecutionErrorResult>>
+                    >
                 >(responseBody)!;
                 return new WithRawResponse<
-                    OneOf<Dictionary<string, object?>, IEnumerable<Dictionary<string, object?>>>
+                    OneOf<
+                        OneOf<Dictionary<string, object?>, ExecutionErrorResult>,
+                        IEnumerable<OneOf<Dictionary<string, object?>, ExecutionErrorResult>>
+                    >
                 >()
                 {
                     Data = responseData,
@@ -89,9 +98,9 @@ public partial class FlowsClient : IFlowsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                     case 503:
                         throw new ServiceUnavailableError(
                             JsonUtils.Deserialize<object>(responseBody)
@@ -113,7 +122,7 @@ public partial class FlowsClient : IFlowsClient
     }
 
     /// <summary>
-    /// Execute a flow by slug and optional version. Policy failures return `{ error }` with status 200, including per-item errors for bulk requests. Errors: 400 invalid input, 500 unhandled execution failure, 503 unavailable, 504 timeout.
+    /// Execute a flow by slug and optional version. The flow setting `failedResponseMode` controls execution-failure responses: a missing or invalid value is treated as `return` (the default), which returns an `{ "error": "..." }` payload with HTTP 200; `fail` returns HTTP 400 for input/schema failures and HTTP 500 for escalated policy/runtime failures. Request- and entity-level errors, capacity errors, and infrastructure failures remain non-2xx responses as documented.
     /// </summary>
     /// <example><code>
     /// await client.Flows.ExecuteAsync(
@@ -131,7 +140,10 @@ public partial class FlowsClient : IFlowsClient
     /// );
     /// </code></example>
     public WithRawResponseTask<
-        OneOf<Dictionary<string, object?>, IEnumerable<Dictionary<string, object?>>>
+        OneOf<
+            OneOf<Dictionary<string, object?>, ExecutionErrorResult>,
+            IEnumerable<OneOf<Dictionary<string, object?>, ExecutionErrorResult>>
+        >
     > ExecuteAsync(
         ExecuteFlowsRequest request,
         RequestOptions? options = null,
@@ -139,7 +151,10 @@ public partial class FlowsClient : IFlowsClient
     )
     {
         return new WithRawResponseTask<
-            OneOf<Dictionary<string, object?>, IEnumerable<Dictionary<string, object?>>>
+            OneOf<
+                OneOf<Dictionary<string, object?>, ExecutionErrorResult>,
+                IEnumerable<OneOf<Dictionary<string, object?>, ExecutionErrorResult>>
+            >
         >(ExecuteAsyncCore(request, options, cancellationToken));
     }
 }

@@ -19,7 +19,11 @@ public partial class FlowsClient : IFlowsClient
         CancellationToken cancellationToken = default
     )
     {
-        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 4)
+        var _queryString = new RulebricksApi.Core.QueryStringBuilder.Builder(capacity: 8)
+            .Add("id", request.Id)
+            .Add("slug", request.Slug)
+            .Add("search", request.Search)
+            .Add("version", request.Version)
             .Add("folder", request.Folder)
             .Add("labels", request.Labels)
             .Add("user_group", request.UserGroup)
@@ -82,8 +86,14 @@ public partial class FlowsClient : IFlowsClient
             {
                 switch (response.StatusCode)
                 {
+                    case 400:
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
+                    case 403:
+                        throw new ForbiddenError(JsonUtils.Deserialize<Error>(responseBody));
+                    case 404:
+                        throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -162,9 +172,9 @@ public partial class FlowsClient : IFlowsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -247,11 +257,11 @@ public partial class FlowsClient : IFlowsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -330,11 +340,11 @@ public partial class FlowsClient : IFlowsClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 404:
                         throw new NotFoundError(JsonUtils.Deserialize<Error>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                 }
             }
             catch (JsonException)
@@ -350,7 +360,7 @@ public partial class FlowsClient : IFlowsClient
     }
 
     /// <summary>
-    /// List all flows in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, labels, user group name or ID when the API key has access to that group, or by name.
+    /// List flows in the organization, scoped to the API key holder's user groups. Combine folder, labels, user_group, id, slug, name, and search filters. When version is supplied, the filters must match exactly one accessible flow: multiple matches return 400 and no matches return 404. Version accepts a published version number, release environment slug, or latest, using the same publication and access checks as execution. A missing version or release returns 404. The response remains an array; request_schema and origin_rule come from the selected graph, while descriptive workspace metadata stays current. Without version, published flows use their published graph and unpublished flows use their draft graph. Flows do not declare a response schema.
     /// </summary>
     /// <example><code>
     /// await client.Assets.Flows.ListAsync(new RulebricksApi.Assets.ListFlowsRequest());

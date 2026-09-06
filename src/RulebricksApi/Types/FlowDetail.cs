@@ -12,6 +12,12 @@ public record FlowDetail : IJsonOnDeserialized
         new Dictionary<string, JsonElement>();
 
     /// <summary>
+    /// The request schema embedded in the selected graph's origin rule. Without version, uses the published graph when published, otherwise the draft graph. Empty when the graph has no origin schema.
+    /// </summary>
+    [JsonPropertyName("request_schema")]
+    public IEnumerable<SchemaField>? RequestSchema { get; set; }
+
+    /// <summary>
     /// Whether the flow is published.
     /// </summary>
     [JsonPropertyName("published")]

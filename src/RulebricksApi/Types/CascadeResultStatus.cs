@@ -16,6 +16,14 @@ public readonly record struct CascadeResultStatus : IStringEnum
 
     public static readonly CascadeResultStatus SkippedAlreadyRun = new(Values.SkippedAlreadyRun);
 
+    public static readonly CascadeResultStatus SkippedInProgress = new(Values.SkippedInProgress);
+
+    public static readonly CascadeResultStatus EvaluationError = new(Values.EvaluationError);
+
+    public static readonly CascadeResultStatus InfrastructureError = new(
+        Values.InfrastructureError
+    );
+
     public CascadeResultStatus(string value)
     {
         Value = value;
@@ -119,5 +127,11 @@ public readonly record struct CascadeResultStatus : IStringEnum
         public const string Pending = "pending";
 
         public const string SkippedAlreadyRun = "skipped_already_run";
+
+        public const string SkippedInProgress = "skipped_in_progress";
+
+        public const string EvaluationError = "evaluation_error";
+
+        public const string InfrastructureError = "infrastructure_error";
     }
 }

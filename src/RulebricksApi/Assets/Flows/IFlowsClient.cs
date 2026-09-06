@@ -5,7 +5,7 @@ namespace RulebricksApi.Assets;
 public partial interface IFlowsClient
 {
     /// <summary>
-    /// List all flows in the organization. Results are scoped to the API key holder's user groups. Optionally filter by folder name or ID, labels, user group name or ID when the API key has access to that group, or by name.
+    /// List flows in the organization, scoped to the API key holder's user groups. Combine folder, labels, user_group, id, slug, name, and search filters. When version is supplied, the filters must match exactly one accessible flow: multiple matches return 400 and no matches return 404. Version accepts a published version number, release environment slug, or latest, using the same publication and access checks as execution. A missing version or release returns 404. The response remains an array; request_schema and origin_rule come from the selected graph, while descriptive workspace metadata stays current. Without version, published flows use their published graph and unpublished flows use their draft graph. Flows do not declare a response schema.
     /// </summary>
     WithRawResponseTask<IEnumerable<FlowDetail>> ListAsync(
         ListFlowsRequest request,

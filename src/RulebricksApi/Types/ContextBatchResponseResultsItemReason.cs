@@ -28,6 +28,10 @@ public readonly record struct ContextBatchResponseResultsItemReason : IStringEnu
         Values.ExecutionUnavailable
     );
 
+    public static readonly ContextBatchResponseResultsItemReason ExecutionInProgress = new(
+        Values.ExecutionInProgress
+    );
+
     public ContextBatchResponseResultsItemReason(string value)
     {
         Value = value;
@@ -136,5 +140,7 @@ public readonly record struct ContextBatchResponseResultsItemReason : IStringEnu
         public const string AutoExecuteDisabled = "auto_execute_disabled";
 
         public const string ExecutionUnavailable = "execution_unavailable";
+
+        public const string ExecutionInProgress = "execution_in_progress";
     }
 }

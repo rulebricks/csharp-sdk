@@ -4,11 +4,11 @@ namespace RulebricksApi;
 /// This exception type will be thrown for any non-2XX API responses.
 /// </summary>
 [Serializable]
-public class PaymentRequiredError(Error body)
-    : RulebricksApiApiException("PaymentRequiredError", 402, body)
+public class TooManyRequestsError(ContextOperationError body)
+    : RulebricksApiApiException("TooManyRequestsError", 429, body)
 {
     /// <summary>
     /// The body of the response that triggered the exception.
     /// </summary>
-    public new Error Body => body;
+    public new ContextOperationError Body => body;
 }

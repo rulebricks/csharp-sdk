@@ -12,7 +12,7 @@ public partial interface IContextsClient
     );
 
     /// <summary>
-    /// Submit data to a context instance, creating it if it doesn't exist. May trigger bound rule/flow evaluations.
+    /// Submit data to a context instance, creating it if it doesn't exist. May trigger bound rule/flow evaluations. Each instance supports up to 64 MiB of combined stored state and execution metadata, measured as serialized database JSON. Deployment transport limits and execution deadlines also apply.
     /// </summary>
     WithRawResponseTask<SubmitContextDataResponse> SubmitAsync(
         SubmitContextsRequest request,
@@ -57,7 +57,25 @@ public partial interface IContextsClient
     );
 
     /// <summary>
-    /// Submit an array of records to any context in one synchronous call. Records merge into their context instances (matched by the context's identity fact), bound rules and flows whose inputs became satisfied execute, and the response returns the resolved state of every touched instance. Retries are always safe: merges are idempotent and executions are deduplicated by input hash. Fact history is recorded for tracked facts exactly as on individual writes. Clients chunk large datasets across requests.
+    /// Execute one rule bound to this context. An optional object body is validated and persisted before evaluation. Returns HTTP 202 and registers pending work when that rule's own inputs are not yet available.
+    /// </summary>
+    WithRawResponseTask<SolveContextRuleResponse> SolveRuleAsync(
+        SolveRuleContextsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Execute one flow bound to this context. An optional object body is validated and persisted before evaluation. Returns HTTP 202 and registers pending work when that flow's own inputs are not yet available.
+    /// </summary>
+    WithRawResponseTask<SolveContextFlowResponse> SolveFlowAsync(
+        SolveFlowContextsRequest request,
+        RequestOptions? options = null,
+        CancellationToken cancellationToken = default
+    );
+
+    /// <summary>
+    /// Synchronously merge records by identity, record tracked history, and execute ready bound rules/flows. Returns each touched instance's resolved state and execution summary. Successful runs are deduplicated by input hash; lost responses can cause repeated external effects. Each instance supports up to 64 MiB of combined stored state and execution metadata, measured as serialized database JSON. Contexts impose no separate request-wide size or record-count budget. Deployment transport limits, available resources, and execution deadlines still apply. Error responses identify committed and failed instances when known; a failed request does not imply rollback of earlier writes.
     /// </summary>
     WithRawResponseTask<ContextBatchResponse> BulkIngestAsync(
         BulkIngestContextsRequest request,

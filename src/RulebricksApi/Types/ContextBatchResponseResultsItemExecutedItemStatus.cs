@@ -24,6 +24,9 @@ public readonly record struct ContextBatchResponseResultsItemExecutedItemStatus 
     public static readonly ContextBatchResponseResultsItemExecutedItemStatus SkippedAlreadyRun =
         new(Values.SkippedAlreadyRun);
 
+    public static readonly ContextBatchResponseResultsItemExecutedItemStatus SkippedInProgress =
+        new(Values.SkippedInProgress);
+
     public ContextBatchResponseResultsItemExecutedItemStatus(string value)
     {
         Value = value;
@@ -136,5 +139,7 @@ public readonly record struct ContextBatchResponseResultsItemExecutedItemStatus 
         public const string InfrastructureError = "infrastructure_error";
 
         public const string SkippedAlreadyRun = "skipped_already_run";
+
+        public const string SkippedInProgress = "skipped_in_progress";
     }
 }

@@ -4,7 +4,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 [Serializable]
-public record SubmitContextsRequest
+public record SolveRuleContextsRequest
 {
     /// <summary>
     /// The unique slug for the context.
@@ -19,10 +19,10 @@ public record SubmitContextsRequest
     public required string Instance { get; set; }
 
     /// <summary>
-    /// Select comma-separated fields; `context` is always returned. Default: state and execution summaries. Opt-ins: `executions` (GET last-run metadata), `execution_results` (POST `cascaded[].result`). Unavailable fields are omitted; relations require `include_relations`. History: `/history`. Fields: positions, is_new, status, have, need, state, derived, expires_at, created_at, updated_at, executions, executed, triggered, reason, cascaded, relations, execution_results.
+    /// Slug of a rule bound to this context.
     /// </summary>
     [JsonIgnore]
-    public string? Include { get; set; }
+    public required string RuleSlug { get; set; }
 
     [JsonIgnore]
     public Dictionary<string, object?> Body { get; set; } = new Dictionary<string, object?>();

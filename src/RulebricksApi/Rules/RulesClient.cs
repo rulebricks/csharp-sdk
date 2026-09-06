@@ -13,7 +13,9 @@ public partial class RulesClient : IRulesClient
         _client = client;
     }
 
-    private async Task<WithRawResponse<Dictionary<string, object?>>> SolveAsyncCore(
+    private async Task<
+        WithRawResponse<OneOf<Dictionary<string, object?>, ExecutionErrorResult>>
+    > SolveAsyncCore(
         SolveRulesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
@@ -50,10 +52,12 @@ public partial class RulesClient : IRulesClient
                 .ConfigureAwait(false);
             try
             {
-                var responseData = JsonUtils.Deserialize<Dictionary<string, object?>>(
-                    responseBody
-                )!;
-                return new WithRawResponse<Dictionary<string, object?>>()
+                var responseData = JsonUtils.Deserialize<
+                    OneOf<Dictionary<string, object?>, ExecutionErrorResult>
+                >(responseBody)!;
+                return new WithRawResponse<
+                    OneOf<Dictionary<string, object?>, ExecutionErrorResult>
+                >()
                 {
                     Data = responseData,
                     RawResponse = new RawResponse()
@@ -83,9 +87,9 @@ public partial class RulesClient : IRulesClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                     case 503:
                         throw new ServiceUnavailableError(
                             JsonUtils.Deserialize<object>(responseBody)
@@ -107,7 +111,7 @@ public partial class RulesClient : IRulesClient
     }
 
     private async Task<
-        WithRawResponse<IEnumerable<OneOf<Dictionary<string, object?>, BulkRuleResponseItemError>>>
+        WithRawResponse<IEnumerable<OneOf<Dictionary<string, object?>, ExecutionErrorResult>>>
     > BulkSolveAsyncCore(
         BulkSolveRulesRequest request,
         RequestOptions? options = null,
@@ -146,10 +150,10 @@ public partial class RulesClient : IRulesClient
             try
             {
                 var responseData = JsonUtils.Deserialize<
-                    IEnumerable<OneOf<Dictionary<string, object?>, BulkRuleResponseItemError>>
+                    IEnumerable<OneOf<Dictionary<string, object?>, ExecutionErrorResult>>
                 >(responseBody)!;
                 return new WithRawResponse<
-                    IEnumerable<OneOf<Dictionary<string, object?>, BulkRuleResponseItemError>>
+                    IEnumerable<OneOf<Dictionary<string, object?>, ExecutionErrorResult>>
                 >()
                 {
                     Data = responseData,
@@ -180,9 +184,9 @@ public partial class RulesClient : IRulesClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                     case 503:
                         throw new ServiceUnavailableError(
                             JsonUtils.Deserialize<object>(responseBody)
@@ -270,9 +274,9 @@ public partial class RulesClient : IRulesClient
                 switch (response.StatusCode)
                 {
                     case 400:
-                        throw new BadRequestError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new BadRequestError(JsonUtils.Deserialize<object>(responseBody));
                     case 500:
-                        throw new InternalServerError(JsonUtils.Deserialize<Error>(responseBody));
+                        throw new InternalServerError(JsonUtils.Deserialize<object>(responseBody));
                     case 503:
                         throw new ServiceUnavailableError(
                             JsonUtils.Deserialize<object>(responseBody)
@@ -311,13 +315,13 @@ public partial class RulesClient : IRulesClient
     ///     }
     /// );
     /// </code></example>
-    public WithRawResponseTask<Dictionary<string, object?>> SolveAsync(
+    public WithRawResponseTask<OneOf<Dictionary<string, object?>, ExecutionErrorResult>> SolveAsync(
         SolveRulesRequest request,
         RequestOptions? options = null,
         CancellationToken cancellationToken = default
     )
     {
-        return new WithRawResponseTask<Dictionary<string, object?>>(
+        return new WithRawResponseTask<OneOf<Dictionary<string, object?>, ExecutionErrorResult>>(
             SolveAsyncCore(request, options, cancellationToken)
         );
     }
@@ -350,7 +354,7 @@ public partial class RulesClient : IRulesClient
     /// );
     /// </code></example>
     public WithRawResponseTask<
-        IEnumerable<OneOf<Dictionary<string, object?>, BulkRuleResponseItemError>>
+        IEnumerable<OneOf<Dictionary<string, object?>, ExecutionErrorResult>>
     > BulkSolveAsync(
         BulkSolveRulesRequest request,
         RequestOptions? options = null,
@@ -358,7 +362,7 @@ public partial class RulesClient : IRulesClient
     )
     {
         return new WithRawResponseTask<
-            IEnumerable<OneOf<Dictionary<string, object?>, BulkRuleResponseItemError>>
+            IEnumerable<OneOf<Dictionary<string, object?>, ExecutionErrorResult>>
         >(BulkSolveAsyncCore(request, options, cancellationToken));
     }
 

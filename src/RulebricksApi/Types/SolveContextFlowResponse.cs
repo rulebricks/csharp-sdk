@@ -18,13 +18,13 @@ public record SolveContextFlowResponse : IJsonOnDeserialized
     /// Whether the flow executed successfully.
     /// </summary>
     [JsonPropertyName("status")]
-    public SolveContextFlowResponseStatus? Status { get; set; }
+    public required SolveContextFlowResponseStatus Status { get; set; }
 
     /// <summary>
     /// Combined identifier in format 'contextSlug:instanceId'.
     /// </summary>
     [JsonPropertyName("context")]
-    public string? Context { get; set; }
+    public required string Context { get; set; }
 
     /// <summary>
     /// The slug of the flow that was executed.

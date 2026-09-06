@@ -5,7 +5,7 @@ using RulebricksApi.Core;
 namespace RulebricksApi;
 
 /// <summary>
-/// Returned with HTTP 202 when a rule or flow cannot run yet because required facts are missing. The evaluation is registered and fires automatically when the instance receives the missing facts (visible under the instance's /pending endpoint until then).
+/// HTTP 202: required facts are missing. The registered rule/flow runs when those facts arrive and remains visible under `/pending` until then.
 /// </summary>
 [Serializable]
 public record PendingContextEvaluationResponse : IJsonOnDeserialized
@@ -18,13 +18,13 @@ public record PendingContextEvaluationResponse : IJsonOnDeserialized
     /// Always 'pending'.
     /// </summary>
     [JsonPropertyName("status")]
-    public PendingContextEvaluationResponseStatus? Status { get; set; }
+    public required PendingContextEvaluationResponseStatus Status { get; set; }
 
     /// <summary>
     /// Combined identifier in format 'contextSlug:instanceId'.
     /// </summary>
     [JsonPropertyName("context")]
-    public string? Context { get; set; }
+    public required string Context { get; set; }
 
     /// <summary>
     /// The slug of the rule awaiting execution (rule solves only).
